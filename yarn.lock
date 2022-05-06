@@ -2031,10 +2031,10 @@
     "@types/qs" "*"
     "@types/range-parser" "*"
 
-"@types/fs-extra@^8.0.1":
-  version "8.1.1"
-  resolved "https://registry.yarnpkg.com/@types/fs-extra/-/fs-extra-8.1.1.tgz#1e49f22d09aa46e19b51c0b013cb63d0d923a068"
-  integrity sha512-TcUlBem321DFQzBNuz8p0CLLKp0VvF/XH9E4KHNmgwyp4E3AfgI5cjiIVZWlbfThBop2qxFIh4+LeY6hVWWZ2w==
+"@types/fs-extra@^9.0.13":
+  version "9.0.13"
+  resolved "https://registry.yarnpkg.com/@types/fs-extra/-/fs-extra-9.0.13.tgz#7594fbae04fe7f1918ce8b3d213f74ff44ac1f45"
+  integrity sha512-nEnwB++1u5lVDM2UI4c1+5R+FYaKfaAzS4OococimjVm3nQw3TuzH5UNsocrcTBbhnerblyHj4A49qXbIiZdpA==
   dependencies:
     "@types/node" "*"
 
@@ -2120,25 +2120,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.17.58.tgz#10682f6016fd866725c36d22ce6bbbd029bf4545"
   integrity sha512-Dn5RBxLohjdHFj17dVVw3rtrZAeXeWg+LQfvxDIW/fdPkSiuQk7h3frKMYtsQhtIW42wkErDcy9UMVxhGW4O7w==
 
-"@types/node@^12.0.0":
+"@types/node@^12.0.0", "@types/node@^12.0.2", "@types/node@^12.12.54", "@types/node@^12.7.5":
   version "12.20.48"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.20.48.tgz#55f70bd432b6515828c0298689776861b90ca4fa"
   integrity sha512-4kxzqkrpwYtn6okJUcb2lfUu9ilnb3yhUOH6qX3nug8D2DupZ2drIkff2yJzYcNJVl3begnlcaBJ7tqiTTzjnQ==
-
-"@types/node@^12.0.2":
-  version "12.20.20"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.20.20.tgz#ce3d6c13c15c5e622a85efcd3a1cb2d9c7fa43a6"
-  integrity sha512-kqmxiJg4AT7rsSPIhO6eoBIx9mNwwpeH42yjtgQh6X2ANSpLpvToMXv+LMFdfxpwG1FZXZ41OGZMiUAtbBLEvg==
-
-"@types/node@^12.12.54":
-  version "12.20.27"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.20.27.tgz#4141fcad57c332a120591de883e26fe4bb14aaea"
-  integrity sha512-qZdePUDSLAZRXXV234bLBEUM0nAQjoxbcSwp1rqSMUe1rZ47mwU6OjciR/JvF1Oo8mc0ys6GE0ks0HGgqAZoGg==
-
-"@types/node@^12.7.5":
-  version "12.20.10"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.20.10.tgz#4dcb8a85a8f1211acafb88d72fafc7e3d2685583"
-  integrity sha512-TxCmnSSppKBBOzYzPR2BR25YlX5Oay8z2XGwFBInuA/Co0V9xJhLlW4kjbxKtgeNo3NOMbQP1A5Rc03y+XecPw==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
