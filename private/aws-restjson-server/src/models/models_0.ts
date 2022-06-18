@@ -18,6 +18,41 @@ import {
 } from "@aws-smithy/server-common";
 import { Readable } from "stream";
 
+export interface GreetingStruct {
+  hi?: string;
+}
+
+export namespace GreetingStruct {
+  /**
+   * @internal
+   */
+  export const filterSensitiveLog = (obj: GreetingStruct): any => ({
+    ...obj,
+  });
+  const memberValidators: {
+    hi?: __MultiConstraintValidator<string>;
+  } = {};
+  /**
+   * @internal
+   */
+  export const validate = (obj: GreetingStruct, path = ""): __ValidationFailure[] => {
+    function getMemberValidator<T extends keyof typeof memberValidators>(
+      member: T
+    ): NonNullable<typeof memberValidators[T]> {
+      if (memberValidators[member] === undefined) {
+        switch (member) {
+          case "hi": {
+            memberValidators["hi"] = new __NoOpValidator();
+            break;
+          }
+        }
+      }
+      return memberValidators[member]!;
+    }
+    return [...getMemberValidator("hi").validate(obj.hi, `${path}/hi`)];
+  };
+}
+
 export enum FooEnum {
   BAR = "Bar",
   BAZ = "Baz",
@@ -45,7 +80,7 @@ export interface AllQueryStringTypesInput {
   queryTimestampList?: Date[];
   queryEnum?: FooEnum | string;
   queryEnumList?: (FooEnum | string)[];
-  queryParamsMapOfStringList?: { [key: string]: string[] };
+  queryParamsMapOfStringList?: Record<string, string[]>;
 }
 
 export namespace AllQueryStringTypesInput {
@@ -74,7 +109,7 @@ export namespace AllQueryStringTypesInput {
     queryTimestampList?: __MultiConstraintValidator<Iterable<Date>>;
     queryEnum?: __MultiConstraintValidator<string>;
     queryEnumList?: __MultiConstraintValidator<Iterable<string>>;
-    queryParamsMapOfStringList?: __MultiConstraintValidator<{ [key: string]: string[] }>;
+    queryParamsMapOfStringList?: __MultiConstraintValidator<Record<string, string[]>>;
   } = {};
   /**
    * @internal
@@ -355,41 +390,6 @@ export namespace ConstantQueryStringInput {
       return memberValidators[member]!;
     }
     return [...getMemberValidator("hello").validate(obj.hello, `${path}/hello`)];
-  };
-}
-
-export interface GreetingStruct {
-  hi?: string;
-}
-
-export namespace GreetingStruct {
-  /**
-   * @internal
-   */
-  export const filterSensitiveLog = (obj: GreetingStruct): any => ({
-    ...obj,
-  });
-  const memberValidators: {
-    hi?: __MultiConstraintValidator<string>;
-  } = {};
-  /**
-   * @internal
-   */
-  export const validate = (obj: GreetingStruct, path = ""): __ValidationFailure[] => {
-    function getMemberValidator<T extends keyof typeof memberValidators>(
-      member: T
-    ): NonNullable<typeof memberValidators[T]> {
-      if (memberValidators[member] === undefined) {
-        switch (member) {
-          case "hi": {
-            memberValidators["hi"] = new __NoOpValidator();
-            break;
-          }
-        }
-      }
-      return memberValidators[member]!;
-    }
-    return [...getMemberValidator("hi").validate(obj.hi, `${path}/hi`)];
   };
 }
 
@@ -877,7 +877,7 @@ export namespace HttpPayloadWithStructureInputOutput {
 
 export interface HttpPrefixHeadersInput {
   foo?: string;
-  fooMap?: { [key: string]: string };
+  fooMap?: Record<string, string>;
 }
 
 export namespace HttpPrefixHeadersInput {
@@ -889,7 +889,7 @@ export namespace HttpPrefixHeadersInput {
   });
   const memberValidators: {
     foo?: __MultiConstraintValidator<string>;
-    fooMap?: __MultiConstraintValidator<{ [key: string]: string }>;
+    fooMap?: __MultiConstraintValidator<Record<string, string>>;
   } = {};
   /**
    * @internal
@@ -925,7 +925,7 @@ export namespace HttpPrefixHeadersInput {
 
 export interface HttpPrefixHeadersOutput {
   foo?: string;
-  fooMap?: { [key: string]: string };
+  fooMap?: Record<string, string>;
 }
 
 export namespace HttpPrefixHeadersOutput {
@@ -937,7 +937,7 @@ export namespace HttpPrefixHeadersOutput {
   });
   const memberValidators: {
     foo?: __MultiConstraintValidator<string>;
-    fooMap?: __MultiConstraintValidator<{ [key: string]: string }>;
+    fooMap?: __MultiConstraintValidator<Record<string, string>>;
   } = {};
   /**
    * @internal
@@ -999,7 +999,7 @@ export namespace HttpPrefixHeadersInResponseInput {
 }
 
 export interface HttpPrefixHeadersInResponseOutput {
-  prefixHeaders?: { [key: string]: string };
+  prefixHeaders?: Record<string, string>;
 }
 
 export namespace HttpPrefixHeadersInResponseOutput {
@@ -1010,7 +1010,7 @@ export namespace HttpPrefixHeadersInResponseOutput {
     ...obj,
   });
   const memberValidators: {
-    prefixHeaders?: __MultiConstraintValidator<{ [key: string]: string }>;
+    prefixHeaders?: __MultiConstraintValidator<Record<string, string>>;
   } = {};
   /**
    * @internal
@@ -1640,7 +1640,7 @@ export interface JsonEnumsInputOutput {
   fooEnum3?: FooEnum | string;
   fooEnumList?: (FooEnum | string)[];
   fooEnumSet?: (FooEnum | string)[];
-  fooEnumMap?: { [key: string]: FooEnum | string };
+  fooEnumMap?: Record<string, FooEnum | string>;
 }
 
 export namespace JsonEnumsInputOutput {
@@ -1656,7 +1656,7 @@ export namespace JsonEnumsInputOutput {
     fooEnum3?: __MultiConstraintValidator<string>;
     fooEnumList?: __MultiConstraintValidator<Iterable<string>>;
     fooEnumSet?: __MultiConstraintValidator<Iterable<string>>;
-    fooEnumMap?: __MultiConstraintValidator<{ [key: string]: FooEnum | string }>;
+    fooEnumMap?: __MultiConstraintValidator<Record<string, FooEnum | string>>;
   } = {};
   /**
    * @internal
@@ -1894,16 +1894,16 @@ export namespace JsonListsInputOutput {
 }
 
 export interface JsonMapsInputOutput {
-  denseStructMap?: { [key: string]: GreetingStruct };
-  sparseStructMap?: { [key: string]: GreetingStruct };
-  denseNumberMap?: { [key: string]: number };
-  denseBooleanMap?: { [key: string]: boolean };
-  denseStringMap?: { [key: string]: string };
-  sparseNumberMap?: { [key: string]: number };
-  sparseBooleanMap?: { [key: string]: boolean };
-  sparseStringMap?: { [key: string]: string };
-  denseSetMap?: { [key: string]: string[] };
-  sparseSetMap?: { [key: string]: string[] };
+  denseStructMap?: Record<string, GreetingStruct>;
+  sparseStructMap?: Record<string, GreetingStruct>;
+  denseNumberMap?: Record<string, number>;
+  denseBooleanMap?: Record<string, boolean>;
+  denseStringMap?: Record<string, string>;
+  sparseNumberMap?: Record<string, number>;
+  sparseBooleanMap?: Record<string, boolean>;
+  sparseStringMap?: Record<string, string>;
+  denseSetMap?: Record<string, string[]>;
+  sparseSetMap?: Record<string, string[]>;
 }
 
 export namespace JsonMapsInputOutput {
@@ -1914,16 +1914,16 @@ export namespace JsonMapsInputOutput {
     ...obj,
   });
   const memberValidators: {
-    denseStructMap?: __MultiConstraintValidator<{ [key: string]: GreetingStruct }>;
-    sparseStructMap?: __MultiConstraintValidator<{ [key: string]: GreetingStruct }>;
-    denseNumberMap?: __MultiConstraintValidator<{ [key: string]: number }>;
-    denseBooleanMap?: __MultiConstraintValidator<{ [key: string]: boolean }>;
-    denseStringMap?: __MultiConstraintValidator<{ [key: string]: string }>;
-    sparseNumberMap?: __MultiConstraintValidator<{ [key: string]: number }>;
-    sparseBooleanMap?: __MultiConstraintValidator<{ [key: string]: boolean }>;
-    sparseStringMap?: __MultiConstraintValidator<{ [key: string]: string }>;
-    denseSetMap?: __MultiConstraintValidator<{ [key: string]: string[] }>;
-    sparseSetMap?: __MultiConstraintValidator<{ [key: string]: string[] }>;
+    denseStructMap?: __MultiConstraintValidator<Record<string, GreetingStruct>>;
+    sparseStructMap?: __MultiConstraintValidator<Record<string, GreetingStruct>>;
+    denseNumberMap?: __MultiConstraintValidator<Record<string, number>>;
+    denseBooleanMap?: __MultiConstraintValidator<Record<string, boolean>>;
+    denseStringMap?: __MultiConstraintValidator<Record<string, string>>;
+    sparseNumberMap?: __MultiConstraintValidator<Record<string, number>>;
+    sparseBooleanMap?: __MultiConstraintValidator<Record<string, boolean>>;
+    sparseStringMap?: __MultiConstraintValidator<Record<string, string>>;
+    denseSetMap?: __MultiConstraintValidator<Record<string, string[]>>;
+    sparseSetMap?: __MultiConstraintValidator<Record<string, string[]>>;
   } = {};
   /**
    * @internal
@@ -2249,7 +2249,7 @@ export namespace MyUnion {
     timestampValue?: never;
     enumValue?: never;
     listValue?: never;
-    mapValue: { [key: string]: string };
+    mapValue: Record<string, string>;
     structureValue?: never;
     renamedStructureValue?: never;
     $unknown?: never;
@@ -2305,7 +2305,7 @@ export namespace MyUnion {
     timestampValue: (value: Date) => T;
     enumValue: (value: FooEnum | string) => T;
     listValue: (value: string[]) => T;
-    mapValue: (value: { [key: string]: string }) => T;
+    mapValue: (value: Record<string, string>) => T;
     structureValue: (value: GreetingStruct) => T;
     renamedStructureValue: (value: RenamedGreeting) => T;
     _: (name: string, value: any) => T;
@@ -2351,7 +2351,7 @@ export namespace MyUnion {
     timestampValue?: __MultiConstraintValidator<Date>;
     enumValue?: __MultiConstraintValidator<string>;
     listValue?: __MultiConstraintValidator<Iterable<string>>;
-    mapValue?: __MultiConstraintValidator<{ [key: string]: string }>;
+    mapValue?: __MultiConstraintValidator<Record<string, string>>;
     structureValue?: __MultiConstraintValidator<GreetingStruct>;
     renamedStructureValue?: __MultiConstraintValidator<RenamedGreeting>;
   } = {};
@@ -3048,7 +3048,7 @@ export namespace MalformedLongInput {
 }
 
 export interface MalformedMapInput {
-  bodyMap?: { [key: string]: string };
+  bodyMap?: Record<string, string>;
 }
 
 export namespace MalformedMapInput {
@@ -3059,7 +3059,7 @@ export namespace MalformedMapInput {
     ...obj,
   });
   const memberValidators: {
-    bodyMap?: __MultiConstraintValidator<{ [key: string]: string }>;
+    bodyMap?: __MultiConstraintValidator<Record<string, string>>;
   } = {};
   /**
    * @internal
@@ -4234,7 +4234,7 @@ export namespace QueryIdempotencyTokenAutoFillInput {
 
 export interface QueryParamsAsStringListMapInput {
   qux?: string;
-  foo?: { [key: string]: string[] };
+  foo?: Record<string, string[]>;
 }
 
 export namespace QueryParamsAsStringListMapInput {
@@ -4246,7 +4246,7 @@ export namespace QueryParamsAsStringListMapInput {
   });
   const memberValidators: {
     qux?: __MultiConstraintValidator<string>;
-    foo?: __MultiConstraintValidator<{ [key: string]: string[] }>;
+    foo?: __MultiConstraintValidator<Record<string, string[]>>;
   } = {};
   /**
    * @internal
@@ -4282,7 +4282,7 @@ export namespace QueryParamsAsStringListMapInput {
 
 export interface QueryPrecedenceInput {
   foo?: string;
-  baz?: { [key: string]: string };
+  baz?: Record<string, string>;
 }
 
 export namespace QueryPrecedenceInput {
@@ -4294,7 +4294,7 @@ export namespace QueryPrecedenceInput {
   });
   const memberValidators: {
     foo?: __MultiConstraintValidator<string>;
-    baz?: __MultiConstraintValidator<{ [key: string]: string }>;
+    baz?: __MultiConstraintValidator<Record<string, string>>;
   } = {};
   /**
    * @internal

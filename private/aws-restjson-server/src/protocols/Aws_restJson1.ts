@@ -519,7 +519,7 @@ export const deserializeAllQueryStringTypesRequest = async (
         : [query["EnumList"] as string];
       contents.queryEnumList = queryValue.map((_entry) => _entry.trim() as any);
     }
-    const parsedQuery: { [key: string]: string[] } = {};
+    const parsedQuery: Record<string, string[]> = {};
     for (const [key, value] of Object.entries(query)) {
       let queryValue: string;
       const valueArray = Array.isArray(value) ? (value as string[]) : [value as string];
@@ -644,7 +644,7 @@ export const deserializeDocumentTypeRequest = async (
     documentValue: undefined,
     stringValue: undefined,
   };
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.documentValue !== undefined && data.documentValue !== null) {
     contents.documentValue = deserializeAws_restJson1Document(data.documentValue, context);
   }
@@ -761,7 +761,7 @@ export const deserializeEndpointWithHostLabelOperationRequest = async (
   if (parsedHost?.groups !== undefined) {
     contents.label = parsedHost.groups.label;
   }
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.label !== undefined && data.label !== null) {
     contents.label = __expectString(data.label);
   }
@@ -841,7 +841,7 @@ export const deserializeHttpChecksumRequiredRequest = async (
   const contents: HttpChecksumRequiredServerInput = {
     foo: undefined,
   };
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.foo !== undefined && data.foo !== null) {
     contents.foo = __expectString(data.foo);
   }
@@ -947,7 +947,7 @@ export const deserializeHttpPayloadWithStructureRequest = async (
   const contents: HttpPayloadWithStructureServerInput = {
     nested: undefined,
   };
-  const data: { [key: string]: any } | undefined = __expectObject(await parseBody(output.body, context));
+  const data: Record<string, any> | undefined = __expectObject(await parseBody(output.body, context));
   contents.nested = deserializeAws_restJson1NestedPayload(data, context);
   return Promise.resolve(contents);
 };
@@ -1421,7 +1421,7 @@ export const deserializeJsonBlobsRequest = async (
   const contents: JsonBlobsServerInput = {
     data: undefined,
   };
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.data !== undefined && data.data !== null) {
     contents.data = context.base64Decoder(data.data);
   }
@@ -1456,7 +1456,7 @@ export const deserializeJsonEnumsRequest = async (
     fooEnumMap: undefined,
     fooEnumSet: undefined,
   };
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.fooEnum1 !== undefined && data.fooEnum1 !== null) {
     contents.fooEnum1 = __expectString(data.fooEnum1);
   }
@@ -1509,7 +1509,7 @@ export const deserializeJsonListsRequest = async (
     structureList: undefined,
     timestampList: undefined,
   };
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.booleanList !== undefined && data.booleanList !== null) {
     contents.booleanList = deserializeAws_restJson1BooleanList(data.booleanList, context);
   }
@@ -1572,7 +1572,7 @@ export const deserializeJsonMapsRequest = async (
     sparseStringMap: undefined,
     sparseStructMap: undefined,
   };
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.denseBooleanMap !== undefined && data.denseBooleanMap !== null) {
     contents.denseBooleanMap = deserializeAws_restJson1DenseBooleanMap(data.denseBooleanMap, context);
   }
@@ -1632,7 +1632,7 @@ export const deserializeJsonTimestampsRequest = async (
     httpDate: undefined,
     normal: undefined,
   };
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.dateTime !== undefined && data.dateTime !== null) {
     contents.dateTime = __expectNonNull(__parseRfc3339DateTime(data.dateTime));
   }
@@ -1671,7 +1671,7 @@ export const deserializeJsonUnionsRequest = async (
   const contents: JsonUnionsServerInput = {
     contents: undefined,
   };
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.contents !== undefined && data.contents !== null) {
     contents.contents = deserializeAws_restJson1MyUnion(__expectUnion(data.contents), context);
   }
@@ -1770,7 +1770,7 @@ export const deserializeMalformedBlobRequest = async (
   const contents: MalformedBlobServerInput = {
     blob: undefined,
   };
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.blob !== undefined && data.blob !== null) {
     contents.blob = context.base64Decoder(data.blob);
   }
@@ -1827,7 +1827,7 @@ export const deserializeMalformedBooleanRequest = async (
   if (output.headers["booleaninheader"] !== undefined) {
     contents.booleanInHeader = __parseBoolean(output.headers["booleaninheader"]);
   }
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.booleanInBody !== undefined && data.booleanInBody !== null) {
     contents.booleanInBody = __expectBoolean(data.booleanInBody);
   }
@@ -1884,7 +1884,7 @@ export const deserializeMalformedByteRequest = async (
   if (output.headers["byteinheader"] !== undefined) {
     contents.byteInHeader = __strictParseByte(output.headers["byteinheader"]);
   }
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.byteInBody !== undefined && data.byteInBody !== null) {
     contents.byteInBody = __expectByte(data.byteInBody);
   }
@@ -1914,7 +1914,7 @@ export const deserializeMalformedContentTypeWithBodyRequest = async (
   const contents: MalformedContentTypeWithBodyServerInput = {
     hi: undefined,
   };
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.hi !== undefined && data.hi !== null) {
     contents.hi = __expectString(data.hi);
   }
@@ -2052,7 +2052,7 @@ export const deserializeMalformedDoubleRequest = async (
   if (output.headers["doubleinheader"] !== undefined) {
     contents.doubleInHeader = __strictParseDouble(output.headers["doubleinheader"]);
   }
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.doubleInBody !== undefined && data.doubleInBody !== null) {
     contents.doubleInBody = __limitedParseDouble(data.doubleInBody);
   }
@@ -2109,7 +2109,7 @@ export const deserializeMalformedFloatRequest = async (
   if (output.headers["floatinheader"] !== undefined) {
     contents.floatInHeader = __strictParseFloat(output.headers["floatinheader"]);
   }
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.floatInBody !== undefined && data.floatInBody !== null) {
     contents.floatInBody = __limitedParseFloat32(data.floatInBody);
   }
@@ -2166,7 +2166,7 @@ export const deserializeMalformedIntegerRequest = async (
   if (output.headers["integerinheader"] !== undefined) {
     contents.integerInHeader = __strictParseInt32(output.headers["integerinheader"]);
   }
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.integerInBody !== undefined && data.integerInBody !== null) {
     contents.integerInBody = __expectInt32(data.integerInBody);
   }
@@ -2196,7 +2196,7 @@ export const deserializeMalformedListRequest = async (
   const contents: MalformedListServerInput = {
     bodyList: undefined,
   };
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.bodyList !== undefined && data.bodyList !== null) {
     contents.bodyList = deserializeAws_restJson1SimpleList(data.bodyList, context);
   }
@@ -2253,7 +2253,7 @@ export const deserializeMalformedLongRequest = async (
   if (output.headers["longinheader"] !== undefined) {
     contents.longInHeader = __strictParseLong(output.headers["longinheader"]);
   }
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.longInBody !== undefined && data.longInBody !== null) {
     contents.longInBody = __expectLong(data.longInBody);
   }
@@ -2283,7 +2283,7 @@ export const deserializeMalformedMapRequest = async (
   const contents: MalformedMapServerInput = {
     bodyMap: undefined,
   };
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.bodyMap !== undefined && data.bodyMap !== null) {
     contents.bodyMap = deserializeAws_restJson1SimpleMap(data.bodyMap, context);
   }
@@ -2314,7 +2314,7 @@ export const deserializeMalformedRequestBodyRequest = async (
     float: undefined,
     int: undefined,
   };
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.float !== undefined && data.float !== null) {
     contents.float = __limitedParseFloat32(data.float);
   }
@@ -2348,7 +2348,7 @@ export const deserializeMalformedSetRequest = async (
     blobSet: undefined,
     set: undefined,
   };
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.blobSet !== undefined && data.blobSet !== null) {
     contents.blobSet = deserializeAws_restJson1BlobSet(data.blobSet, context);
   }
@@ -2408,7 +2408,7 @@ export const deserializeMalformedShortRequest = async (
   if (output.headers["shortinheader"] !== undefined) {
     contents.shortInHeader = __strictParseShort(output.headers["shortinheader"]);
   }
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.shortInBody !== undefined && data.shortInBody !== null) {
     contents.shortInBody = __expectShort(data.shortInBody);
   }
@@ -2470,7 +2470,7 @@ export const deserializeMalformedTimestampBodyDateTimeRequest = async (
   const contents: MalformedTimestampBodyDateTimeServerInput = {
     timestamp: undefined,
   };
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.timestamp !== undefined && data.timestamp !== null) {
     contents.timestamp = __expectNonNull(__parseRfc3339DateTime(data.timestamp));
   }
@@ -2500,7 +2500,7 @@ export const deserializeMalformedTimestampBodyDefaultRequest = async (
   const contents: MalformedTimestampBodyDefaultServerInput = {
     timestamp: undefined,
   };
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.timestamp !== undefined && data.timestamp !== null) {
     contents.timestamp = __expectNonNull(__parseEpochTimestamp(__expectNumber(data.timestamp)));
   }
@@ -2530,7 +2530,7 @@ export const deserializeMalformedTimestampBodyHttpDateRequest = async (
   const contents: MalformedTimestampBodyHttpDateServerInput = {
     timestamp: undefined,
   };
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.timestamp !== undefined && data.timestamp !== null) {
     contents.timestamp = __expectNonNull(__parseRfc7231DateTime(data.timestamp));
   }
@@ -2875,7 +2875,7 @@ export const deserializeMalformedUnionRequest = async (
   const contents: MalformedUnionServerInput = {
     union: undefined,
   };
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.union !== undefined && data.union !== null) {
     contents.union = deserializeAws_restJson1SimpleUnion(__expectUnion(data.union), context);
   }
@@ -3118,7 +3118,7 @@ export const deserializePostPlayerActionRequest = async (
   const contents: PostPlayerActionServerInput = {
     action: undefined,
   };
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.action !== undefined && data.action !== null) {
     contents.action = deserializeAws_restJson1PlayerAction(__expectUnion(data.action), context);
   }
@@ -3207,7 +3207,7 @@ export const deserializeQueryParamsAsStringListMapRequest = async (
       }
       contents.qux = queryValue;
     }
-    const parsedQuery: { [key: string]: string[] } = {};
+    const parsedQuery: Record<string, string[]> = {};
     for (const [key, value] of Object.entries(query)) {
       let queryValue: string;
       const valueArray = Array.isArray(value) ? (value as string[]) : [value as string];
@@ -3258,7 +3258,7 @@ export const deserializeQueryPrecedenceRequest = async (
       }
       contents.foo = queryValue;
     }
-    const parsedQuery: { [key: string]: string } = {};
+    const parsedQuery: Record<string, string> = {};
     for (const [key, value] of Object.entries(query)) {
       let queryValue: string;
       if (Array.isArray(value)) {
@@ -3301,7 +3301,7 @@ export const deserializeRecursiveShapesRequest = async (
   const contents: RecursiveShapesServerInput = {
     nested: undefined,
   };
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.nested !== undefined && data.nested !== null) {
     contents.nested = deserializeAws_restJson1RecursiveShapesInputOutputNested1(data.nested, context);
   }
@@ -3343,7 +3343,7 @@ export const deserializeSimpleScalarPropertiesRequest = async (
   if (output.headers["x-foo"] !== undefined) {
     contents.foo = output.headers["x-foo"];
   }
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.byteValue !== undefined && data.byteValue !== null) {
     contents.byteValue = __expectByte(data.byteValue);
   }
@@ -3472,7 +3472,7 @@ export const deserializeTestBodyStructureRequest = async (
   if (output.headers["x-amz-test-id"] !== undefined) {
     contents.testId = output.headers["x-amz-test-id"];
   }
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.testConfig !== undefined && data.testConfig !== null) {
     contents.testConfig = deserializeAws_restJson1TestConfig(data.testConfig, context);
   }
@@ -3552,7 +3552,7 @@ export const deserializeTestPayloadStructureRequest = async (
   if (output.headers["x-amz-test-id"] !== undefined) {
     contents.testId = output.headers["x-amz-test-id"];
   }
-  const data: { [key: string]: any } | undefined = __expectObject(await parseBody(output.body, context));
+  const data: Record<string, any> | undefined = __expectObject(await parseBody(output.body, context));
   contents.payloadConfig = deserializeAws_restJson1PayloadConfig(data, context);
   return Promise.resolve(contents);
 };
@@ -7099,8 +7099,8 @@ const serializeAws_restJson1ComplexNestedErrorData = (input: ComplexNestedErrorD
   };
 };
 
-const serializeAws_restJson1DenseBooleanMap = (input: { [key: string]: boolean }, context: __SerdeContext): any => {
-  return Object.entries(input).reduce((acc: { [key: string]: any }, [key, value]: [string, any]) => {
+const serializeAws_restJson1DenseBooleanMap = (input: Record<string, boolean>, context: __SerdeContext): any => {
+  return Object.entries(input).reduce((acc: Record<string, any>, [key, value]: [string, any]) => {
     if (value === null) {
       return acc;
     }
@@ -7111,8 +7111,8 @@ const serializeAws_restJson1DenseBooleanMap = (input: { [key: string]: boolean }
   }, {});
 };
 
-const serializeAws_restJson1DenseNumberMap = (input: { [key: string]: number }, context: __SerdeContext): any => {
-  return Object.entries(input).reduce((acc: { [key: string]: any }, [key, value]: [string, any]) => {
+const serializeAws_restJson1DenseNumberMap = (input: Record<string, number>, context: __SerdeContext): any => {
+  return Object.entries(input).reduce((acc: Record<string, any>, [key, value]: [string, any]) => {
     if (value === null) {
       return acc;
     }
@@ -7123,8 +7123,8 @@ const serializeAws_restJson1DenseNumberMap = (input: { [key: string]: number }, 
   }, {});
 };
 
-const serializeAws_restJson1DenseSetMap = (input: { [key: string]: string[] }, context: __SerdeContext): any => {
-  return Object.entries(input).reduce((acc: { [key: string]: any }, [key, value]: [string, any]) => {
+const serializeAws_restJson1DenseSetMap = (input: Record<string, string[]>, context: __SerdeContext): any => {
+  return Object.entries(input).reduce((acc: Record<string, any>, [key, value]: [string, any]) => {
     if (value === null) {
       return acc;
     }
@@ -7135,8 +7135,8 @@ const serializeAws_restJson1DenseSetMap = (input: { [key: string]: string[] }, c
   }, {});
 };
 
-const serializeAws_restJson1DenseStringMap = (input: { [key: string]: string }, context: __SerdeContext): any => {
-  return Object.entries(input).reduce((acc: { [key: string]: any }, [key, value]: [string, any]) => {
+const serializeAws_restJson1DenseStringMap = (input: Record<string, string>, context: __SerdeContext): any => {
+  return Object.entries(input).reduce((acc: Record<string, any>, [key, value]: [string, any]) => {
     if (value === null) {
       return acc;
     }
@@ -7147,11 +7147,8 @@ const serializeAws_restJson1DenseStringMap = (input: { [key: string]: string }, 
   }, {});
 };
 
-const serializeAws_restJson1DenseStructMap = (
-  input: { [key: string]: GreetingStruct },
-  context: __SerdeContext
-): any => {
-  return Object.entries(input).reduce((acc: { [key: string]: any }, [key, value]: [string, any]) => {
+const serializeAws_restJson1DenseStructMap = (input: Record<string, GreetingStruct>, context: __SerdeContext): any => {
+  return Object.entries(input).reduce((acc: Record<string, any>, [key, value]: [string, any]) => {
     if (value === null) {
       return acc;
     }
@@ -7230,8 +7227,8 @@ const serializeAws_restJson1RecursiveShapesInputOutputNested2 = (
   };
 };
 
-const serializeAws_restJson1SparseBooleanMap = (input: { [key: string]: boolean }, context: __SerdeContext): any => {
-  return Object.entries(input).reduce((acc: { [key: string]: any }, [key, value]: [string, any]) => {
+const serializeAws_restJson1SparseBooleanMap = (input: Record<string, boolean>, context: __SerdeContext): any => {
+  return Object.entries(input).reduce((acc: Record<string, any>, [key, value]: [string, any]) => {
     if (value === null) {
       return { ...acc, [key]: null as any };
     }
@@ -7242,8 +7239,8 @@ const serializeAws_restJson1SparseBooleanMap = (input: { [key: string]: boolean 
   }, {});
 };
 
-const serializeAws_restJson1SparseNumberMap = (input: { [key: string]: number }, context: __SerdeContext): any => {
-  return Object.entries(input).reduce((acc: { [key: string]: any }, [key, value]: [string, any]) => {
+const serializeAws_restJson1SparseNumberMap = (input: Record<string, number>, context: __SerdeContext): any => {
+  return Object.entries(input).reduce((acc: Record<string, any>, [key, value]: [string, any]) => {
     if (value === null) {
       return { ...acc, [key]: null as any };
     }
@@ -7254,8 +7251,8 @@ const serializeAws_restJson1SparseNumberMap = (input: { [key: string]: number },
   }, {});
 };
 
-const serializeAws_restJson1SparseSetMap = (input: { [key: string]: string[] }, context: __SerdeContext): any => {
-  return Object.entries(input).reduce((acc: { [key: string]: any }, [key, value]: [string, any]) => {
+const serializeAws_restJson1SparseSetMap = (input: Record<string, string[]>, context: __SerdeContext): any => {
+  return Object.entries(input).reduce((acc: Record<string, any>, [key, value]: [string, any]) => {
     if (value === null) {
       return { ...acc, [key]: null as any };
     }
@@ -7266,11 +7263,8 @@ const serializeAws_restJson1SparseSetMap = (input: { [key: string]: string[] }, 
   }, {});
 };
 
-const serializeAws_restJson1SparseStructMap = (
-  input: { [key: string]: GreetingStruct },
-  context: __SerdeContext
-): any => {
-  return Object.entries(input).reduce((acc: { [key: string]: any }, [key, value]: [string, any]) => {
+const serializeAws_restJson1SparseStructMap = (input: Record<string, GreetingStruct>, context: __SerdeContext): any => {
+  return Object.entries(input).reduce((acc: Record<string, any>, [key, value]: [string, any]) => {
     if (value === null) {
       return { ...acc, [key]: null as any };
     }
@@ -7333,8 +7327,8 @@ const serializeAws_restJson1FooEnumList = (input: (FooEnum | string)[], context:
     });
 };
 
-const serializeAws_restJson1FooEnumMap = (input: { [key: string]: FooEnum | string }, context: __SerdeContext): any => {
-  return Object.entries(input).reduce((acc: { [key: string]: any }, [key, value]: [string, any]) => {
+const serializeAws_restJson1FooEnumMap = (input: Record<string, FooEnum | string>, context: __SerdeContext): any => {
+  return Object.entries(input).reduce((acc: Record<string, any>, [key, value]: [string, any]) => {
     if (value === null) {
       return acc;
     }
@@ -7393,8 +7387,8 @@ const serializeAws_restJson1SparseStringList = (input: string[], context: __Serd
   });
 };
 
-const serializeAws_restJson1SparseStringMap = (input: { [key: string]: string }, context: __SerdeContext): any => {
-  return Object.entries(input).reduce((acc: { [key: string]: any }, [key, value]: [string, any]) => {
+const serializeAws_restJson1SparseStringMap = (input: Record<string, string>, context: __SerdeContext): any => {
+  return Object.entries(input).reduce((acc: Record<string, any>, [key, value]: [string, any]) => {
     if (value === null) {
       return { ...acc, [key]: null as any };
     }
@@ -7416,8 +7410,8 @@ const serializeAws_restJson1StringList = (input: string[], context: __SerdeConte
     });
 };
 
-const serializeAws_restJson1StringMap = (input: { [key: string]: string }, context: __SerdeContext): any => {
-  return Object.entries(input).reduce((acc: { [key: string]: any }, [key, value]: [string, any]) => {
+const serializeAws_restJson1StringMap = (input: Record<string, string>, context: __SerdeContext): any => {
+  return Object.entries(input).reduce((acc: Record<string, any>, [key, value]: [string, any]) => {
     if (value === null) {
       return acc;
     }
@@ -7467,8 +7461,8 @@ const deserializeAws_restJson1BlobSet = (output: any, context: __SerdeContext): 
   return retVal;
 };
 
-const deserializeAws_restJson1DenseBooleanMap = (output: any, context: __SerdeContext): { [key: string]: boolean } => {
-  return Object.entries(output).reduce((acc: { [key: string]: boolean }, [key, value]: [string, any]) => {
+const deserializeAws_restJson1DenseBooleanMap = (output: any, context: __SerdeContext): Record<string, boolean> => {
+  return Object.entries(output).reduce((acc: Record<string, boolean>, [key, value]: [string, any]) => {
     if (value === null) {
       return acc;
     }
@@ -7479,8 +7473,8 @@ const deserializeAws_restJson1DenseBooleanMap = (output: any, context: __SerdeCo
   }, {});
 };
 
-const deserializeAws_restJson1DenseNumberMap = (output: any, context: __SerdeContext): { [key: string]: number } => {
-  return Object.entries(output).reduce((acc: { [key: string]: number }, [key, value]: [string, any]) => {
+const deserializeAws_restJson1DenseNumberMap = (output: any, context: __SerdeContext): Record<string, number> => {
+  return Object.entries(output).reduce((acc: Record<string, number>, [key, value]: [string, any]) => {
     if (value === null) {
       return acc;
     }
@@ -7491,8 +7485,8 @@ const deserializeAws_restJson1DenseNumberMap = (output: any, context: __SerdeCon
   }, {});
 };
 
-const deserializeAws_restJson1DenseSetMap = (output: any, context: __SerdeContext): { [key: string]: string[] } => {
-  return Object.entries(output).reduce((acc: { [key: string]: string[] }, [key, value]: [string, any]) => {
+const deserializeAws_restJson1DenseSetMap = (output: any, context: __SerdeContext): Record<string, string[]> => {
+  return Object.entries(output).reduce((acc: Record<string, string[]>, [key, value]: [string, any]) => {
     if (value === null) {
       return acc;
     }
@@ -7503,8 +7497,8 @@ const deserializeAws_restJson1DenseSetMap = (output: any, context: __SerdeContex
   }, {});
 };
 
-const deserializeAws_restJson1DenseStringMap = (output: any, context: __SerdeContext): { [key: string]: string } => {
-  return Object.entries(output).reduce((acc: { [key: string]: string }, [key, value]: [string, any]) => {
+const deserializeAws_restJson1DenseStringMap = (output: any, context: __SerdeContext): Record<string, string> => {
+  return Object.entries(output).reduce((acc: Record<string, string>, [key, value]: [string, any]) => {
     if (value === null) {
       return acc;
     }
@@ -7518,8 +7512,8 @@ const deserializeAws_restJson1DenseStringMap = (output: any, context: __SerdeCon
 const deserializeAws_restJson1DenseStructMap = (
   output: any,
   context: __SerdeContext
-): { [key: string]: GreetingStruct } => {
-  return Object.entries(output).reduce((acc: { [key: string]: GreetingStruct }, [key, value]: [string, any]) => {
+): Record<string, GreetingStruct> => {
+  return Object.entries(output).reduce((acc: Record<string, GreetingStruct>, [key, value]: [string, any]) => {
     if (value === null) {
       return acc;
     }
@@ -7640,8 +7634,8 @@ const deserializeAws_restJson1SimpleList = (output: any, context: __SerdeContext
   return retVal;
 };
 
-const deserializeAws_restJson1SimpleMap = (output: any, context: __SerdeContext): { [key: string]: string } => {
-  return Object.entries(output).reduce((acc: { [key: string]: string }, [key, value]: [string, any]) => {
+const deserializeAws_restJson1SimpleMap = (output: any, context: __SerdeContext): Record<string, string> => {
+  return Object.entries(output).reduce((acc: Record<string, string>, [key, value]: [string, any]) => {
     if (value === null) {
       return acc;
     }
@@ -7677,8 +7671,8 @@ const deserializeAws_restJson1SimpleUnion = (output: any, context: __SerdeContex
   return { $unknown: Object.entries(output)[0] };
 };
 
-const deserializeAws_restJson1SparseBooleanMap = (output: any, context: __SerdeContext): { [key: string]: boolean } => {
-  return Object.entries(output).reduce((acc: { [key: string]: boolean }, [key, value]: [string, any]) => {
+const deserializeAws_restJson1SparseBooleanMap = (output: any, context: __SerdeContext): Record<string, boolean> => {
+  return Object.entries(output).reduce((acc: Record<string, boolean>, [key, value]: [string, any]) => {
     if (value === null) {
       return { ...acc, [key]: null as any };
     }
@@ -7689,8 +7683,8 @@ const deserializeAws_restJson1SparseBooleanMap = (output: any, context: __SerdeC
   }, {});
 };
 
-const deserializeAws_restJson1SparseNumberMap = (output: any, context: __SerdeContext): { [key: string]: number } => {
-  return Object.entries(output).reduce((acc: { [key: string]: number }, [key, value]: [string, any]) => {
+const deserializeAws_restJson1SparseNumberMap = (output: any, context: __SerdeContext): Record<string, number> => {
+  return Object.entries(output).reduce((acc: Record<string, number>, [key, value]: [string, any]) => {
     if (value === null) {
       return { ...acc, [key]: null as any };
     }
@@ -7701,8 +7695,8 @@ const deserializeAws_restJson1SparseNumberMap = (output: any, context: __SerdeCo
   }, {});
 };
 
-const deserializeAws_restJson1SparseSetMap = (output: any, context: __SerdeContext): { [key: string]: string[] } => {
-  return Object.entries(output).reduce((acc: { [key: string]: string[] }, [key, value]: [string, any]) => {
+const deserializeAws_restJson1SparseSetMap = (output: any, context: __SerdeContext): Record<string, string[]> => {
+  return Object.entries(output).reduce((acc: Record<string, string[]>, [key, value]: [string, any]) => {
     if (value === null) {
       return { ...acc, [key]: null as any };
     }
@@ -7716,8 +7710,8 @@ const deserializeAws_restJson1SparseSetMap = (output: any, context: __SerdeConte
 const deserializeAws_restJson1SparseStructMap = (
   output: any,
   context: __SerdeContext
-): { [key: string]: GreetingStruct } => {
-  return Object.entries(output).reduce((acc: { [key: string]: GreetingStruct }, [key, value]: [string, any]) => {
+): Record<string, GreetingStruct> => {
+  return Object.entries(output).reduce((acc: Record<string, GreetingStruct>, [key, value]: [string, any]) => {
     if (value === null) {
       return { ...acc, [key]: null as any };
     }
@@ -7783,11 +7777,8 @@ const deserializeAws_restJson1FooEnumList = (output: any, context: __SerdeContex
   return retVal;
 };
 
-const deserializeAws_restJson1FooEnumMap = (
-  output: any,
-  context: __SerdeContext
-): { [key: string]: FooEnum | string } => {
-  return Object.entries(output).reduce((acc: { [key: string]: FooEnum | string }, [key, value]: [string, any]) => {
+const deserializeAws_restJson1FooEnumMap = (output: any, context: __SerdeContext): Record<string, FooEnum | string> => {
+  return Object.entries(output).reduce((acc: Record<string, FooEnum | string>, [key, value]: [string, any]) => {
     if (value === null) {
       return acc;
     }
@@ -7853,8 +7844,8 @@ const deserializeAws_restJson1SparseStringList = (output: any, context: __SerdeC
   return retVal;
 };
 
-const deserializeAws_restJson1SparseStringMap = (output: any, context: __SerdeContext): { [key: string]: string } => {
-  return Object.entries(output).reduce((acc: { [key: string]: string }, [key, value]: [string, any]) => {
+const deserializeAws_restJson1SparseStringMap = (output: any, context: __SerdeContext): Record<string, string> => {
+  return Object.entries(output).reduce((acc: Record<string, string>, [key, value]: [string, any]) => {
     if (value === null) {
       return { ...acc, [key]: null as any };
     }
@@ -7877,8 +7868,8 @@ const deserializeAws_restJson1StringList = (output: any, context: __SerdeContext
   return retVal;
 };
 
-const deserializeAws_restJson1StringMap = (output: any, context: __SerdeContext): { [key: string]: string } => {
-  return Object.entries(output).reduce((acc: { [key: string]: string }, [key, value]: [string, any]) => {
+const deserializeAws_restJson1StringMap = (output: any, context: __SerdeContext): Record<string, string> => {
+  return Object.entries(output).reduce((acc: Record<string, string>, [key, value]: [string, any]) => {
     if (value === null) {
       return acc;
     }
