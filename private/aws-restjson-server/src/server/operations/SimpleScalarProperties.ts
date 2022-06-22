@@ -30,6 +30,61 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type SimpleScalarProperties<Context> = __Operation<
+  SimpleScalarPropertiesServerInput,
+  SimpleScalarPropertiesServerOutput,
+  Context
+>;
+
+export interface SimpleScalarPropertiesServerInput extends SimpleScalarPropertiesInputOutput {}
+export namespace SimpleScalarPropertiesServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (
+    obj: Parameters<typeof SimpleScalarPropertiesInputOutput.validate>[0]
+  ) => __ValidationFailure[] = SimpleScalarPropertiesInputOutput.validate;
+}
+export interface SimpleScalarPropertiesServerOutput extends SimpleScalarPropertiesInputOutput {}
+
+export type SimpleScalarPropertiesErrors = never;
+
+export class SimpleScalarPropertiesSerializer
+  implements __OperationSerializer<RestJsonService<any>, "SimpleScalarProperties", SimpleScalarPropertiesErrors>
+{
+  serialize = serializeSimpleScalarPropertiesResponse;
+  deserialize = deserializeSimpleScalarPropertiesRequest;
+
+  isOperationError(error: any): error is SimpleScalarPropertiesErrors {
+    return false;
+  }
+
+  serializeError(error: SimpleScalarPropertiesErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getSimpleScalarPropertiesHandler = <Context>(
+  operation: __Operation<SimpleScalarPropertiesServerInput, SimpleScalarPropertiesServerOutput, Context>,
+  customizer: __ValidationCustomizer<"SimpleScalarProperties">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "SimpleScalarProperties">([
+    new httpbinding.UriSpec<"RestJson", "SimpleScalarProperties">(
+      "PUT",
+      [{ type: "path_literal", value: "SimpleScalarProperties" }],
+      [],
+      { service: "RestJson", operation: "SimpleScalarProperties" }
+    ),
+  ]);
+  return new SimpleScalarPropertiesHandler(
+    operation,
+    mux,
+    new SimpleScalarPropertiesSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -138,58 +193,3 @@ export class SimpleScalarPropertiesHandler<Context> implements __ServiceHandler<
     );
   }
 }
-
-export type SimpleScalarProperties<Context> = __Operation<
-  SimpleScalarPropertiesServerInput,
-  SimpleScalarPropertiesServerOutput,
-  Context
->;
-
-export interface SimpleScalarPropertiesServerInput extends SimpleScalarPropertiesInputOutput {}
-export namespace SimpleScalarPropertiesServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (
-    obj: Parameters<typeof SimpleScalarPropertiesInputOutput.validate>[0]
-  ) => __ValidationFailure[] = SimpleScalarPropertiesInputOutput.validate;
-}
-export interface SimpleScalarPropertiesServerOutput extends SimpleScalarPropertiesInputOutput {}
-
-export type SimpleScalarPropertiesErrors = never;
-
-export class SimpleScalarPropertiesSerializer
-  implements __OperationSerializer<RestJsonService<any>, "SimpleScalarProperties", SimpleScalarPropertiesErrors>
-{
-  serialize = serializeSimpleScalarPropertiesResponse;
-  deserialize = deserializeSimpleScalarPropertiesRequest;
-
-  isOperationError(error: any): error is SimpleScalarPropertiesErrors {
-    return false;
-  }
-
-  serializeError(error: SimpleScalarPropertiesErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getSimpleScalarPropertiesHandler = <Context>(
-  operation: __Operation<SimpleScalarPropertiesServerInput, SimpleScalarPropertiesServerOutput, Context>,
-  customizer: __ValidationCustomizer<"SimpleScalarProperties">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "SimpleScalarProperties">([
-    new httpbinding.UriSpec<"RestJson", "SimpleScalarProperties">(
-      "PUT",
-      [{ type: "path_literal", value: "SimpleScalarProperties" }],
-      [],
-      { service: "RestJson", operation: "SimpleScalarProperties" }
-    ),
-  ]);
-  return new SimpleScalarPropertiesHandler(
-    operation,
-    mux,
-    new SimpleScalarPropertiesSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

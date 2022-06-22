@@ -30,6 +30,66 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type OmitsNullSerializesEmptyString<Context> = __Operation<
+  OmitsNullSerializesEmptyStringServerInput,
+  OmitsNullSerializesEmptyStringServerOutput,
+  Context
+>;
+
+export interface OmitsNullSerializesEmptyStringServerInput extends OmitsNullSerializesEmptyStringInput {}
+export namespace OmitsNullSerializesEmptyStringServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (
+    obj: Parameters<typeof OmitsNullSerializesEmptyStringInput.validate>[0]
+  ) => __ValidationFailure[] = OmitsNullSerializesEmptyStringInput.validate;
+}
+export interface OmitsNullSerializesEmptyStringServerOutput {}
+
+export type OmitsNullSerializesEmptyStringErrors = never;
+
+export class OmitsNullSerializesEmptyStringSerializer
+  implements
+    __OperationSerializer<RestJsonService<any>, "OmitsNullSerializesEmptyString", OmitsNullSerializesEmptyStringErrors>
+{
+  serialize = serializeOmitsNullSerializesEmptyStringResponse;
+  deserialize = deserializeOmitsNullSerializesEmptyStringRequest;
+
+  isOperationError(error: any): error is OmitsNullSerializesEmptyStringErrors {
+    return false;
+  }
+
+  serializeError(error: OmitsNullSerializesEmptyStringErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getOmitsNullSerializesEmptyStringHandler = <Context>(
+  operation: __Operation<
+    OmitsNullSerializesEmptyStringServerInput,
+    OmitsNullSerializesEmptyStringServerOutput,
+    Context
+  >,
+  customizer: __ValidationCustomizer<"OmitsNullSerializesEmptyString">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "OmitsNullSerializesEmptyString">([
+    new httpbinding.UriSpec<"RestJson", "OmitsNullSerializesEmptyString">(
+      "GET",
+      [{ type: "path_literal", value: "OmitsNullSerializesEmptyString" }],
+      [],
+      { service: "RestJson", operation: "OmitsNullSerializesEmptyString" }
+    ),
+  ]);
+  return new OmitsNullSerializesEmptyStringHandler(
+    operation,
+    mux,
+    new OmitsNullSerializesEmptyStringSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -146,63 +206,3 @@ export class OmitsNullSerializesEmptyStringHandler<Context> implements __Service
     );
   }
 }
-
-export type OmitsNullSerializesEmptyString<Context> = __Operation<
-  OmitsNullSerializesEmptyStringServerInput,
-  OmitsNullSerializesEmptyStringServerOutput,
-  Context
->;
-
-export interface OmitsNullSerializesEmptyStringServerInput extends OmitsNullSerializesEmptyStringInput {}
-export namespace OmitsNullSerializesEmptyStringServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (
-    obj: Parameters<typeof OmitsNullSerializesEmptyStringInput.validate>[0]
-  ) => __ValidationFailure[] = OmitsNullSerializesEmptyStringInput.validate;
-}
-export interface OmitsNullSerializesEmptyStringServerOutput {}
-
-export type OmitsNullSerializesEmptyStringErrors = never;
-
-export class OmitsNullSerializesEmptyStringSerializer
-  implements
-    __OperationSerializer<RestJsonService<any>, "OmitsNullSerializesEmptyString", OmitsNullSerializesEmptyStringErrors>
-{
-  serialize = serializeOmitsNullSerializesEmptyStringResponse;
-  deserialize = deserializeOmitsNullSerializesEmptyStringRequest;
-
-  isOperationError(error: any): error is OmitsNullSerializesEmptyStringErrors {
-    return false;
-  }
-
-  serializeError(error: OmitsNullSerializesEmptyStringErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getOmitsNullSerializesEmptyStringHandler = <Context>(
-  operation: __Operation<
-    OmitsNullSerializesEmptyStringServerInput,
-    OmitsNullSerializesEmptyStringServerOutput,
-    Context
-  >,
-  customizer: __ValidationCustomizer<"OmitsNullSerializesEmptyString">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "OmitsNullSerializesEmptyString">([
-    new httpbinding.UriSpec<"RestJson", "OmitsNullSerializesEmptyString">(
-      "GET",
-      [{ type: "path_literal", value: "OmitsNullSerializesEmptyString" }],
-      [],
-      { service: "RestJson", operation: "OmitsNullSerializesEmptyString" }
-    ),
-  ]);
-  return new OmitsNullSerializesEmptyStringHandler(
-    operation,
-    mux,
-    new OmitsNullSerializesEmptyStringSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

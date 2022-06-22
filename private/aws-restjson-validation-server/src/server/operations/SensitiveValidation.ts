@@ -34,6 +34,81 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonValidationService } from "../RestJsonValidationService";
 
+export type SensitiveValidation<Context> = __Operation<
+  SensitiveValidationServerInput,
+  SensitiveValidationServerOutput,
+  Context
+>;
+
+export interface SensitiveValidationServerInput extends SensitiveValidationInput {}
+export namespace SensitiveValidationServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof SensitiveValidationInput.validate>[0]) => __ValidationFailure[] =
+    SensitiveValidationInput.validate;
+}
+export interface SensitiveValidationServerOutput {}
+
+export type SensitiveValidationErrors = ValidationException;
+
+export class SensitiveValidationSerializer
+  implements __OperationSerializer<RestJsonValidationService<any>, "SensitiveValidation", SensitiveValidationErrors>
+{
+  serialize = serializeSensitiveValidationResponse;
+  deserialize = deserializeSensitiveValidationRequest;
+
+  isOperationError(error: any): error is SensitiveValidationErrors {
+    const names: SensitiveValidationErrors["name"][] = ["ValidationException"];
+    return names.includes(error.name);
+  }
+
+  serializeError(error: SensitiveValidationErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    switch (error.name) {
+      case "ValidationException": {
+        return serializeValidationExceptionError(error, ctx);
+      }
+      default: {
+        throw error;
+      }
+    }
+  }
+}
+
+export const getSensitiveValidationHandler = <Context>(
+  operation: __Operation<SensitiveValidationServerInput, SensitiveValidationServerOutput, Context>
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJsonValidation", "SensitiveValidation">([
+    new httpbinding.UriSpec<"RestJsonValidation", "SensitiveValidation">(
+      "POST",
+      [{ type: "path_literal", value: "SensitiveValidation" }],
+      [],
+      { service: "RestJsonValidation", operation: "SensitiveValidation" }
+    ),
+  ]);
+  const customizer: __ValidationCustomizer<"SensitiveValidation"> = (ctx, failures) => {
+    if (!failures) {
+      return undefined;
+    }
+    return {
+      name: "ValidationException",
+      $fault: "client",
+      message: __generateValidationSummary(failures),
+      fieldList: failures.map((failure) => ({
+        path: failure.path,
+        message: __generateValidationMessage(failure),
+      })),
+    };
+  };
+  return new SensitiveValidationHandler(
+    operation,
+    mux,
+    new SensitiveValidationSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -142,78 +217,3 @@ export class SensitiveValidationHandler<Context> implements __ServiceHandler<Con
     );
   }
 }
-
-export type SensitiveValidation<Context> = __Operation<
-  SensitiveValidationServerInput,
-  SensitiveValidationServerOutput,
-  Context
->;
-
-export interface SensitiveValidationServerInput extends SensitiveValidationInput {}
-export namespace SensitiveValidationServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof SensitiveValidationInput.validate>[0]) => __ValidationFailure[] =
-    SensitiveValidationInput.validate;
-}
-export interface SensitiveValidationServerOutput {}
-
-export type SensitiveValidationErrors = ValidationException;
-
-export class SensitiveValidationSerializer
-  implements __OperationSerializer<RestJsonValidationService<any>, "SensitiveValidation", SensitiveValidationErrors>
-{
-  serialize = serializeSensitiveValidationResponse;
-  deserialize = deserializeSensitiveValidationRequest;
-
-  isOperationError(error: any): error is SensitiveValidationErrors {
-    const names: SensitiveValidationErrors["name"][] = ["ValidationException"];
-    return names.includes(error.name);
-  }
-
-  serializeError(error: SensitiveValidationErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    switch (error.name) {
-      case "ValidationException": {
-        return serializeValidationExceptionError(error, ctx);
-      }
-      default: {
-        throw error;
-      }
-    }
-  }
-}
-
-export const getSensitiveValidationHandler = <Context>(
-  operation: __Operation<SensitiveValidationServerInput, SensitiveValidationServerOutput, Context>
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJsonValidation", "SensitiveValidation">([
-    new httpbinding.UriSpec<"RestJsonValidation", "SensitiveValidation">(
-      "POST",
-      [{ type: "path_literal", value: "SensitiveValidation" }],
-      [],
-      { service: "RestJsonValidation", operation: "SensitiveValidation" }
-    ),
-  ]);
-  const customizer: __ValidationCustomizer<"SensitiveValidation"> = (ctx, failures) => {
-    if (!failures) {
-      return undefined;
-    }
-    return {
-      name: "ValidationException",
-      $fault: "client",
-      message: __generateValidationSummary(failures),
-      fieldList: failures.map((failure) => ({
-        path: failure.path,
-        message: __generateValidationMessage(failure),
-      })),
-    };
-  };
-  return new SensitiveValidationHandler(
-    operation,
-    mux,
-    new SensitiveValidationSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

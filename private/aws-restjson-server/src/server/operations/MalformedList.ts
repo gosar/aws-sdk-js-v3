@@ -30,6 +30,56 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type MalformedList<Context> = __Operation<MalformedListServerInput, MalformedListServerOutput, Context>;
+
+export interface MalformedListServerInput extends MalformedListInput {}
+export namespace MalformedListServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof MalformedListInput.validate>[0]) => __ValidationFailure[] =
+    MalformedListInput.validate;
+}
+export interface MalformedListServerOutput {}
+
+export type MalformedListErrors = never;
+
+export class MalformedListSerializer
+  implements __OperationSerializer<RestJsonService<any>, "MalformedList", MalformedListErrors>
+{
+  serialize = serializeMalformedListResponse;
+  deserialize = deserializeMalformedListRequest;
+
+  isOperationError(error: any): error is MalformedListErrors {
+    return false;
+  }
+
+  serializeError(error: MalformedListErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getMalformedListHandler = <Context>(
+  operation: __Operation<MalformedListServerInput, MalformedListServerOutput, Context>,
+  customizer: __ValidationCustomizer<"MalformedList">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedList">([
+    new httpbinding.UriSpec<"RestJson", "MalformedList">(
+      "POST",
+      [{ type: "path_literal", value: "MalformedList" }],
+      [],
+      { service: "RestJson", operation: "MalformedList" }
+    ),
+  ]);
+  return new MalformedListHandler(
+    operation,
+    mux,
+    new MalformedListSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -130,53 +180,3 @@ export class MalformedListHandler<Context> implements __ServiceHandler<Context> 
     );
   }
 }
-
-export type MalformedList<Context> = __Operation<MalformedListServerInput, MalformedListServerOutput, Context>;
-
-export interface MalformedListServerInput extends MalformedListInput {}
-export namespace MalformedListServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof MalformedListInput.validate>[0]) => __ValidationFailure[] =
-    MalformedListInput.validate;
-}
-export interface MalformedListServerOutput {}
-
-export type MalformedListErrors = never;
-
-export class MalformedListSerializer
-  implements __OperationSerializer<RestJsonService<any>, "MalformedList", MalformedListErrors>
-{
-  serialize = serializeMalformedListResponse;
-  deserialize = deserializeMalformedListRequest;
-
-  isOperationError(error: any): error is MalformedListErrors {
-    return false;
-  }
-
-  serializeError(error: MalformedListErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getMalformedListHandler = <Context>(
-  operation: __Operation<MalformedListServerInput, MalformedListServerOutput, Context>,
-  customizer: __ValidationCustomizer<"MalformedList">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedList">([
-    new httpbinding.UriSpec<"RestJson", "MalformedList">(
-      "POST",
-      [{ type: "path_literal", value: "MalformedList" }],
-      [],
-      { service: "RestJson", operation: "MalformedList" }
-    ),
-  ]);
-  return new MalformedListHandler(
-    operation,
-    mux,
-    new MalformedListSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

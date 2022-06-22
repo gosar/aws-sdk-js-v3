@@ -30,6 +30,56 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type MalformedUnion<Context> = __Operation<MalformedUnionServerInput, MalformedUnionServerOutput, Context>;
+
+export interface MalformedUnionServerInput extends MalformedUnionInput {}
+export namespace MalformedUnionServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof MalformedUnionInput.validate>[0]) => __ValidationFailure[] =
+    MalformedUnionInput.validate;
+}
+export interface MalformedUnionServerOutput {}
+
+export type MalformedUnionErrors = never;
+
+export class MalformedUnionSerializer
+  implements __OperationSerializer<RestJsonService<any>, "MalformedUnion", MalformedUnionErrors>
+{
+  serialize = serializeMalformedUnionResponse;
+  deserialize = deserializeMalformedUnionRequest;
+
+  isOperationError(error: any): error is MalformedUnionErrors {
+    return false;
+  }
+
+  serializeError(error: MalformedUnionErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getMalformedUnionHandler = <Context>(
+  operation: __Operation<MalformedUnionServerInput, MalformedUnionServerOutput, Context>,
+  customizer: __ValidationCustomizer<"MalformedUnion">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedUnion">([
+    new httpbinding.UriSpec<"RestJson", "MalformedUnion">(
+      "POST",
+      [{ type: "path_literal", value: "MalformedUnion" }],
+      [],
+      { service: "RestJson", operation: "MalformedUnion" }
+    ),
+  ]);
+  return new MalformedUnionHandler(
+    operation,
+    mux,
+    new MalformedUnionSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -130,53 +180,3 @@ export class MalformedUnionHandler<Context> implements __ServiceHandler<Context>
     );
   }
 }
-
-export type MalformedUnion<Context> = __Operation<MalformedUnionServerInput, MalformedUnionServerOutput, Context>;
-
-export interface MalformedUnionServerInput extends MalformedUnionInput {}
-export namespace MalformedUnionServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof MalformedUnionInput.validate>[0]) => __ValidationFailure[] =
-    MalformedUnionInput.validate;
-}
-export interface MalformedUnionServerOutput {}
-
-export type MalformedUnionErrors = never;
-
-export class MalformedUnionSerializer
-  implements __OperationSerializer<RestJsonService<any>, "MalformedUnion", MalformedUnionErrors>
-{
-  serialize = serializeMalformedUnionResponse;
-  deserialize = deserializeMalformedUnionRequest;
-
-  isOperationError(error: any): error is MalformedUnionErrors {
-    return false;
-  }
-
-  serializeError(error: MalformedUnionErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getMalformedUnionHandler = <Context>(
-  operation: __Operation<MalformedUnionServerInput, MalformedUnionServerOutput, Context>,
-  customizer: __ValidationCustomizer<"MalformedUnion">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedUnion">([
-    new httpbinding.UriSpec<"RestJson", "MalformedUnion">(
-      "POST",
-      [{ type: "path_literal", value: "MalformedUnion" }],
-      [],
-      { service: "RestJson", operation: "MalformedUnion" }
-    ),
-  ]);
-  return new MalformedUnionHandler(
-    operation,
-    mux,
-    new MalformedUnionSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

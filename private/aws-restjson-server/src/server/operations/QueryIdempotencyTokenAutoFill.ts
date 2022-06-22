@@ -30,6 +30,62 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type QueryIdempotencyTokenAutoFill<Context> = __Operation<
+  QueryIdempotencyTokenAutoFillServerInput,
+  QueryIdempotencyTokenAutoFillServerOutput,
+  Context
+>;
+
+export interface QueryIdempotencyTokenAutoFillServerInput extends QueryIdempotencyTokenAutoFillInput {}
+export namespace QueryIdempotencyTokenAutoFillServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (
+    obj: Parameters<typeof QueryIdempotencyTokenAutoFillInput.validate>[0]
+  ) => __ValidationFailure[] = QueryIdempotencyTokenAutoFillInput.validate;
+}
+export interface QueryIdempotencyTokenAutoFillServerOutput {}
+
+export type QueryIdempotencyTokenAutoFillErrors = never;
+
+export class QueryIdempotencyTokenAutoFillSerializer
+  implements
+    __OperationSerializer<RestJsonService<any>, "QueryIdempotencyTokenAutoFill", QueryIdempotencyTokenAutoFillErrors>
+{
+  serialize = serializeQueryIdempotencyTokenAutoFillResponse;
+  deserialize = deserializeQueryIdempotencyTokenAutoFillRequest;
+
+  isOperationError(error: any): error is QueryIdempotencyTokenAutoFillErrors {
+    return false;
+  }
+
+  serializeError(error: QueryIdempotencyTokenAutoFillErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getQueryIdempotencyTokenAutoFillHandler = <Context>(
+  operation: __Operation<QueryIdempotencyTokenAutoFillServerInput, QueryIdempotencyTokenAutoFillServerOutput, Context>,
+  customizer: __ValidationCustomizer<"QueryIdempotencyTokenAutoFill">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "QueryIdempotencyTokenAutoFill">([
+    new httpbinding.UriSpec<"RestJson", "QueryIdempotencyTokenAutoFill">(
+      "POST",
+      [{ type: "path_literal", value: "QueryIdempotencyTokenAutoFill" }],
+      [],
+      { service: "RestJson", operation: "QueryIdempotencyTokenAutoFill" }
+    ),
+  ]);
+  return new QueryIdempotencyTokenAutoFillHandler(
+    operation,
+    mux,
+    new QueryIdempotencyTokenAutoFillSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -146,59 +202,3 @@ export class QueryIdempotencyTokenAutoFillHandler<Context> implements __ServiceH
     );
   }
 }
-
-export type QueryIdempotencyTokenAutoFill<Context> = __Operation<
-  QueryIdempotencyTokenAutoFillServerInput,
-  QueryIdempotencyTokenAutoFillServerOutput,
-  Context
->;
-
-export interface QueryIdempotencyTokenAutoFillServerInput extends QueryIdempotencyTokenAutoFillInput {}
-export namespace QueryIdempotencyTokenAutoFillServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (
-    obj: Parameters<typeof QueryIdempotencyTokenAutoFillInput.validate>[0]
-  ) => __ValidationFailure[] = QueryIdempotencyTokenAutoFillInput.validate;
-}
-export interface QueryIdempotencyTokenAutoFillServerOutput {}
-
-export type QueryIdempotencyTokenAutoFillErrors = never;
-
-export class QueryIdempotencyTokenAutoFillSerializer
-  implements
-    __OperationSerializer<RestJsonService<any>, "QueryIdempotencyTokenAutoFill", QueryIdempotencyTokenAutoFillErrors>
-{
-  serialize = serializeQueryIdempotencyTokenAutoFillResponse;
-  deserialize = deserializeQueryIdempotencyTokenAutoFillRequest;
-
-  isOperationError(error: any): error is QueryIdempotencyTokenAutoFillErrors {
-    return false;
-  }
-
-  serializeError(error: QueryIdempotencyTokenAutoFillErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getQueryIdempotencyTokenAutoFillHandler = <Context>(
-  operation: __Operation<QueryIdempotencyTokenAutoFillServerInput, QueryIdempotencyTokenAutoFillServerOutput, Context>,
-  customizer: __ValidationCustomizer<"QueryIdempotencyTokenAutoFill">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "QueryIdempotencyTokenAutoFill">([
-    new httpbinding.UriSpec<"RestJson", "QueryIdempotencyTokenAutoFill">(
-      "POST",
-      [{ type: "path_literal", value: "QueryIdempotencyTokenAutoFill" }],
-      [],
-      { service: "RestJson", operation: "QueryIdempotencyTokenAutoFill" }
-    ),
-  ]);
-  return new QueryIdempotencyTokenAutoFillHandler(
-    operation,
-    mux,
-    new QueryIdempotencyTokenAutoFillSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

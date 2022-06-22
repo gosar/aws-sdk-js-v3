@@ -30,6 +30,65 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type StreamingTraits<Context> = __Operation<StreamingTraitsServerInput, StreamingTraitsServerOutput, Context>;
+
+type StreamingTraitsServerInputType = Omit<StreamingTraitsInputOutput, "blob"> & {
+  /**
+   * For *`StreamingTraitsInputOutput["blob"]`*, see {@link StreamingTraitsInputOutput.blob}.
+   */
+  blob?: StreamingTraitsInputOutput["blob"] | string | Uint8Array | Buffer;
+};
+/**
+ * This interface extends from `StreamingTraitsInputOutput` interface. There are more parameters than `blob` defined in {@link StreamingTraitsInputOutput}
+ */
+export interface StreamingTraitsServerInput extends StreamingTraitsServerInputType {}
+export namespace StreamingTraitsServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof StreamingTraitsInputOutput.validate>[0]) => __ValidationFailure[] =
+    StreamingTraitsInputOutput.validate;
+}
+export interface StreamingTraitsServerOutput extends StreamingTraitsInputOutput {}
+
+export type StreamingTraitsErrors = never;
+
+export class StreamingTraitsSerializer
+  implements __OperationSerializer<RestJsonService<any>, "StreamingTraits", StreamingTraitsErrors>
+{
+  serialize = serializeStreamingTraitsResponse;
+  deserialize = deserializeStreamingTraitsRequest;
+
+  isOperationError(error: any): error is StreamingTraitsErrors {
+    return false;
+  }
+
+  serializeError(error: StreamingTraitsErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getStreamingTraitsHandler = <Context>(
+  operation: __Operation<StreamingTraitsServerInput, StreamingTraitsServerOutput, Context>,
+  customizer: __ValidationCustomizer<"StreamingTraits">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "StreamingTraits">([
+    new httpbinding.UriSpec<"RestJson", "StreamingTraits">(
+      "POST",
+      [{ type: "path_literal", value: "StreamingTraits" }],
+      [],
+      { service: "RestJson", operation: "StreamingTraits" }
+    ),
+  ]);
+  return new StreamingTraitsHandler(
+    operation,
+    mux,
+    new StreamingTraitsSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -134,62 +193,3 @@ export class StreamingTraitsHandler<Context> implements __ServiceHandler<Context
     );
   }
 }
-
-export type StreamingTraits<Context> = __Operation<StreamingTraitsServerInput, StreamingTraitsServerOutput, Context>;
-
-type StreamingTraitsServerInputType = Omit<StreamingTraitsInputOutput, "blob"> & {
-  /**
-   * For *`StreamingTraitsInputOutput["blob"]`*, see {@link StreamingTraitsInputOutput.blob}.
-   */
-  blob?: StreamingTraitsInputOutput["blob"] | string | Uint8Array | Buffer;
-};
-/**
- * This interface extends from `StreamingTraitsInputOutput` interface. There are more parameters than `blob` defined in {@link StreamingTraitsInputOutput}
- */
-export interface StreamingTraitsServerInput extends StreamingTraitsServerInputType {}
-export namespace StreamingTraitsServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof StreamingTraitsInputOutput.validate>[0]) => __ValidationFailure[] =
-    StreamingTraitsInputOutput.validate;
-}
-export interface StreamingTraitsServerOutput extends StreamingTraitsInputOutput {}
-
-export type StreamingTraitsErrors = never;
-
-export class StreamingTraitsSerializer
-  implements __OperationSerializer<RestJsonService<any>, "StreamingTraits", StreamingTraitsErrors>
-{
-  serialize = serializeStreamingTraitsResponse;
-  deserialize = deserializeStreamingTraitsRequest;
-
-  isOperationError(error: any): error is StreamingTraitsErrors {
-    return false;
-  }
-
-  serializeError(error: StreamingTraitsErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getStreamingTraitsHandler = <Context>(
-  operation: __Operation<StreamingTraitsServerInput, StreamingTraitsServerOutput, Context>,
-  customizer: __ValidationCustomizer<"StreamingTraits">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "StreamingTraits">([
-    new httpbinding.UriSpec<"RestJson", "StreamingTraits">(
-      "POST",
-      [{ type: "path_literal", value: "StreamingTraits" }],
-      [],
-      { service: "RestJson", operation: "StreamingTraits" }
-    ),
-  ]);
-  return new StreamingTraitsHandler(
-    operation,
-    mux,
-    new StreamingTraitsSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

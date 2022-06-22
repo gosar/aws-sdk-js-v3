@@ -30,6 +30,56 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type MalformedByte<Context> = __Operation<MalformedByteServerInput, MalformedByteServerOutput, Context>;
+
+export interface MalformedByteServerInput extends MalformedByteInput {}
+export namespace MalformedByteServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof MalformedByteInput.validate>[0]) => __ValidationFailure[] =
+    MalformedByteInput.validate;
+}
+export interface MalformedByteServerOutput {}
+
+export type MalformedByteErrors = never;
+
+export class MalformedByteSerializer
+  implements __OperationSerializer<RestJsonService<any>, "MalformedByte", MalformedByteErrors>
+{
+  serialize = serializeMalformedByteResponse;
+  deserialize = deserializeMalformedByteRequest;
+
+  isOperationError(error: any): error is MalformedByteErrors {
+    return false;
+  }
+
+  serializeError(error: MalformedByteErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getMalformedByteHandler = <Context>(
+  operation: __Operation<MalformedByteServerInput, MalformedByteServerOutput, Context>,
+  customizer: __ValidationCustomizer<"MalformedByte">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedByte">([
+    new httpbinding.UriSpec<"RestJson", "MalformedByte">(
+      "POST",
+      [{ type: "path_literal", value: "MalformedByte" }, { type: "path" }],
+      [],
+      { service: "RestJson", operation: "MalformedByte" }
+    ),
+  ]);
+  return new MalformedByteHandler(
+    operation,
+    mux,
+    new MalformedByteSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -130,53 +180,3 @@ export class MalformedByteHandler<Context> implements __ServiceHandler<Context> 
     );
   }
 }
-
-export type MalformedByte<Context> = __Operation<MalformedByteServerInput, MalformedByteServerOutput, Context>;
-
-export interface MalformedByteServerInput extends MalformedByteInput {}
-export namespace MalformedByteServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof MalformedByteInput.validate>[0]) => __ValidationFailure[] =
-    MalformedByteInput.validate;
-}
-export interface MalformedByteServerOutput {}
-
-export type MalformedByteErrors = never;
-
-export class MalformedByteSerializer
-  implements __OperationSerializer<RestJsonService<any>, "MalformedByte", MalformedByteErrors>
-{
-  serialize = serializeMalformedByteResponse;
-  deserialize = deserializeMalformedByteRequest;
-
-  isOperationError(error: any): error is MalformedByteErrors {
-    return false;
-  }
-
-  serializeError(error: MalformedByteErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getMalformedByteHandler = <Context>(
-  operation: __Operation<MalformedByteServerInput, MalformedByteServerOutput, Context>,
-  customizer: __ValidationCustomizer<"MalformedByte">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedByte">([
-    new httpbinding.UriSpec<"RestJson", "MalformedByte">(
-      "POST",
-      [{ type: "path_literal", value: "MalformedByte" }, { type: "path" }],
-      [],
-      { service: "RestJson", operation: "MalformedByte" }
-    ),
-  ]);
-  return new MalformedByteHandler(
-    operation,
-    mux,
-    new MalformedByteSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

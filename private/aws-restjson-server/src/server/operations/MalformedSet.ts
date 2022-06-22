@@ -30,6 +30,48 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type MalformedSet<Context> = __Operation<MalformedSetServerInput, MalformedSetServerOutput, Context>;
+
+export interface MalformedSetServerInput extends MalformedSetInput {}
+export namespace MalformedSetServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof MalformedSetInput.validate>[0]) => __ValidationFailure[] =
+    MalformedSetInput.validate;
+}
+export interface MalformedSetServerOutput {}
+
+export type MalformedSetErrors = never;
+
+export class MalformedSetSerializer
+  implements __OperationSerializer<RestJsonService<any>, "MalformedSet", MalformedSetErrors>
+{
+  serialize = serializeMalformedSetResponse;
+  deserialize = deserializeMalformedSetRequest;
+
+  isOperationError(error: any): error is MalformedSetErrors {
+    return false;
+  }
+
+  serializeError(error: MalformedSetErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getMalformedSetHandler = <Context>(
+  operation: __Operation<MalformedSetServerInput, MalformedSetServerOutput, Context>,
+  customizer: __ValidationCustomizer<"MalformedSet">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedSet">([
+    new httpbinding.UriSpec<"RestJson", "MalformedSet">("POST", [{ type: "path_literal", value: "MalformedSet" }], [], {
+      service: "RestJson",
+      operation: "MalformedSet",
+    }),
+  ]);
+  return new MalformedSetHandler(operation, mux, new MalformedSetSerializer(), serializeFrameworkException, customizer);
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -130,45 +172,3 @@ export class MalformedSetHandler<Context> implements __ServiceHandler<Context> {
     );
   }
 }
-
-export type MalformedSet<Context> = __Operation<MalformedSetServerInput, MalformedSetServerOutput, Context>;
-
-export interface MalformedSetServerInput extends MalformedSetInput {}
-export namespace MalformedSetServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof MalformedSetInput.validate>[0]) => __ValidationFailure[] =
-    MalformedSetInput.validate;
-}
-export interface MalformedSetServerOutput {}
-
-export type MalformedSetErrors = never;
-
-export class MalformedSetSerializer
-  implements __OperationSerializer<RestJsonService<any>, "MalformedSet", MalformedSetErrors>
-{
-  serialize = serializeMalformedSetResponse;
-  deserialize = deserializeMalformedSetRequest;
-
-  isOperationError(error: any): error is MalformedSetErrors {
-    return false;
-  }
-
-  serializeError(error: MalformedSetErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getMalformedSetHandler = <Context>(
-  operation: __Operation<MalformedSetServerInput, MalformedSetServerOutput, Context>,
-  customizer: __ValidationCustomizer<"MalformedSet">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedSet">([
-    new httpbinding.UriSpec<"RestJson", "MalformedSet">("POST", [{ type: "path_literal", value: "MalformedSet" }], [], {
-      service: "RestJson",
-      operation: "MalformedSet",
-    }),
-  ]);
-  return new MalformedSetHandler(operation, mux, new MalformedSetSerializer(), serializeFrameworkException, customizer);
-};

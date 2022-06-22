@@ -30,6 +30,56 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type JsonTimestamps<Context> = __Operation<JsonTimestampsServerInput, JsonTimestampsServerOutput, Context>;
+
+export interface JsonTimestampsServerInput extends JsonTimestampsInputOutput {}
+export namespace JsonTimestampsServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof JsonTimestampsInputOutput.validate>[0]) => __ValidationFailure[] =
+    JsonTimestampsInputOutput.validate;
+}
+export interface JsonTimestampsServerOutput extends JsonTimestampsInputOutput {}
+
+export type JsonTimestampsErrors = never;
+
+export class JsonTimestampsSerializer
+  implements __OperationSerializer<RestJsonService<any>, "JsonTimestamps", JsonTimestampsErrors>
+{
+  serialize = serializeJsonTimestampsResponse;
+  deserialize = deserializeJsonTimestampsRequest;
+
+  isOperationError(error: any): error is JsonTimestampsErrors {
+    return false;
+  }
+
+  serializeError(error: JsonTimestampsErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getJsonTimestampsHandler = <Context>(
+  operation: __Operation<JsonTimestampsServerInput, JsonTimestampsServerOutput, Context>,
+  customizer: __ValidationCustomizer<"JsonTimestamps">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "JsonTimestamps">([
+    new httpbinding.UriSpec<"RestJson", "JsonTimestamps">(
+      "POST",
+      [{ type: "path_literal", value: "JsonTimestamps" }],
+      [],
+      { service: "RestJson", operation: "JsonTimestamps" }
+    ),
+  ]);
+  return new JsonTimestampsHandler(
+    operation,
+    mux,
+    new JsonTimestampsSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -130,53 +180,3 @@ export class JsonTimestampsHandler<Context> implements __ServiceHandler<Context>
     );
   }
 }
-
-export type JsonTimestamps<Context> = __Operation<JsonTimestampsServerInput, JsonTimestampsServerOutput, Context>;
-
-export interface JsonTimestampsServerInput extends JsonTimestampsInputOutput {}
-export namespace JsonTimestampsServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof JsonTimestampsInputOutput.validate>[0]) => __ValidationFailure[] =
-    JsonTimestampsInputOutput.validate;
-}
-export interface JsonTimestampsServerOutput extends JsonTimestampsInputOutput {}
-
-export type JsonTimestampsErrors = never;
-
-export class JsonTimestampsSerializer
-  implements __OperationSerializer<RestJsonService<any>, "JsonTimestamps", JsonTimestampsErrors>
-{
-  serialize = serializeJsonTimestampsResponse;
-  deserialize = deserializeJsonTimestampsRequest;
-
-  isOperationError(error: any): error is JsonTimestampsErrors {
-    return false;
-  }
-
-  serializeError(error: JsonTimestampsErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getJsonTimestampsHandler = <Context>(
-  operation: __Operation<JsonTimestampsServerInput, JsonTimestampsServerOutput, Context>,
-  customizer: __ValidationCustomizer<"JsonTimestamps">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "JsonTimestamps">([
-    new httpbinding.UriSpec<"RestJson", "JsonTimestamps">(
-      "POST",
-      [{ type: "path_literal", value: "JsonTimestamps" }],
-      [],
-      { service: "RestJson", operation: "JsonTimestamps" }
-    ),
-  ]);
-  return new JsonTimestampsHandler(
-    operation,
-    mux,
-    new JsonTimestampsSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

@@ -30,6 +30,62 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type MalformedTimestampQueryEpoch<Context> = __Operation<
+  MalformedTimestampQueryEpochServerInput,
+  MalformedTimestampQueryEpochServerOutput,
+  Context
+>;
+
+export interface MalformedTimestampQueryEpochServerInput extends MalformedTimestampQueryEpochInput {}
+export namespace MalformedTimestampQueryEpochServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (
+    obj: Parameters<typeof MalformedTimestampQueryEpochInput.validate>[0]
+  ) => __ValidationFailure[] = MalformedTimestampQueryEpochInput.validate;
+}
+export interface MalformedTimestampQueryEpochServerOutput {}
+
+export type MalformedTimestampQueryEpochErrors = never;
+
+export class MalformedTimestampQueryEpochSerializer
+  implements
+    __OperationSerializer<RestJsonService<any>, "MalformedTimestampQueryEpoch", MalformedTimestampQueryEpochErrors>
+{
+  serialize = serializeMalformedTimestampQueryEpochResponse;
+  deserialize = deserializeMalformedTimestampQueryEpochRequest;
+
+  isOperationError(error: any): error is MalformedTimestampQueryEpochErrors {
+    return false;
+  }
+
+  serializeError(error: MalformedTimestampQueryEpochErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getMalformedTimestampQueryEpochHandler = <Context>(
+  operation: __Operation<MalformedTimestampQueryEpochServerInput, MalformedTimestampQueryEpochServerOutput, Context>,
+  customizer: __ValidationCustomizer<"MalformedTimestampQueryEpoch">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedTimestampQueryEpoch">([
+    new httpbinding.UriSpec<"RestJson", "MalformedTimestampQueryEpoch">(
+      "POST",
+      [{ type: "path_literal", value: "MalformedTimestampQueryEpoch" }],
+      [{ type: "query", key: "timestamp" }],
+      { service: "RestJson", operation: "MalformedTimestampQueryEpoch" }
+    ),
+  ]);
+  return new MalformedTimestampQueryEpochHandler(
+    operation,
+    mux,
+    new MalformedTimestampQueryEpochSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -142,59 +198,3 @@ export class MalformedTimestampQueryEpochHandler<Context> implements __ServiceHa
     );
   }
 }
-
-export type MalformedTimestampQueryEpoch<Context> = __Operation<
-  MalformedTimestampQueryEpochServerInput,
-  MalformedTimestampQueryEpochServerOutput,
-  Context
->;
-
-export interface MalformedTimestampQueryEpochServerInput extends MalformedTimestampQueryEpochInput {}
-export namespace MalformedTimestampQueryEpochServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (
-    obj: Parameters<typeof MalformedTimestampQueryEpochInput.validate>[0]
-  ) => __ValidationFailure[] = MalformedTimestampQueryEpochInput.validate;
-}
-export interface MalformedTimestampQueryEpochServerOutput {}
-
-export type MalformedTimestampQueryEpochErrors = never;
-
-export class MalformedTimestampQueryEpochSerializer
-  implements
-    __OperationSerializer<RestJsonService<any>, "MalformedTimestampQueryEpoch", MalformedTimestampQueryEpochErrors>
-{
-  serialize = serializeMalformedTimestampQueryEpochResponse;
-  deserialize = deserializeMalformedTimestampQueryEpochRequest;
-
-  isOperationError(error: any): error is MalformedTimestampQueryEpochErrors {
-    return false;
-  }
-
-  serializeError(error: MalformedTimestampQueryEpochErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getMalformedTimestampQueryEpochHandler = <Context>(
-  operation: __Operation<MalformedTimestampQueryEpochServerInput, MalformedTimestampQueryEpochServerOutput, Context>,
-  customizer: __ValidationCustomizer<"MalformedTimestampQueryEpoch">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedTimestampQueryEpoch">([
-    new httpbinding.UriSpec<"RestJson", "MalformedTimestampQueryEpoch">(
-      "POST",
-      [{ type: "path_literal", value: "MalformedTimestampQueryEpoch" }],
-      [{ type: "query", key: "timestamp" }],
-      { service: "RestJson", operation: "MalformedTimestampQueryEpoch" }
-    ),
-  ]);
-  return new MalformedTimestampQueryEpochHandler(
-    operation,
-    mux,
-    new MalformedTimestampQueryEpochSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

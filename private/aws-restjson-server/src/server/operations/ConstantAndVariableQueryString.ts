@@ -30,6 +30,66 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type ConstantAndVariableQueryString<Context> = __Operation<
+  ConstantAndVariableQueryStringServerInput,
+  ConstantAndVariableQueryStringServerOutput,
+  Context
+>;
+
+export interface ConstantAndVariableQueryStringServerInput extends ConstantAndVariableQueryStringInput {}
+export namespace ConstantAndVariableQueryStringServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (
+    obj: Parameters<typeof ConstantAndVariableQueryStringInput.validate>[0]
+  ) => __ValidationFailure[] = ConstantAndVariableQueryStringInput.validate;
+}
+export interface ConstantAndVariableQueryStringServerOutput {}
+
+export type ConstantAndVariableQueryStringErrors = never;
+
+export class ConstantAndVariableQueryStringSerializer
+  implements
+    __OperationSerializer<RestJsonService<any>, "ConstantAndVariableQueryString", ConstantAndVariableQueryStringErrors>
+{
+  serialize = serializeConstantAndVariableQueryStringResponse;
+  deserialize = deserializeConstantAndVariableQueryStringRequest;
+
+  isOperationError(error: any): error is ConstantAndVariableQueryStringErrors {
+    return false;
+  }
+
+  serializeError(error: ConstantAndVariableQueryStringErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getConstantAndVariableQueryStringHandler = <Context>(
+  operation: __Operation<
+    ConstantAndVariableQueryStringServerInput,
+    ConstantAndVariableQueryStringServerOutput,
+    Context
+  >,
+  customizer: __ValidationCustomizer<"ConstantAndVariableQueryString">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "ConstantAndVariableQueryString">([
+    new httpbinding.UriSpec<"RestJson", "ConstantAndVariableQueryString">(
+      "GET",
+      [{ type: "path_literal", value: "ConstantAndVariableQueryString" }],
+      [{ type: "query_literal", key: "foo", value: "bar" }],
+      { service: "RestJson", operation: "ConstantAndVariableQueryString" }
+    ),
+  ]);
+  return new ConstantAndVariableQueryStringHandler(
+    operation,
+    mux,
+    new ConstantAndVariableQueryStringSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -146,63 +206,3 @@ export class ConstantAndVariableQueryStringHandler<Context> implements __Service
     );
   }
 }
-
-export type ConstantAndVariableQueryString<Context> = __Operation<
-  ConstantAndVariableQueryStringServerInput,
-  ConstantAndVariableQueryStringServerOutput,
-  Context
->;
-
-export interface ConstantAndVariableQueryStringServerInput extends ConstantAndVariableQueryStringInput {}
-export namespace ConstantAndVariableQueryStringServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (
-    obj: Parameters<typeof ConstantAndVariableQueryStringInput.validate>[0]
-  ) => __ValidationFailure[] = ConstantAndVariableQueryStringInput.validate;
-}
-export interface ConstantAndVariableQueryStringServerOutput {}
-
-export type ConstantAndVariableQueryStringErrors = never;
-
-export class ConstantAndVariableQueryStringSerializer
-  implements
-    __OperationSerializer<RestJsonService<any>, "ConstantAndVariableQueryString", ConstantAndVariableQueryStringErrors>
-{
-  serialize = serializeConstantAndVariableQueryStringResponse;
-  deserialize = deserializeConstantAndVariableQueryStringRequest;
-
-  isOperationError(error: any): error is ConstantAndVariableQueryStringErrors {
-    return false;
-  }
-
-  serializeError(error: ConstantAndVariableQueryStringErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getConstantAndVariableQueryStringHandler = <Context>(
-  operation: __Operation<
-    ConstantAndVariableQueryStringServerInput,
-    ConstantAndVariableQueryStringServerOutput,
-    Context
-  >,
-  customizer: __ValidationCustomizer<"ConstantAndVariableQueryString">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "ConstantAndVariableQueryString">([
-    new httpbinding.UriSpec<"RestJson", "ConstantAndVariableQueryString">(
-      "GET",
-      [{ type: "path_literal", value: "ConstantAndVariableQueryString" }],
-      [{ type: "query_literal", key: "foo", value: "bar" }],
-      { service: "RestJson", operation: "ConstantAndVariableQueryString" }
-    ),
-  ]);
-  return new ConstantAndVariableQueryStringHandler(
-    operation,
-    mux,
-    new ConstantAndVariableQueryStringSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

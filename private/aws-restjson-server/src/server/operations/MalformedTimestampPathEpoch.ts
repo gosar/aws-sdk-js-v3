@@ -30,6 +30,62 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type MalformedTimestampPathEpoch<Context> = __Operation<
+  MalformedTimestampPathEpochServerInput,
+  MalformedTimestampPathEpochServerOutput,
+  Context
+>;
+
+export interface MalformedTimestampPathEpochServerInput extends MalformedTimestampPathEpochInput {}
+export namespace MalformedTimestampPathEpochServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (
+    obj: Parameters<typeof MalformedTimestampPathEpochInput.validate>[0]
+  ) => __ValidationFailure[] = MalformedTimestampPathEpochInput.validate;
+}
+export interface MalformedTimestampPathEpochServerOutput {}
+
+export type MalformedTimestampPathEpochErrors = never;
+
+export class MalformedTimestampPathEpochSerializer
+  implements
+    __OperationSerializer<RestJsonService<any>, "MalformedTimestampPathEpoch", MalformedTimestampPathEpochErrors>
+{
+  serialize = serializeMalformedTimestampPathEpochResponse;
+  deserialize = deserializeMalformedTimestampPathEpochRequest;
+
+  isOperationError(error: any): error is MalformedTimestampPathEpochErrors {
+    return false;
+  }
+
+  serializeError(error: MalformedTimestampPathEpochErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getMalformedTimestampPathEpochHandler = <Context>(
+  operation: __Operation<MalformedTimestampPathEpochServerInput, MalformedTimestampPathEpochServerOutput, Context>,
+  customizer: __ValidationCustomizer<"MalformedTimestampPathEpoch">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedTimestampPathEpoch">([
+    new httpbinding.UriSpec<"RestJson", "MalformedTimestampPathEpoch">(
+      "POST",
+      [{ type: "path_literal", value: "MalformedTimestampPathEpoch" }, { type: "path" }],
+      [],
+      { service: "RestJson", operation: "MalformedTimestampPathEpoch" }
+    ),
+  ]);
+  return new MalformedTimestampPathEpochHandler(
+    operation,
+    mux,
+    new MalformedTimestampPathEpochSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -142,59 +198,3 @@ export class MalformedTimestampPathEpochHandler<Context> implements __ServiceHan
     );
   }
 }
-
-export type MalformedTimestampPathEpoch<Context> = __Operation<
-  MalformedTimestampPathEpochServerInput,
-  MalformedTimestampPathEpochServerOutput,
-  Context
->;
-
-export interface MalformedTimestampPathEpochServerInput extends MalformedTimestampPathEpochInput {}
-export namespace MalformedTimestampPathEpochServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (
-    obj: Parameters<typeof MalformedTimestampPathEpochInput.validate>[0]
-  ) => __ValidationFailure[] = MalformedTimestampPathEpochInput.validate;
-}
-export interface MalformedTimestampPathEpochServerOutput {}
-
-export type MalformedTimestampPathEpochErrors = never;
-
-export class MalformedTimestampPathEpochSerializer
-  implements
-    __OperationSerializer<RestJsonService<any>, "MalformedTimestampPathEpoch", MalformedTimestampPathEpochErrors>
-{
-  serialize = serializeMalformedTimestampPathEpochResponse;
-  deserialize = deserializeMalformedTimestampPathEpochRequest;
-
-  isOperationError(error: any): error is MalformedTimestampPathEpochErrors {
-    return false;
-  }
-
-  serializeError(error: MalformedTimestampPathEpochErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getMalformedTimestampPathEpochHandler = <Context>(
-  operation: __Operation<MalformedTimestampPathEpochServerInput, MalformedTimestampPathEpochServerOutput, Context>,
-  customizer: __ValidationCustomizer<"MalformedTimestampPathEpoch">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedTimestampPathEpoch">([
-    new httpbinding.UriSpec<"RestJson", "MalformedTimestampPathEpoch">(
-      "POST",
-      [{ type: "path_literal", value: "MalformedTimestampPathEpoch" }, { type: "path" }],
-      [],
-      { service: "RestJson", operation: "MalformedTimestampPathEpoch" }
-    ),
-  ]);
-  return new MalformedTimestampPathEpochHandler(
-    operation,
-    mux,
-    new MalformedTimestampPathEpochSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

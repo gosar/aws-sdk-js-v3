@@ -34,6 +34,73 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type GreetingWithErrors<Context> = __Operation<
+  GreetingWithErrorsServerInput,
+  GreetingWithErrorsServerOutput,
+  Context
+>;
+
+export interface GreetingWithErrorsServerInput {}
+export namespace GreetingWithErrorsServerInput {
+  /**
+   * @internal
+   */
+  export const validate: () => __ValidationFailure[] = () => [];
+}
+export interface GreetingWithErrorsServerOutput extends GreetingWithErrorsOutput {}
+
+export type GreetingWithErrorsErrors = FooError | ComplexError | InvalidGreeting;
+
+export class GreetingWithErrorsSerializer
+  implements __OperationSerializer<RestJsonService<any>, "GreetingWithErrors", GreetingWithErrorsErrors>
+{
+  serialize = serializeGreetingWithErrorsResponse;
+  deserialize = deserializeGreetingWithErrorsRequest;
+
+  isOperationError(error: any): error is GreetingWithErrorsErrors {
+    const names: GreetingWithErrorsErrors["name"][] = ["FooError", "ComplexError", "InvalidGreeting"];
+    return names.includes(error.name);
+  }
+
+  serializeError(error: GreetingWithErrorsErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    switch (error.name) {
+      case "FooError": {
+        return serializeFooErrorError(error, ctx);
+      }
+      case "ComplexError": {
+        return serializeComplexErrorError(error, ctx);
+      }
+      case "InvalidGreeting": {
+        return serializeInvalidGreetingError(error, ctx);
+      }
+      default: {
+        throw error;
+      }
+    }
+  }
+}
+
+export const getGreetingWithErrorsHandler = <Context>(
+  operation: __Operation<GreetingWithErrorsServerInput, GreetingWithErrorsServerOutput, Context>,
+  customizer: __ValidationCustomizer<"GreetingWithErrors">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "GreetingWithErrors">([
+    new httpbinding.UriSpec<"RestJson", "GreetingWithErrors">(
+      "PUT",
+      [{ type: "path_literal", value: "GreetingWithErrors" }],
+      [],
+      { service: "RestJson", operation: "GreetingWithErrors" }
+    ),
+  ]);
+  return new GreetingWithErrorsHandler(
+    operation,
+    mux,
+    new GreetingWithErrorsSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -138,70 +205,3 @@ export class GreetingWithErrorsHandler<Context> implements __ServiceHandler<Cont
     );
   }
 }
-
-export type GreetingWithErrors<Context> = __Operation<
-  GreetingWithErrorsServerInput,
-  GreetingWithErrorsServerOutput,
-  Context
->;
-
-export interface GreetingWithErrorsServerInput {}
-export namespace GreetingWithErrorsServerInput {
-  /**
-   * @internal
-   */
-  export const validate: () => __ValidationFailure[] = () => [];
-}
-export interface GreetingWithErrorsServerOutput extends GreetingWithErrorsOutput {}
-
-export type GreetingWithErrorsErrors = FooError | ComplexError | InvalidGreeting;
-
-export class GreetingWithErrorsSerializer
-  implements __OperationSerializer<RestJsonService<any>, "GreetingWithErrors", GreetingWithErrorsErrors>
-{
-  serialize = serializeGreetingWithErrorsResponse;
-  deserialize = deserializeGreetingWithErrorsRequest;
-
-  isOperationError(error: any): error is GreetingWithErrorsErrors {
-    const names: GreetingWithErrorsErrors["name"][] = ["FooError", "ComplexError", "InvalidGreeting"];
-    return names.includes(error.name);
-  }
-
-  serializeError(error: GreetingWithErrorsErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    switch (error.name) {
-      case "FooError": {
-        return serializeFooErrorError(error, ctx);
-      }
-      case "ComplexError": {
-        return serializeComplexErrorError(error, ctx);
-      }
-      case "InvalidGreeting": {
-        return serializeInvalidGreetingError(error, ctx);
-      }
-      default: {
-        throw error;
-      }
-    }
-  }
-}
-
-export const getGreetingWithErrorsHandler = <Context>(
-  operation: __Operation<GreetingWithErrorsServerInput, GreetingWithErrorsServerOutput, Context>,
-  customizer: __ValidationCustomizer<"GreetingWithErrors">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "GreetingWithErrors">([
-    new httpbinding.UriSpec<"RestJson", "GreetingWithErrors">(
-      "PUT",
-      [{ type: "path_literal", value: "GreetingWithErrors" }],
-      [],
-      { service: "RestJson", operation: "GreetingWithErrors" }
-    ),
-  ]);
-  return new GreetingWithErrorsHandler(
-    operation,
-    mux,
-    new GreetingWithErrorsSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

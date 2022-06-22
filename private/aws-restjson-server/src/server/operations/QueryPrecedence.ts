@@ -30,6 +30,56 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type QueryPrecedence<Context> = __Operation<QueryPrecedenceServerInput, QueryPrecedenceServerOutput, Context>;
+
+export interface QueryPrecedenceServerInput extends QueryPrecedenceInput {}
+export namespace QueryPrecedenceServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof QueryPrecedenceInput.validate>[0]) => __ValidationFailure[] =
+    QueryPrecedenceInput.validate;
+}
+export interface QueryPrecedenceServerOutput {}
+
+export type QueryPrecedenceErrors = never;
+
+export class QueryPrecedenceSerializer
+  implements __OperationSerializer<RestJsonService<any>, "QueryPrecedence", QueryPrecedenceErrors>
+{
+  serialize = serializeQueryPrecedenceResponse;
+  deserialize = deserializeQueryPrecedenceRequest;
+
+  isOperationError(error: any): error is QueryPrecedenceErrors {
+    return false;
+  }
+
+  serializeError(error: QueryPrecedenceErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getQueryPrecedenceHandler = <Context>(
+  operation: __Operation<QueryPrecedenceServerInput, QueryPrecedenceServerOutput, Context>,
+  customizer: __ValidationCustomizer<"QueryPrecedence">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "QueryPrecedence">([
+    new httpbinding.UriSpec<"RestJson", "QueryPrecedence">(
+      "POST",
+      [{ type: "path_literal", value: "Precedence" }],
+      [],
+      { service: "RestJson", operation: "QueryPrecedence" }
+    ),
+  ]);
+  return new QueryPrecedenceHandler(
+    operation,
+    mux,
+    new QueryPrecedenceSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -134,53 +184,3 @@ export class QueryPrecedenceHandler<Context> implements __ServiceHandler<Context
     );
   }
 }
-
-export type QueryPrecedence<Context> = __Operation<QueryPrecedenceServerInput, QueryPrecedenceServerOutput, Context>;
-
-export interface QueryPrecedenceServerInput extends QueryPrecedenceInput {}
-export namespace QueryPrecedenceServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof QueryPrecedenceInput.validate>[0]) => __ValidationFailure[] =
-    QueryPrecedenceInput.validate;
-}
-export interface QueryPrecedenceServerOutput {}
-
-export type QueryPrecedenceErrors = never;
-
-export class QueryPrecedenceSerializer
-  implements __OperationSerializer<RestJsonService<any>, "QueryPrecedence", QueryPrecedenceErrors>
-{
-  serialize = serializeQueryPrecedenceResponse;
-  deserialize = deserializeQueryPrecedenceRequest;
-
-  isOperationError(error: any): error is QueryPrecedenceErrors {
-    return false;
-  }
-
-  serializeError(error: QueryPrecedenceErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getQueryPrecedenceHandler = <Context>(
-  operation: __Operation<QueryPrecedenceServerInput, QueryPrecedenceServerOutput, Context>,
-  customizer: __ValidationCustomizer<"QueryPrecedence">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "QueryPrecedence">([
-    new httpbinding.UriSpec<"RestJson", "QueryPrecedence">(
-      "POST",
-      [{ type: "path_literal", value: "Precedence" }],
-      [],
-      { service: "RestJson", operation: "QueryPrecedence" }
-    ),
-  ]);
-  return new QueryPrecedenceHandler(
-    operation,
-    mux,
-    new QueryPrecedenceSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

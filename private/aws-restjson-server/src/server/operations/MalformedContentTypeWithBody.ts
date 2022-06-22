@@ -30,6 +30,61 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type MalformedContentTypeWithBody<Context> = __Operation<
+  MalformedContentTypeWithBodyServerInput,
+  MalformedContentTypeWithBodyServerOutput,
+  Context
+>;
+
+export interface MalformedContentTypeWithBodyServerInput extends GreetingStruct {}
+export namespace MalformedContentTypeWithBodyServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof GreetingStruct.validate>[0]) => __ValidationFailure[] =
+    GreetingStruct.validate;
+}
+export interface MalformedContentTypeWithBodyServerOutput {}
+
+export type MalformedContentTypeWithBodyErrors = never;
+
+export class MalformedContentTypeWithBodySerializer
+  implements
+    __OperationSerializer<RestJsonService<any>, "MalformedContentTypeWithBody", MalformedContentTypeWithBodyErrors>
+{
+  serialize = serializeMalformedContentTypeWithBodyResponse;
+  deserialize = deserializeMalformedContentTypeWithBodyRequest;
+
+  isOperationError(error: any): error is MalformedContentTypeWithBodyErrors {
+    return false;
+  }
+
+  serializeError(error: MalformedContentTypeWithBodyErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getMalformedContentTypeWithBodyHandler = <Context>(
+  operation: __Operation<MalformedContentTypeWithBodyServerInput, MalformedContentTypeWithBodyServerOutput, Context>,
+  customizer: __ValidationCustomizer<"MalformedContentTypeWithBody">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedContentTypeWithBody">([
+    new httpbinding.UriSpec<"RestJson", "MalformedContentTypeWithBody">(
+      "POST",
+      [{ type: "path_literal", value: "MalformedContentTypeWithBody" }],
+      [],
+      { service: "RestJson", operation: "MalformedContentTypeWithBody" }
+    ),
+  ]);
+  return new MalformedContentTypeWithBodyHandler(
+    operation,
+    mux,
+    new MalformedContentTypeWithBodySerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -142,58 +197,3 @@ export class MalformedContentTypeWithBodyHandler<Context> implements __ServiceHa
     );
   }
 }
-
-export type MalformedContentTypeWithBody<Context> = __Operation<
-  MalformedContentTypeWithBodyServerInput,
-  MalformedContentTypeWithBodyServerOutput,
-  Context
->;
-
-export interface MalformedContentTypeWithBodyServerInput extends GreetingStruct {}
-export namespace MalformedContentTypeWithBodyServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof GreetingStruct.validate>[0]) => __ValidationFailure[] =
-    GreetingStruct.validate;
-}
-export interface MalformedContentTypeWithBodyServerOutput {}
-
-export type MalformedContentTypeWithBodyErrors = never;
-
-export class MalformedContentTypeWithBodySerializer
-  implements
-    __OperationSerializer<RestJsonService<any>, "MalformedContentTypeWithBody", MalformedContentTypeWithBodyErrors>
-{
-  serialize = serializeMalformedContentTypeWithBodyResponse;
-  deserialize = deserializeMalformedContentTypeWithBodyRequest;
-
-  isOperationError(error: any): error is MalformedContentTypeWithBodyErrors {
-    return false;
-  }
-
-  serializeError(error: MalformedContentTypeWithBodyErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getMalformedContentTypeWithBodyHandler = <Context>(
-  operation: __Operation<MalformedContentTypeWithBodyServerInput, MalformedContentTypeWithBodyServerOutput, Context>,
-  customizer: __ValidationCustomizer<"MalformedContentTypeWithBody">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedContentTypeWithBody">([
-    new httpbinding.UriSpec<"RestJson", "MalformedContentTypeWithBody">(
-      "POST",
-      [{ type: "path_literal", value: "MalformedContentTypeWithBody" }],
-      [],
-      { service: "RestJson", operation: "MalformedContentTypeWithBody" }
-    ),
-  ]);
-  return new MalformedContentTypeWithBodyHandler(
-    operation,
-    mux,
-    new MalformedContentTypeWithBodySerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

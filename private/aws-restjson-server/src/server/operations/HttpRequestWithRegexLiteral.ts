@@ -30,6 +30,62 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type HttpRequestWithRegexLiteral<Context> = __Operation<
+  HttpRequestWithRegexLiteralServerInput,
+  HttpRequestWithRegexLiteralServerOutput,
+  Context
+>;
+
+export interface HttpRequestWithRegexLiteralServerInput extends HttpRequestWithRegexLiteralInput {}
+export namespace HttpRequestWithRegexLiteralServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (
+    obj: Parameters<typeof HttpRequestWithRegexLiteralInput.validate>[0]
+  ) => __ValidationFailure[] = HttpRequestWithRegexLiteralInput.validate;
+}
+export interface HttpRequestWithRegexLiteralServerOutput {}
+
+export type HttpRequestWithRegexLiteralErrors = never;
+
+export class HttpRequestWithRegexLiteralSerializer
+  implements
+    __OperationSerializer<RestJsonService<any>, "HttpRequestWithRegexLiteral", HttpRequestWithRegexLiteralErrors>
+{
+  serialize = serializeHttpRequestWithRegexLiteralResponse;
+  deserialize = deserializeHttpRequestWithRegexLiteralRequest;
+
+  isOperationError(error: any): error is HttpRequestWithRegexLiteralErrors {
+    return false;
+  }
+
+  serializeError(error: HttpRequestWithRegexLiteralErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getHttpRequestWithRegexLiteralHandler = <Context>(
+  operation: __Operation<HttpRequestWithRegexLiteralServerInput, HttpRequestWithRegexLiteralServerOutput, Context>,
+  customizer: __ValidationCustomizer<"HttpRequestWithRegexLiteral">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "HttpRequestWithRegexLiteral">([
+    new httpbinding.UriSpec<"RestJson", "HttpRequestWithRegexLiteral">(
+      "GET",
+      [{ type: "path_literal", value: "ReDosLiteral" }, { type: "path" }, { type: "path_literal", value: "(a+)+" }],
+      [],
+      { service: "RestJson", operation: "HttpRequestWithRegexLiteral" }
+    ),
+  ]);
+  return new HttpRequestWithRegexLiteralHandler(
+    operation,
+    mux,
+    new HttpRequestWithRegexLiteralSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -142,59 +198,3 @@ export class HttpRequestWithRegexLiteralHandler<Context> implements __ServiceHan
     );
   }
 }
-
-export type HttpRequestWithRegexLiteral<Context> = __Operation<
-  HttpRequestWithRegexLiteralServerInput,
-  HttpRequestWithRegexLiteralServerOutput,
-  Context
->;
-
-export interface HttpRequestWithRegexLiteralServerInput extends HttpRequestWithRegexLiteralInput {}
-export namespace HttpRequestWithRegexLiteralServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (
-    obj: Parameters<typeof HttpRequestWithRegexLiteralInput.validate>[0]
-  ) => __ValidationFailure[] = HttpRequestWithRegexLiteralInput.validate;
-}
-export interface HttpRequestWithRegexLiteralServerOutput {}
-
-export type HttpRequestWithRegexLiteralErrors = never;
-
-export class HttpRequestWithRegexLiteralSerializer
-  implements
-    __OperationSerializer<RestJsonService<any>, "HttpRequestWithRegexLiteral", HttpRequestWithRegexLiteralErrors>
-{
-  serialize = serializeHttpRequestWithRegexLiteralResponse;
-  deserialize = deserializeHttpRequestWithRegexLiteralRequest;
-
-  isOperationError(error: any): error is HttpRequestWithRegexLiteralErrors {
-    return false;
-  }
-
-  serializeError(error: HttpRequestWithRegexLiteralErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getHttpRequestWithRegexLiteralHandler = <Context>(
-  operation: __Operation<HttpRequestWithRegexLiteralServerInput, HttpRequestWithRegexLiteralServerOutput, Context>,
-  customizer: __ValidationCustomizer<"HttpRequestWithRegexLiteral">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "HttpRequestWithRegexLiteral">([
-    new httpbinding.UriSpec<"RestJson", "HttpRequestWithRegexLiteral">(
-      "GET",
-      [{ type: "path_literal", value: "ReDosLiteral" }, { type: "path" }, { type: "path_literal", value: "(a+)+" }],
-      [],
-      { service: "RestJson", operation: "HttpRequestWithRegexLiteral" }
-    ),
-  ]);
-  return new HttpRequestWithRegexLiteralHandler(
-    operation,
-    mux,
-    new HttpRequestWithRegexLiteralSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

@@ -30,6 +30,46 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type JsonMaps<Context> = __Operation<JsonMapsServerInput, JsonMapsServerOutput, Context>;
+
+export interface JsonMapsServerInput extends JsonMapsInputOutput {}
+export namespace JsonMapsServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof JsonMapsInputOutput.validate>[0]) => __ValidationFailure[] =
+    JsonMapsInputOutput.validate;
+}
+export interface JsonMapsServerOutput extends JsonMapsInputOutput {}
+
+export type JsonMapsErrors = never;
+
+export class JsonMapsSerializer implements __OperationSerializer<RestJsonService<any>, "JsonMaps", JsonMapsErrors> {
+  serialize = serializeJsonMapsResponse;
+  deserialize = deserializeJsonMapsRequest;
+
+  isOperationError(error: any): error is JsonMapsErrors {
+    return false;
+  }
+
+  serializeError(error: JsonMapsErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getJsonMapsHandler = <Context>(
+  operation: __Operation<JsonMapsServerInput, JsonMapsServerOutput, Context>,
+  customizer: __ValidationCustomizer<"JsonMaps">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "JsonMaps">([
+    new httpbinding.UriSpec<"RestJson", "JsonMaps">("POST", [{ type: "path_literal", value: "JsonMaps" }], [], {
+      service: "RestJson",
+      operation: "JsonMaps",
+    }),
+  ]);
+  return new JsonMapsHandler(operation, mux, new JsonMapsSerializer(), serializeFrameworkException, customizer);
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -130,43 +170,3 @@ export class JsonMapsHandler<Context> implements __ServiceHandler<Context> {
     );
   }
 }
-
-export type JsonMaps<Context> = __Operation<JsonMapsServerInput, JsonMapsServerOutput, Context>;
-
-export interface JsonMapsServerInput extends JsonMapsInputOutput {}
-export namespace JsonMapsServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof JsonMapsInputOutput.validate>[0]) => __ValidationFailure[] =
-    JsonMapsInputOutput.validate;
-}
-export interface JsonMapsServerOutput extends JsonMapsInputOutput {}
-
-export type JsonMapsErrors = never;
-
-export class JsonMapsSerializer implements __OperationSerializer<RestJsonService<any>, "JsonMaps", JsonMapsErrors> {
-  serialize = serializeJsonMapsResponse;
-  deserialize = deserializeJsonMapsRequest;
-
-  isOperationError(error: any): error is JsonMapsErrors {
-    return false;
-  }
-
-  serializeError(error: JsonMapsErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getJsonMapsHandler = <Context>(
-  operation: __Operation<JsonMapsServerInput, JsonMapsServerOutput, Context>,
-  customizer: __ValidationCustomizer<"JsonMaps">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "JsonMaps">([
-    new httpbinding.UriSpec<"RestJson", "JsonMaps">("POST", [{ type: "path_literal", value: "JsonMaps" }], [], {
-      service: "RestJson",
-      operation: "JsonMaps",
-    }),
-  ]);
-  return new JsonMapsHandler(operation, mux, new JsonMapsSerializer(), serializeFrameworkException, customizer);
-};

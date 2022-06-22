@@ -30,6 +30,60 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type HttpPrefixHeaders<Context> = __Operation<
+  HttpPrefixHeadersServerInput,
+  HttpPrefixHeadersServerOutput,
+  Context
+>;
+
+export interface HttpPrefixHeadersServerInput extends HttpPrefixHeadersInput {}
+export namespace HttpPrefixHeadersServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof HttpPrefixHeadersInput.validate>[0]) => __ValidationFailure[] =
+    HttpPrefixHeadersInput.validate;
+}
+export interface HttpPrefixHeadersServerOutput extends HttpPrefixHeadersOutput {}
+
+export type HttpPrefixHeadersErrors = never;
+
+export class HttpPrefixHeadersSerializer
+  implements __OperationSerializer<RestJsonService<any>, "HttpPrefixHeaders", HttpPrefixHeadersErrors>
+{
+  serialize = serializeHttpPrefixHeadersResponse;
+  deserialize = deserializeHttpPrefixHeadersRequest;
+
+  isOperationError(error: any): error is HttpPrefixHeadersErrors {
+    return false;
+  }
+
+  serializeError(error: HttpPrefixHeadersErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getHttpPrefixHeadersHandler = <Context>(
+  operation: __Operation<HttpPrefixHeadersServerInput, HttpPrefixHeadersServerOutput, Context>,
+  customizer: __ValidationCustomizer<"HttpPrefixHeaders">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "HttpPrefixHeaders">([
+    new httpbinding.UriSpec<"RestJson", "HttpPrefixHeaders">(
+      "GET",
+      [{ type: "path_literal", value: "HttpPrefixHeaders" }],
+      [],
+      { service: "RestJson", operation: "HttpPrefixHeaders" }
+    ),
+  ]);
+  return new HttpPrefixHeadersHandler(
+    operation,
+    mux,
+    new HttpPrefixHeadersSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -134,57 +188,3 @@ export class HttpPrefixHeadersHandler<Context> implements __ServiceHandler<Conte
     );
   }
 }
-
-export type HttpPrefixHeaders<Context> = __Operation<
-  HttpPrefixHeadersServerInput,
-  HttpPrefixHeadersServerOutput,
-  Context
->;
-
-export interface HttpPrefixHeadersServerInput extends HttpPrefixHeadersInput {}
-export namespace HttpPrefixHeadersServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof HttpPrefixHeadersInput.validate>[0]) => __ValidationFailure[] =
-    HttpPrefixHeadersInput.validate;
-}
-export interface HttpPrefixHeadersServerOutput extends HttpPrefixHeadersOutput {}
-
-export type HttpPrefixHeadersErrors = never;
-
-export class HttpPrefixHeadersSerializer
-  implements __OperationSerializer<RestJsonService<any>, "HttpPrefixHeaders", HttpPrefixHeadersErrors>
-{
-  serialize = serializeHttpPrefixHeadersResponse;
-  deserialize = deserializeHttpPrefixHeadersRequest;
-
-  isOperationError(error: any): error is HttpPrefixHeadersErrors {
-    return false;
-  }
-
-  serializeError(error: HttpPrefixHeadersErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getHttpPrefixHeadersHandler = <Context>(
-  operation: __Operation<HttpPrefixHeadersServerInput, HttpPrefixHeadersServerOutput, Context>,
-  customizer: __ValidationCustomizer<"HttpPrefixHeaders">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "HttpPrefixHeaders">([
-    new httpbinding.UriSpec<"RestJson", "HttpPrefixHeaders">(
-      "GET",
-      [{ type: "path_literal", value: "HttpPrefixHeaders" }],
-      [],
-      { service: "RestJson", operation: "HttpPrefixHeaders" }
-    ),
-  ]);
-  return new HttpPrefixHeadersHandler(
-    operation,
-    mux,
-    new HttpPrefixHeadersSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

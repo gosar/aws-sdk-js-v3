@@ -30,6 +30,46 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type JsonBlobs<Context> = __Operation<JsonBlobsServerInput, JsonBlobsServerOutput, Context>;
+
+export interface JsonBlobsServerInput extends JsonBlobsInputOutput {}
+export namespace JsonBlobsServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof JsonBlobsInputOutput.validate>[0]) => __ValidationFailure[] =
+    JsonBlobsInputOutput.validate;
+}
+export interface JsonBlobsServerOutput extends JsonBlobsInputOutput {}
+
+export type JsonBlobsErrors = never;
+
+export class JsonBlobsSerializer implements __OperationSerializer<RestJsonService<any>, "JsonBlobs", JsonBlobsErrors> {
+  serialize = serializeJsonBlobsResponse;
+  deserialize = deserializeJsonBlobsRequest;
+
+  isOperationError(error: any): error is JsonBlobsErrors {
+    return false;
+  }
+
+  serializeError(error: JsonBlobsErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getJsonBlobsHandler = <Context>(
+  operation: __Operation<JsonBlobsServerInput, JsonBlobsServerOutput, Context>,
+  customizer: __ValidationCustomizer<"JsonBlobs">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "JsonBlobs">([
+    new httpbinding.UriSpec<"RestJson", "JsonBlobs">("POST", [{ type: "path_literal", value: "JsonBlobs" }], [], {
+      service: "RestJson",
+      operation: "JsonBlobs",
+    }),
+  ]);
+  return new JsonBlobsHandler(operation, mux, new JsonBlobsSerializer(), serializeFrameworkException, customizer);
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -130,43 +170,3 @@ export class JsonBlobsHandler<Context> implements __ServiceHandler<Context> {
     );
   }
 }
-
-export type JsonBlobs<Context> = __Operation<JsonBlobsServerInput, JsonBlobsServerOutput, Context>;
-
-export interface JsonBlobsServerInput extends JsonBlobsInputOutput {}
-export namespace JsonBlobsServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof JsonBlobsInputOutput.validate>[0]) => __ValidationFailure[] =
-    JsonBlobsInputOutput.validate;
-}
-export interface JsonBlobsServerOutput extends JsonBlobsInputOutput {}
-
-export type JsonBlobsErrors = never;
-
-export class JsonBlobsSerializer implements __OperationSerializer<RestJsonService<any>, "JsonBlobs", JsonBlobsErrors> {
-  serialize = serializeJsonBlobsResponse;
-  deserialize = deserializeJsonBlobsRequest;
-
-  isOperationError(error: any): error is JsonBlobsErrors {
-    return false;
-  }
-
-  serializeError(error: JsonBlobsErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getJsonBlobsHandler = <Context>(
-  operation: __Operation<JsonBlobsServerInput, JsonBlobsServerOutput, Context>,
-  customizer: __ValidationCustomizer<"JsonBlobs">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "JsonBlobs">([
-    new httpbinding.UriSpec<"RestJson", "JsonBlobs">("POST", [{ type: "path_literal", value: "JsonBlobs" }], [], {
-      service: "RestJson",
-      operation: "JsonBlobs",
-    }),
-  ]);
-  return new JsonBlobsHandler(operation, mux, new JsonBlobsSerializer(), serializeFrameworkException, customizer);
-};

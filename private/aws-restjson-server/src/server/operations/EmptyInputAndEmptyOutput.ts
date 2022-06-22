@@ -30,6 +30,60 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type EmptyInputAndEmptyOutput<Context> = __Operation<
+  EmptyInputAndEmptyOutputServerInput,
+  EmptyInputAndEmptyOutputServerOutput,
+  Context
+>;
+
+export interface EmptyInputAndEmptyOutputServerInput extends EmptyInputAndEmptyOutputInput {}
+export namespace EmptyInputAndEmptyOutputServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof EmptyInputAndEmptyOutputInput.validate>[0]) => __ValidationFailure[] =
+    EmptyInputAndEmptyOutputInput.validate;
+}
+export interface EmptyInputAndEmptyOutputServerOutput extends EmptyInputAndEmptyOutputOutput {}
+
+export type EmptyInputAndEmptyOutputErrors = never;
+
+export class EmptyInputAndEmptyOutputSerializer
+  implements __OperationSerializer<RestJsonService<any>, "EmptyInputAndEmptyOutput", EmptyInputAndEmptyOutputErrors>
+{
+  serialize = serializeEmptyInputAndEmptyOutputResponse;
+  deserialize = deserializeEmptyInputAndEmptyOutputRequest;
+
+  isOperationError(error: any): error is EmptyInputAndEmptyOutputErrors {
+    return false;
+  }
+
+  serializeError(error: EmptyInputAndEmptyOutputErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getEmptyInputAndEmptyOutputHandler = <Context>(
+  operation: __Operation<EmptyInputAndEmptyOutputServerInput, EmptyInputAndEmptyOutputServerOutput, Context>,
+  customizer: __ValidationCustomizer<"EmptyInputAndEmptyOutput">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "EmptyInputAndEmptyOutput">([
+    new httpbinding.UriSpec<"RestJson", "EmptyInputAndEmptyOutput">(
+      "POST",
+      [{ type: "path_literal", value: "EmptyInputAndEmptyOutput" }],
+      [],
+      { service: "RestJson", operation: "EmptyInputAndEmptyOutput" }
+    ),
+  ]);
+  return new EmptyInputAndEmptyOutputHandler(
+    operation,
+    mux,
+    new EmptyInputAndEmptyOutputSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -142,57 +196,3 @@ export class EmptyInputAndEmptyOutputHandler<Context> implements __ServiceHandle
     );
   }
 }
-
-export type EmptyInputAndEmptyOutput<Context> = __Operation<
-  EmptyInputAndEmptyOutputServerInput,
-  EmptyInputAndEmptyOutputServerOutput,
-  Context
->;
-
-export interface EmptyInputAndEmptyOutputServerInput extends EmptyInputAndEmptyOutputInput {}
-export namespace EmptyInputAndEmptyOutputServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof EmptyInputAndEmptyOutputInput.validate>[0]) => __ValidationFailure[] =
-    EmptyInputAndEmptyOutputInput.validate;
-}
-export interface EmptyInputAndEmptyOutputServerOutput extends EmptyInputAndEmptyOutputOutput {}
-
-export type EmptyInputAndEmptyOutputErrors = never;
-
-export class EmptyInputAndEmptyOutputSerializer
-  implements __OperationSerializer<RestJsonService<any>, "EmptyInputAndEmptyOutput", EmptyInputAndEmptyOutputErrors>
-{
-  serialize = serializeEmptyInputAndEmptyOutputResponse;
-  deserialize = deserializeEmptyInputAndEmptyOutputRequest;
-
-  isOperationError(error: any): error is EmptyInputAndEmptyOutputErrors {
-    return false;
-  }
-
-  serializeError(error: EmptyInputAndEmptyOutputErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getEmptyInputAndEmptyOutputHandler = <Context>(
-  operation: __Operation<EmptyInputAndEmptyOutputServerInput, EmptyInputAndEmptyOutputServerOutput, Context>,
-  customizer: __ValidationCustomizer<"EmptyInputAndEmptyOutput">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "EmptyInputAndEmptyOutput">([
-    new httpbinding.UriSpec<"RestJson", "EmptyInputAndEmptyOutput">(
-      "POST",
-      [{ type: "path_literal", value: "EmptyInputAndEmptyOutput" }],
-      [],
-      { service: "RestJson", operation: "EmptyInputAndEmptyOutput" }
-    ),
-  ]);
-  return new EmptyInputAndEmptyOutputHandler(
-    operation,
-    mux,
-    new EmptyInputAndEmptyOutputSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

@@ -30,6 +30,55 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type NoInputAndOutput<Context> = __Operation<NoInputAndOutputServerInput, NoInputAndOutputServerOutput, Context>;
+
+export interface NoInputAndOutputServerInput {}
+export namespace NoInputAndOutputServerInput {
+  /**
+   * @internal
+   */
+  export const validate: () => __ValidationFailure[] = () => [];
+}
+export interface NoInputAndOutputServerOutput extends NoInputAndOutputOutput {}
+
+export type NoInputAndOutputErrors = never;
+
+export class NoInputAndOutputSerializer
+  implements __OperationSerializer<RestJsonService<any>, "NoInputAndOutput", NoInputAndOutputErrors>
+{
+  serialize = serializeNoInputAndOutputResponse;
+  deserialize = deserializeNoInputAndOutputRequest;
+
+  isOperationError(error: any): error is NoInputAndOutputErrors {
+    return false;
+  }
+
+  serializeError(error: NoInputAndOutputErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getNoInputAndOutputHandler = <Context>(
+  operation: __Operation<NoInputAndOutputServerInput, NoInputAndOutputServerOutput, Context>,
+  customizer: __ValidationCustomizer<"NoInputAndOutput">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "NoInputAndOutput">([
+    new httpbinding.UriSpec<"RestJson", "NoInputAndOutput">(
+      "POST",
+      [{ type: "path_literal", value: "NoInputAndOutputOutput" }],
+      [],
+      { service: "RestJson", operation: "NoInputAndOutput" }
+    ),
+  ]);
+  return new NoInputAndOutputHandler(
+    operation,
+    mux,
+    new NoInputAndOutputSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -134,52 +183,3 @@ export class NoInputAndOutputHandler<Context> implements __ServiceHandler<Contex
     );
   }
 }
-
-export type NoInputAndOutput<Context> = __Operation<NoInputAndOutputServerInput, NoInputAndOutputServerOutput, Context>;
-
-export interface NoInputAndOutputServerInput {}
-export namespace NoInputAndOutputServerInput {
-  /**
-   * @internal
-   */
-  export const validate: () => __ValidationFailure[] = () => [];
-}
-export interface NoInputAndOutputServerOutput extends NoInputAndOutputOutput {}
-
-export type NoInputAndOutputErrors = never;
-
-export class NoInputAndOutputSerializer
-  implements __OperationSerializer<RestJsonService<any>, "NoInputAndOutput", NoInputAndOutputErrors>
-{
-  serialize = serializeNoInputAndOutputResponse;
-  deserialize = deserializeNoInputAndOutputRequest;
-
-  isOperationError(error: any): error is NoInputAndOutputErrors {
-    return false;
-  }
-
-  serializeError(error: NoInputAndOutputErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getNoInputAndOutputHandler = <Context>(
-  operation: __Operation<NoInputAndOutputServerInput, NoInputAndOutputServerOutput, Context>,
-  customizer: __ValidationCustomizer<"NoInputAndOutput">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "NoInputAndOutput">([
-    new httpbinding.UriSpec<"RestJson", "NoInputAndOutput">(
-      "POST",
-      [{ type: "path_literal", value: "NoInputAndOutputOutput" }],
-      [],
-      { service: "RestJson", operation: "NoInputAndOutput" }
-    ),
-  ]);
-  return new NoInputAndOutputHandler(
-    operation,
-    mux,
-    new NoInputAndOutputSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

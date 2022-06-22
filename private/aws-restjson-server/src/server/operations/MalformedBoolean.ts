@@ -30,6 +30,56 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type MalformedBoolean<Context> = __Operation<MalformedBooleanServerInput, MalformedBooleanServerOutput, Context>;
+
+export interface MalformedBooleanServerInput extends MalformedBooleanInput {}
+export namespace MalformedBooleanServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof MalformedBooleanInput.validate>[0]) => __ValidationFailure[] =
+    MalformedBooleanInput.validate;
+}
+export interface MalformedBooleanServerOutput {}
+
+export type MalformedBooleanErrors = never;
+
+export class MalformedBooleanSerializer
+  implements __OperationSerializer<RestJsonService<any>, "MalformedBoolean", MalformedBooleanErrors>
+{
+  serialize = serializeMalformedBooleanResponse;
+  deserialize = deserializeMalformedBooleanRequest;
+
+  isOperationError(error: any): error is MalformedBooleanErrors {
+    return false;
+  }
+
+  serializeError(error: MalformedBooleanErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getMalformedBooleanHandler = <Context>(
+  operation: __Operation<MalformedBooleanServerInput, MalformedBooleanServerOutput, Context>,
+  customizer: __ValidationCustomizer<"MalformedBoolean">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedBoolean">([
+    new httpbinding.UriSpec<"RestJson", "MalformedBoolean">(
+      "POST",
+      [{ type: "path_literal", value: "MalformedBoolean" }, { type: "path" }],
+      [],
+      { service: "RestJson", operation: "MalformedBoolean" }
+    ),
+  ]);
+  return new MalformedBooleanHandler(
+    operation,
+    mux,
+    new MalformedBooleanSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -134,53 +184,3 @@ export class MalformedBooleanHandler<Context> implements __ServiceHandler<Contex
     );
   }
 }
-
-export type MalformedBoolean<Context> = __Operation<MalformedBooleanServerInput, MalformedBooleanServerOutput, Context>;
-
-export interface MalformedBooleanServerInput extends MalformedBooleanInput {}
-export namespace MalformedBooleanServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof MalformedBooleanInput.validate>[0]) => __ValidationFailure[] =
-    MalformedBooleanInput.validate;
-}
-export interface MalformedBooleanServerOutput {}
-
-export type MalformedBooleanErrors = never;
-
-export class MalformedBooleanSerializer
-  implements __OperationSerializer<RestJsonService<any>, "MalformedBoolean", MalformedBooleanErrors>
-{
-  serialize = serializeMalformedBooleanResponse;
-  deserialize = deserializeMalformedBooleanRequest;
-
-  isOperationError(error: any): error is MalformedBooleanErrors {
-    return false;
-  }
-
-  serializeError(error: MalformedBooleanErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getMalformedBooleanHandler = <Context>(
-  operation: __Operation<MalformedBooleanServerInput, MalformedBooleanServerOutput, Context>,
-  customizer: __ValidationCustomizer<"MalformedBoolean">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedBoolean">([
-    new httpbinding.UriSpec<"RestJson", "MalformedBoolean">(
-      "POST",
-      [{ type: "path_literal", value: "MalformedBoolean" }, { type: "path" }],
-      [],
-      { service: "RestJson", operation: "MalformedBoolean" }
-    ),
-  ]);
-  return new MalformedBooleanHandler(
-    operation,
-    mux,
-    new MalformedBooleanSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

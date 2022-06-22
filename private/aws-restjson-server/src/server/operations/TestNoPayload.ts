@@ -30,6 +30,54 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type TestNoPayload<Context> = __Operation<TestNoPayloadServerInput, TestNoPayloadServerOutput, Context>;
+
+export interface TestNoPayloadServerInput extends TestNoPayloadInputOutput {}
+export namespace TestNoPayloadServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof TestNoPayloadInputOutput.validate>[0]) => __ValidationFailure[] =
+    TestNoPayloadInputOutput.validate;
+}
+export interface TestNoPayloadServerOutput extends TestNoPayloadInputOutput {}
+
+export type TestNoPayloadErrors = never;
+
+export class TestNoPayloadSerializer
+  implements __OperationSerializer<RestJsonService<any>, "TestNoPayload", TestNoPayloadErrors>
+{
+  serialize = serializeTestNoPayloadResponse;
+  deserialize = deserializeTestNoPayloadRequest;
+
+  isOperationError(error: any): error is TestNoPayloadErrors {
+    return false;
+  }
+
+  serializeError(error: TestNoPayloadErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getTestNoPayloadHandler = <Context>(
+  operation: __Operation<TestNoPayloadServerInput, TestNoPayloadServerOutput, Context>,
+  customizer: __ValidationCustomizer<"TestNoPayload">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "TestNoPayload">([
+    new httpbinding.UriSpec<"RestJson", "TestNoPayload">("GET", [{ type: "path_literal", value: "no_payload" }], [], {
+      service: "RestJson",
+      operation: "TestNoPayload",
+    }),
+  ]);
+  return new TestNoPayloadHandler(
+    operation,
+    mux,
+    new TestNoPayloadSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -130,51 +178,3 @@ export class TestNoPayloadHandler<Context> implements __ServiceHandler<Context> 
     );
   }
 }
-
-export type TestNoPayload<Context> = __Operation<TestNoPayloadServerInput, TestNoPayloadServerOutput, Context>;
-
-export interface TestNoPayloadServerInput extends TestNoPayloadInputOutput {}
-export namespace TestNoPayloadServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof TestNoPayloadInputOutput.validate>[0]) => __ValidationFailure[] =
-    TestNoPayloadInputOutput.validate;
-}
-export interface TestNoPayloadServerOutput extends TestNoPayloadInputOutput {}
-
-export type TestNoPayloadErrors = never;
-
-export class TestNoPayloadSerializer
-  implements __OperationSerializer<RestJsonService<any>, "TestNoPayload", TestNoPayloadErrors>
-{
-  serialize = serializeTestNoPayloadResponse;
-  deserialize = deserializeTestNoPayloadRequest;
-
-  isOperationError(error: any): error is TestNoPayloadErrors {
-    return false;
-  }
-
-  serializeError(error: TestNoPayloadErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getTestNoPayloadHandler = <Context>(
-  operation: __Operation<TestNoPayloadServerInput, TestNoPayloadServerOutput, Context>,
-  customizer: __ValidationCustomizer<"TestNoPayload">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "TestNoPayload">([
-    new httpbinding.UriSpec<"RestJson", "TestNoPayload">("GET", [{ type: "path_literal", value: "no_payload" }], [], {
-      service: "RestJson",
-      operation: "TestNoPayload",
-    }),
-  ]);
-  return new TestNoPayloadHandler(
-    operation,
-    mux,
-    new TestNoPayloadSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

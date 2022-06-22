@@ -30,6 +30,60 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type MalformedAcceptWithPayload<Context> = __Operation<
+  MalformedAcceptWithPayloadServerInput,
+  MalformedAcceptWithPayloadServerOutput,
+  Context
+>;
+
+export interface MalformedAcceptWithPayloadServerInput {}
+export namespace MalformedAcceptWithPayloadServerInput {
+  /**
+   * @internal
+   */
+  export const validate: () => __ValidationFailure[] = () => [];
+}
+export interface MalformedAcceptWithPayloadServerOutput extends MalformedAcceptWithPayloadOutput {}
+
+export type MalformedAcceptWithPayloadErrors = never;
+
+export class MalformedAcceptWithPayloadSerializer
+  implements
+    __OperationSerializer<RestJsonService<any>, "MalformedAcceptWithPayload", MalformedAcceptWithPayloadErrors>
+{
+  serialize = serializeMalformedAcceptWithPayloadResponse;
+  deserialize = deserializeMalformedAcceptWithPayloadRequest;
+
+  isOperationError(error: any): error is MalformedAcceptWithPayloadErrors {
+    return false;
+  }
+
+  serializeError(error: MalformedAcceptWithPayloadErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getMalformedAcceptWithPayloadHandler = <Context>(
+  operation: __Operation<MalformedAcceptWithPayloadServerInput, MalformedAcceptWithPayloadServerOutput, Context>,
+  customizer: __ValidationCustomizer<"MalformedAcceptWithPayload">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedAcceptWithPayload">([
+    new httpbinding.UriSpec<"RestJson", "MalformedAcceptWithPayload">(
+      "POST",
+      [{ type: "path_literal", value: "MalformedAcceptWithPayload" }],
+      [],
+      { service: "RestJson", operation: "MalformedAcceptWithPayload" }
+    ),
+  ]);
+  return new MalformedAcceptWithPayloadHandler(
+    operation,
+    mux,
+    new MalformedAcceptWithPayloadSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -142,57 +196,3 @@ export class MalformedAcceptWithPayloadHandler<Context> implements __ServiceHand
     );
   }
 }
-
-export type MalformedAcceptWithPayload<Context> = __Operation<
-  MalformedAcceptWithPayloadServerInput,
-  MalformedAcceptWithPayloadServerOutput,
-  Context
->;
-
-export interface MalformedAcceptWithPayloadServerInput {}
-export namespace MalformedAcceptWithPayloadServerInput {
-  /**
-   * @internal
-   */
-  export const validate: () => __ValidationFailure[] = () => [];
-}
-export interface MalformedAcceptWithPayloadServerOutput extends MalformedAcceptWithPayloadOutput {}
-
-export type MalformedAcceptWithPayloadErrors = never;
-
-export class MalformedAcceptWithPayloadSerializer
-  implements
-    __OperationSerializer<RestJsonService<any>, "MalformedAcceptWithPayload", MalformedAcceptWithPayloadErrors>
-{
-  serialize = serializeMalformedAcceptWithPayloadResponse;
-  deserialize = deserializeMalformedAcceptWithPayloadRequest;
-
-  isOperationError(error: any): error is MalformedAcceptWithPayloadErrors {
-    return false;
-  }
-
-  serializeError(error: MalformedAcceptWithPayloadErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getMalformedAcceptWithPayloadHandler = <Context>(
-  operation: __Operation<MalformedAcceptWithPayloadServerInput, MalformedAcceptWithPayloadServerOutput, Context>,
-  customizer: __ValidationCustomizer<"MalformedAcceptWithPayload">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedAcceptWithPayload">([
-    new httpbinding.UriSpec<"RestJson", "MalformedAcceptWithPayload">(
-      "POST",
-      [{ type: "path_literal", value: "MalformedAcceptWithPayload" }],
-      [],
-      { service: "RestJson", operation: "MalformedAcceptWithPayload" }
-    ),
-  ]);
-  return new MalformedAcceptWithPayloadHandler(
-    operation,
-    mux,
-    new MalformedAcceptWithPayloadSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

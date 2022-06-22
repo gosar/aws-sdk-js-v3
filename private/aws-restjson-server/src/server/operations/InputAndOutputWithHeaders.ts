@@ -30,6 +30,60 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type InputAndOutputWithHeaders<Context> = __Operation<
+  InputAndOutputWithHeadersServerInput,
+  InputAndOutputWithHeadersServerOutput,
+  Context
+>;
+
+export interface InputAndOutputWithHeadersServerInput extends InputAndOutputWithHeadersIO {}
+export namespace InputAndOutputWithHeadersServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof InputAndOutputWithHeadersIO.validate>[0]) => __ValidationFailure[] =
+    InputAndOutputWithHeadersIO.validate;
+}
+export interface InputAndOutputWithHeadersServerOutput extends InputAndOutputWithHeadersIO {}
+
+export type InputAndOutputWithHeadersErrors = never;
+
+export class InputAndOutputWithHeadersSerializer
+  implements __OperationSerializer<RestJsonService<any>, "InputAndOutputWithHeaders", InputAndOutputWithHeadersErrors>
+{
+  serialize = serializeInputAndOutputWithHeadersResponse;
+  deserialize = deserializeInputAndOutputWithHeadersRequest;
+
+  isOperationError(error: any): error is InputAndOutputWithHeadersErrors {
+    return false;
+  }
+
+  serializeError(error: InputAndOutputWithHeadersErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getInputAndOutputWithHeadersHandler = <Context>(
+  operation: __Operation<InputAndOutputWithHeadersServerInput, InputAndOutputWithHeadersServerOutput, Context>,
+  customizer: __ValidationCustomizer<"InputAndOutputWithHeaders">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "InputAndOutputWithHeaders">([
+    new httpbinding.UriSpec<"RestJson", "InputAndOutputWithHeaders">(
+      "POST",
+      [{ type: "path_literal", value: "InputAndOutputWithHeaders" }],
+      [],
+      { service: "RestJson", operation: "InputAndOutputWithHeaders" }
+    ),
+  ]);
+  return new InputAndOutputWithHeadersHandler(
+    operation,
+    mux,
+    new InputAndOutputWithHeadersSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -142,57 +196,3 @@ export class InputAndOutputWithHeadersHandler<Context> implements __ServiceHandl
     );
   }
 }
-
-export type InputAndOutputWithHeaders<Context> = __Operation<
-  InputAndOutputWithHeadersServerInput,
-  InputAndOutputWithHeadersServerOutput,
-  Context
->;
-
-export interface InputAndOutputWithHeadersServerInput extends InputAndOutputWithHeadersIO {}
-export namespace InputAndOutputWithHeadersServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof InputAndOutputWithHeadersIO.validate>[0]) => __ValidationFailure[] =
-    InputAndOutputWithHeadersIO.validate;
-}
-export interface InputAndOutputWithHeadersServerOutput extends InputAndOutputWithHeadersIO {}
-
-export type InputAndOutputWithHeadersErrors = never;
-
-export class InputAndOutputWithHeadersSerializer
-  implements __OperationSerializer<RestJsonService<any>, "InputAndOutputWithHeaders", InputAndOutputWithHeadersErrors>
-{
-  serialize = serializeInputAndOutputWithHeadersResponse;
-  deserialize = deserializeInputAndOutputWithHeadersRequest;
-
-  isOperationError(error: any): error is InputAndOutputWithHeadersErrors {
-    return false;
-  }
-
-  serializeError(error: InputAndOutputWithHeadersErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getInputAndOutputWithHeadersHandler = <Context>(
-  operation: __Operation<InputAndOutputWithHeadersServerInput, InputAndOutputWithHeadersServerOutput, Context>,
-  customizer: __ValidationCustomizer<"InputAndOutputWithHeaders">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "InputAndOutputWithHeaders">([
-    new httpbinding.UriSpec<"RestJson", "InputAndOutputWithHeaders">(
-      "POST",
-      [{ type: "path_literal", value: "InputAndOutputWithHeaders" }],
-      [],
-      { service: "RestJson", operation: "InputAndOutputWithHeaders" }
-    ),
-  ]);
-  return new InputAndOutputWithHeadersHandler(
-    operation,
-    mux,
-    new InputAndOutputWithHeadersSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

@@ -30,6 +30,66 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type MalformedTimestampBodyHttpDate<Context> = __Operation<
+  MalformedTimestampBodyHttpDateServerInput,
+  MalformedTimestampBodyHttpDateServerOutput,
+  Context
+>;
+
+export interface MalformedTimestampBodyHttpDateServerInput extends MalformedTimestampBodyHttpDateInput {}
+export namespace MalformedTimestampBodyHttpDateServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (
+    obj: Parameters<typeof MalformedTimestampBodyHttpDateInput.validate>[0]
+  ) => __ValidationFailure[] = MalformedTimestampBodyHttpDateInput.validate;
+}
+export interface MalformedTimestampBodyHttpDateServerOutput {}
+
+export type MalformedTimestampBodyHttpDateErrors = never;
+
+export class MalformedTimestampBodyHttpDateSerializer
+  implements
+    __OperationSerializer<RestJsonService<any>, "MalformedTimestampBodyHttpDate", MalformedTimestampBodyHttpDateErrors>
+{
+  serialize = serializeMalformedTimestampBodyHttpDateResponse;
+  deserialize = deserializeMalformedTimestampBodyHttpDateRequest;
+
+  isOperationError(error: any): error is MalformedTimestampBodyHttpDateErrors {
+    return false;
+  }
+
+  serializeError(error: MalformedTimestampBodyHttpDateErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getMalformedTimestampBodyHttpDateHandler = <Context>(
+  operation: __Operation<
+    MalformedTimestampBodyHttpDateServerInput,
+    MalformedTimestampBodyHttpDateServerOutput,
+    Context
+  >,
+  customizer: __ValidationCustomizer<"MalformedTimestampBodyHttpDate">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedTimestampBodyHttpDate">([
+    new httpbinding.UriSpec<"RestJson", "MalformedTimestampBodyHttpDate">(
+      "POST",
+      [{ type: "path_literal", value: "MalformedTimestampBodyHttpDate" }],
+      [],
+      { service: "RestJson", operation: "MalformedTimestampBodyHttpDate" }
+    ),
+  ]);
+  return new MalformedTimestampBodyHttpDateHandler(
+    operation,
+    mux,
+    new MalformedTimestampBodyHttpDateSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -146,63 +206,3 @@ export class MalformedTimestampBodyHttpDateHandler<Context> implements __Service
     );
   }
 }
-
-export type MalformedTimestampBodyHttpDate<Context> = __Operation<
-  MalformedTimestampBodyHttpDateServerInput,
-  MalformedTimestampBodyHttpDateServerOutput,
-  Context
->;
-
-export interface MalformedTimestampBodyHttpDateServerInput extends MalformedTimestampBodyHttpDateInput {}
-export namespace MalformedTimestampBodyHttpDateServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (
-    obj: Parameters<typeof MalformedTimestampBodyHttpDateInput.validate>[0]
-  ) => __ValidationFailure[] = MalformedTimestampBodyHttpDateInput.validate;
-}
-export interface MalformedTimestampBodyHttpDateServerOutput {}
-
-export type MalformedTimestampBodyHttpDateErrors = never;
-
-export class MalformedTimestampBodyHttpDateSerializer
-  implements
-    __OperationSerializer<RestJsonService<any>, "MalformedTimestampBodyHttpDate", MalformedTimestampBodyHttpDateErrors>
-{
-  serialize = serializeMalformedTimestampBodyHttpDateResponse;
-  deserialize = deserializeMalformedTimestampBodyHttpDateRequest;
-
-  isOperationError(error: any): error is MalformedTimestampBodyHttpDateErrors {
-    return false;
-  }
-
-  serializeError(error: MalformedTimestampBodyHttpDateErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getMalformedTimestampBodyHttpDateHandler = <Context>(
-  operation: __Operation<
-    MalformedTimestampBodyHttpDateServerInput,
-    MalformedTimestampBodyHttpDateServerOutput,
-    Context
-  >,
-  customizer: __ValidationCustomizer<"MalformedTimestampBodyHttpDate">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedTimestampBodyHttpDate">([
-    new httpbinding.UriSpec<"RestJson", "MalformedTimestampBodyHttpDate">(
-      "POST",
-      [{ type: "path_literal", value: "MalformedTimestampBodyHttpDate" }],
-      [],
-      { service: "RestJson", operation: "MalformedTimestampBodyHttpDate" }
-    ),
-  ]);
-  return new MalformedTimestampBodyHttpDateHandler(
-    operation,
-    mux,
-    new MalformedTimestampBodyHttpDateSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

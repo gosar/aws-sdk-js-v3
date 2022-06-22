@@ -30,6 +30,61 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type DocumentTypeAsPayload<Context> = __Operation<
+  DocumentTypeAsPayloadServerInput,
+  DocumentTypeAsPayloadServerOutput,
+  Context
+>;
+
+export interface DocumentTypeAsPayloadServerInput extends DocumentTypeAsPayloadInputOutput {}
+export namespace DocumentTypeAsPayloadServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (
+    obj: Parameters<typeof DocumentTypeAsPayloadInputOutput.validate>[0]
+  ) => __ValidationFailure[] = DocumentTypeAsPayloadInputOutput.validate;
+}
+export interface DocumentTypeAsPayloadServerOutput extends DocumentTypeAsPayloadInputOutput {}
+
+export type DocumentTypeAsPayloadErrors = never;
+
+export class DocumentTypeAsPayloadSerializer
+  implements __OperationSerializer<RestJsonService<any>, "DocumentTypeAsPayload", DocumentTypeAsPayloadErrors>
+{
+  serialize = serializeDocumentTypeAsPayloadResponse;
+  deserialize = deserializeDocumentTypeAsPayloadRequest;
+
+  isOperationError(error: any): error is DocumentTypeAsPayloadErrors {
+    return false;
+  }
+
+  serializeError(error: DocumentTypeAsPayloadErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getDocumentTypeAsPayloadHandler = <Context>(
+  operation: __Operation<DocumentTypeAsPayloadServerInput, DocumentTypeAsPayloadServerOutput, Context>,
+  customizer: __ValidationCustomizer<"DocumentTypeAsPayload">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "DocumentTypeAsPayload">([
+    new httpbinding.UriSpec<"RestJson", "DocumentTypeAsPayload">(
+      "PUT",
+      [{ type: "path_literal", value: "DocumentTypeAsPayload" }],
+      [],
+      { service: "RestJson", operation: "DocumentTypeAsPayload" }
+    ),
+  ]);
+  return new DocumentTypeAsPayloadHandler(
+    operation,
+    mux,
+    new DocumentTypeAsPayloadSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -134,58 +189,3 @@ export class DocumentTypeAsPayloadHandler<Context> implements __ServiceHandler<C
     );
   }
 }
-
-export type DocumentTypeAsPayload<Context> = __Operation<
-  DocumentTypeAsPayloadServerInput,
-  DocumentTypeAsPayloadServerOutput,
-  Context
->;
-
-export interface DocumentTypeAsPayloadServerInput extends DocumentTypeAsPayloadInputOutput {}
-export namespace DocumentTypeAsPayloadServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (
-    obj: Parameters<typeof DocumentTypeAsPayloadInputOutput.validate>[0]
-  ) => __ValidationFailure[] = DocumentTypeAsPayloadInputOutput.validate;
-}
-export interface DocumentTypeAsPayloadServerOutput extends DocumentTypeAsPayloadInputOutput {}
-
-export type DocumentTypeAsPayloadErrors = never;
-
-export class DocumentTypeAsPayloadSerializer
-  implements __OperationSerializer<RestJsonService<any>, "DocumentTypeAsPayload", DocumentTypeAsPayloadErrors>
-{
-  serialize = serializeDocumentTypeAsPayloadResponse;
-  deserialize = deserializeDocumentTypeAsPayloadRequest;
-
-  isOperationError(error: any): error is DocumentTypeAsPayloadErrors {
-    return false;
-  }
-
-  serializeError(error: DocumentTypeAsPayloadErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getDocumentTypeAsPayloadHandler = <Context>(
-  operation: __Operation<DocumentTypeAsPayloadServerInput, DocumentTypeAsPayloadServerOutput, Context>,
-  customizer: __ValidationCustomizer<"DocumentTypeAsPayload">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "DocumentTypeAsPayload">([
-    new httpbinding.UriSpec<"RestJson", "DocumentTypeAsPayload">(
-      "PUT",
-      [{ type: "path_literal", value: "DocumentTypeAsPayload" }],
-      [],
-      { service: "RestJson", operation: "DocumentTypeAsPayload" }
-    ),
-  ]);
-  return new DocumentTypeAsPayloadHandler(
-    operation,
-    mux,
-    new DocumentTypeAsPayloadSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

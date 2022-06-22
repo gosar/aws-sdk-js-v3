@@ -30,6 +30,55 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type HttpResponseCode<Context> = __Operation<HttpResponseCodeServerInput, HttpResponseCodeServerOutput, Context>;
+
+export interface HttpResponseCodeServerInput {}
+export namespace HttpResponseCodeServerInput {
+  /**
+   * @internal
+   */
+  export const validate: () => __ValidationFailure[] = () => [];
+}
+export interface HttpResponseCodeServerOutput extends HttpResponseCodeOutput {}
+
+export type HttpResponseCodeErrors = never;
+
+export class HttpResponseCodeSerializer
+  implements __OperationSerializer<RestJsonService<any>, "HttpResponseCode", HttpResponseCodeErrors>
+{
+  serialize = serializeHttpResponseCodeResponse;
+  deserialize = deserializeHttpResponseCodeRequest;
+
+  isOperationError(error: any): error is HttpResponseCodeErrors {
+    return false;
+  }
+
+  serializeError(error: HttpResponseCodeErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getHttpResponseCodeHandler = <Context>(
+  operation: __Operation<HttpResponseCodeServerInput, HttpResponseCodeServerOutput, Context>,
+  customizer: __ValidationCustomizer<"HttpResponseCode">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "HttpResponseCode">([
+    new httpbinding.UriSpec<"RestJson", "HttpResponseCode">(
+      "PUT",
+      [{ type: "path_literal", value: "HttpResponseCode" }],
+      [],
+      { service: "RestJson", operation: "HttpResponseCode" }
+    ),
+  ]);
+  return new HttpResponseCodeHandler(
+    operation,
+    mux,
+    new HttpResponseCodeSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -134,52 +183,3 @@ export class HttpResponseCodeHandler<Context> implements __ServiceHandler<Contex
     );
   }
 }
-
-export type HttpResponseCode<Context> = __Operation<HttpResponseCodeServerInput, HttpResponseCodeServerOutput, Context>;
-
-export interface HttpResponseCodeServerInput {}
-export namespace HttpResponseCodeServerInput {
-  /**
-   * @internal
-   */
-  export const validate: () => __ValidationFailure[] = () => [];
-}
-export interface HttpResponseCodeServerOutput extends HttpResponseCodeOutput {}
-
-export type HttpResponseCodeErrors = never;
-
-export class HttpResponseCodeSerializer
-  implements __OperationSerializer<RestJsonService<any>, "HttpResponseCode", HttpResponseCodeErrors>
-{
-  serialize = serializeHttpResponseCodeResponse;
-  deserialize = deserializeHttpResponseCodeRequest;
-
-  isOperationError(error: any): error is HttpResponseCodeErrors {
-    return false;
-  }
-
-  serializeError(error: HttpResponseCodeErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getHttpResponseCodeHandler = <Context>(
-  operation: __Operation<HttpResponseCodeServerInput, HttpResponseCodeServerOutput, Context>,
-  customizer: __ValidationCustomizer<"HttpResponseCode">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "HttpResponseCode">([
-    new httpbinding.UriSpec<"RestJson", "HttpResponseCode">(
-      "PUT",
-      [{ type: "path_literal", value: "HttpResponseCode" }],
-      [],
-      { service: "RestJson", operation: "HttpResponseCode" }
-    ),
-  ]);
-  return new HttpResponseCodeHandler(
-    operation,
-    mux,
-    new HttpResponseCodeSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

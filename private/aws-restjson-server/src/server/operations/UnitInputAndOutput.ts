@@ -29,6 +29,59 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type UnitInputAndOutput<Context> = __Operation<
+  UnitInputAndOutputServerInput,
+  UnitInputAndOutputServerOutput,
+  Context
+>;
+
+export interface UnitInputAndOutputServerInput {}
+export namespace UnitInputAndOutputServerInput {
+  /**
+   * @internal
+   */
+  export const validate: () => __ValidationFailure[] = () => [];
+}
+export interface UnitInputAndOutputServerOutput {}
+
+export type UnitInputAndOutputErrors = never;
+
+export class UnitInputAndOutputSerializer
+  implements __OperationSerializer<RestJsonService<any>, "UnitInputAndOutput", UnitInputAndOutputErrors>
+{
+  serialize = serializeUnitInputAndOutputResponse;
+  deserialize = deserializeUnitInputAndOutputRequest;
+
+  isOperationError(error: any): error is UnitInputAndOutputErrors {
+    return false;
+  }
+
+  serializeError(error: UnitInputAndOutputErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getUnitInputAndOutputHandler = <Context>(
+  operation: __Operation<UnitInputAndOutputServerInput, UnitInputAndOutputServerOutput, Context>,
+  customizer: __ValidationCustomizer<"UnitInputAndOutput">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "UnitInputAndOutput">([
+    new httpbinding.UriSpec<"RestJson", "UnitInputAndOutput">(
+      "POST",
+      [{ type: "path_literal", value: "UnitInputAndOutput" }],
+      [],
+      { service: "RestJson", operation: "UnitInputAndOutput" }
+    ),
+  ]);
+  return new UnitInputAndOutputHandler(
+    operation,
+    mux,
+    new UnitInputAndOutputSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -133,56 +186,3 @@ export class UnitInputAndOutputHandler<Context> implements __ServiceHandler<Cont
     );
   }
 }
-
-export type UnitInputAndOutput<Context> = __Operation<
-  UnitInputAndOutputServerInput,
-  UnitInputAndOutputServerOutput,
-  Context
->;
-
-export interface UnitInputAndOutputServerInput {}
-export namespace UnitInputAndOutputServerInput {
-  /**
-   * @internal
-   */
-  export const validate: () => __ValidationFailure[] = () => [];
-}
-export interface UnitInputAndOutputServerOutput {}
-
-export type UnitInputAndOutputErrors = never;
-
-export class UnitInputAndOutputSerializer
-  implements __OperationSerializer<RestJsonService<any>, "UnitInputAndOutput", UnitInputAndOutputErrors>
-{
-  serialize = serializeUnitInputAndOutputResponse;
-  deserialize = deserializeUnitInputAndOutputRequest;
-
-  isOperationError(error: any): error is UnitInputAndOutputErrors {
-    return false;
-  }
-
-  serializeError(error: UnitInputAndOutputErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getUnitInputAndOutputHandler = <Context>(
-  operation: __Operation<UnitInputAndOutputServerInput, UnitInputAndOutputServerOutput, Context>,
-  customizer: __ValidationCustomizer<"UnitInputAndOutput">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "UnitInputAndOutput">([
-    new httpbinding.UriSpec<"RestJson", "UnitInputAndOutput">(
-      "POST",
-      [{ type: "path_literal", value: "UnitInputAndOutput" }],
-      [],
-      { service: "RestJson", operation: "UnitInputAndOutput" }
-    ),
-  ]);
-  return new UnitInputAndOutputHandler(
-    operation,
-    mux,
-    new UnitInputAndOutputSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

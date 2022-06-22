@@ -34,6 +34,81 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonValidationService } from "../RestJsonValidationService";
 
+export type MalformedRequired<Context> = __Operation<
+  MalformedRequiredServerInput,
+  MalformedRequiredServerOutput,
+  Context
+>;
+
+export interface MalformedRequiredServerInput extends MalformedRequiredInput {}
+export namespace MalformedRequiredServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof MalformedRequiredInput.validate>[0]) => __ValidationFailure[] =
+    MalformedRequiredInput.validate;
+}
+export interface MalformedRequiredServerOutput {}
+
+export type MalformedRequiredErrors = ValidationException;
+
+export class MalformedRequiredSerializer
+  implements __OperationSerializer<RestJsonValidationService<any>, "MalformedRequired", MalformedRequiredErrors>
+{
+  serialize = serializeMalformedRequiredResponse;
+  deserialize = deserializeMalformedRequiredRequest;
+
+  isOperationError(error: any): error is MalformedRequiredErrors {
+    const names: MalformedRequiredErrors["name"][] = ["ValidationException"];
+    return names.includes(error.name);
+  }
+
+  serializeError(error: MalformedRequiredErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    switch (error.name) {
+      case "ValidationException": {
+        return serializeValidationExceptionError(error, ctx);
+      }
+      default: {
+        throw error;
+      }
+    }
+  }
+}
+
+export const getMalformedRequiredHandler = <Context>(
+  operation: __Operation<MalformedRequiredServerInput, MalformedRequiredServerOutput, Context>
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJsonValidation", "MalformedRequired">([
+    new httpbinding.UriSpec<"RestJsonValidation", "MalformedRequired">(
+      "POST",
+      [{ type: "path_literal", value: "MalformedRequired" }],
+      [{ type: "query", key: "stringInQuery" }],
+      { service: "RestJsonValidation", operation: "MalformedRequired" }
+    ),
+  ]);
+  const customizer: __ValidationCustomizer<"MalformedRequired"> = (ctx, failures) => {
+    if (!failures) {
+      return undefined;
+    }
+    return {
+      name: "ValidationException",
+      $fault: "client",
+      message: __generateValidationSummary(failures),
+      fieldList: failures.map((failure) => ({
+        path: failure.path,
+        message: __generateValidationMessage(failure),
+      })),
+    };
+  };
+  return new MalformedRequiredHandler(
+    operation,
+    mux,
+    new MalformedRequiredSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -138,78 +213,3 @@ export class MalformedRequiredHandler<Context> implements __ServiceHandler<Conte
     );
   }
 }
-
-export type MalformedRequired<Context> = __Operation<
-  MalformedRequiredServerInput,
-  MalformedRequiredServerOutput,
-  Context
->;
-
-export interface MalformedRequiredServerInput extends MalformedRequiredInput {}
-export namespace MalformedRequiredServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof MalformedRequiredInput.validate>[0]) => __ValidationFailure[] =
-    MalformedRequiredInput.validate;
-}
-export interface MalformedRequiredServerOutput {}
-
-export type MalformedRequiredErrors = ValidationException;
-
-export class MalformedRequiredSerializer
-  implements __OperationSerializer<RestJsonValidationService<any>, "MalformedRequired", MalformedRequiredErrors>
-{
-  serialize = serializeMalformedRequiredResponse;
-  deserialize = deserializeMalformedRequiredRequest;
-
-  isOperationError(error: any): error is MalformedRequiredErrors {
-    const names: MalformedRequiredErrors["name"][] = ["ValidationException"];
-    return names.includes(error.name);
-  }
-
-  serializeError(error: MalformedRequiredErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    switch (error.name) {
-      case "ValidationException": {
-        return serializeValidationExceptionError(error, ctx);
-      }
-      default: {
-        throw error;
-      }
-    }
-  }
-}
-
-export const getMalformedRequiredHandler = <Context>(
-  operation: __Operation<MalformedRequiredServerInput, MalformedRequiredServerOutput, Context>
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJsonValidation", "MalformedRequired">([
-    new httpbinding.UriSpec<"RestJsonValidation", "MalformedRequired">(
-      "POST",
-      [{ type: "path_literal", value: "MalformedRequired" }],
-      [{ type: "query", key: "stringInQuery" }],
-      { service: "RestJsonValidation", operation: "MalformedRequired" }
-    ),
-  ]);
-  const customizer: __ValidationCustomizer<"MalformedRequired"> = (ctx, failures) => {
-    if (!failures) {
-      return undefined;
-    }
-    return {
-      name: "ValidationException",
-      $fault: "client",
-      message: __generateValidationSummary(failures),
-      fieldList: failures.map((failure) => ({
-        path: failure.path,
-        message: __generateValidationMessage(failure),
-      })),
-    };
-  };
-  return new MalformedRequiredHandler(
-    operation,
-    mux,
-    new MalformedRequiredSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

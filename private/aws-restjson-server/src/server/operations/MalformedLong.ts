@@ -30,6 +30,56 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type MalformedLong<Context> = __Operation<MalformedLongServerInput, MalformedLongServerOutput, Context>;
+
+export interface MalformedLongServerInput extends MalformedLongInput {}
+export namespace MalformedLongServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof MalformedLongInput.validate>[0]) => __ValidationFailure[] =
+    MalformedLongInput.validate;
+}
+export interface MalformedLongServerOutput {}
+
+export type MalformedLongErrors = never;
+
+export class MalformedLongSerializer
+  implements __OperationSerializer<RestJsonService<any>, "MalformedLong", MalformedLongErrors>
+{
+  serialize = serializeMalformedLongResponse;
+  deserialize = deserializeMalformedLongRequest;
+
+  isOperationError(error: any): error is MalformedLongErrors {
+    return false;
+  }
+
+  serializeError(error: MalformedLongErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getMalformedLongHandler = <Context>(
+  operation: __Operation<MalformedLongServerInput, MalformedLongServerOutput, Context>,
+  customizer: __ValidationCustomizer<"MalformedLong">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedLong">([
+    new httpbinding.UriSpec<"RestJson", "MalformedLong">(
+      "POST",
+      [{ type: "path_literal", value: "MalformedLong" }, { type: "path" }],
+      [],
+      { service: "RestJson", operation: "MalformedLong" }
+    ),
+  ]);
+  return new MalformedLongHandler(
+    operation,
+    mux,
+    new MalformedLongSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -130,53 +180,3 @@ export class MalformedLongHandler<Context> implements __ServiceHandler<Context> 
     );
   }
 }
-
-export type MalformedLong<Context> = __Operation<MalformedLongServerInput, MalformedLongServerOutput, Context>;
-
-export interface MalformedLongServerInput extends MalformedLongInput {}
-export namespace MalformedLongServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof MalformedLongInput.validate>[0]) => __ValidationFailure[] =
-    MalformedLongInput.validate;
-}
-export interface MalformedLongServerOutput {}
-
-export type MalformedLongErrors = never;
-
-export class MalformedLongSerializer
-  implements __OperationSerializer<RestJsonService<any>, "MalformedLong", MalformedLongErrors>
-{
-  serialize = serializeMalformedLongResponse;
-  deserialize = deserializeMalformedLongRequest;
-
-  isOperationError(error: any): error is MalformedLongErrors {
-    return false;
-  }
-
-  serializeError(error: MalformedLongErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getMalformedLongHandler = <Context>(
-  operation: __Operation<MalformedLongServerInput, MalformedLongServerOutput, Context>,
-  customizer: __ValidationCustomizer<"MalformedLong">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedLong">([
-    new httpbinding.UriSpec<"RestJson", "MalformedLong">(
-      "POST",
-      [{ type: "path_literal", value: "MalformedLong" }, { type: "path" }],
-      [],
-      { service: "RestJson", operation: "MalformedLong" }
-    ),
-  ]);
-  return new MalformedLongHandler(
-    operation,
-    mux,
-    new MalformedLongSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

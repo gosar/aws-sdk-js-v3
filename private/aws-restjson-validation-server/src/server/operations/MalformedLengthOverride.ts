@@ -34,6 +34,82 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonValidationService } from "../RestJsonValidationService";
 
+export type MalformedLengthOverride<Context> = __Operation<
+  MalformedLengthOverrideServerInput,
+  MalformedLengthOverrideServerOutput,
+  Context
+>;
+
+export interface MalformedLengthOverrideServerInput extends MalformedLengthOverrideInput {}
+export namespace MalformedLengthOverrideServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof MalformedLengthOverrideInput.validate>[0]) => __ValidationFailure[] =
+    MalformedLengthOverrideInput.validate;
+}
+export interface MalformedLengthOverrideServerOutput {}
+
+export type MalformedLengthOverrideErrors = ValidationException;
+
+export class MalformedLengthOverrideSerializer
+  implements
+    __OperationSerializer<RestJsonValidationService<any>, "MalformedLengthOverride", MalformedLengthOverrideErrors>
+{
+  serialize = serializeMalformedLengthOverrideResponse;
+  deserialize = deserializeMalformedLengthOverrideRequest;
+
+  isOperationError(error: any): error is MalformedLengthOverrideErrors {
+    const names: MalformedLengthOverrideErrors["name"][] = ["ValidationException"];
+    return names.includes(error.name);
+  }
+
+  serializeError(error: MalformedLengthOverrideErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    switch (error.name) {
+      case "ValidationException": {
+        return serializeValidationExceptionError(error, ctx);
+      }
+      default: {
+        throw error;
+      }
+    }
+  }
+}
+
+export const getMalformedLengthOverrideHandler = <Context>(
+  operation: __Operation<MalformedLengthOverrideServerInput, MalformedLengthOverrideServerOutput, Context>
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJsonValidation", "MalformedLengthOverride">([
+    new httpbinding.UriSpec<"RestJsonValidation", "MalformedLengthOverride">(
+      "POST",
+      [{ type: "path_literal", value: "MalformedLengthOverride" }],
+      [],
+      { service: "RestJsonValidation", operation: "MalformedLengthOverride" }
+    ),
+  ]);
+  const customizer: __ValidationCustomizer<"MalformedLengthOverride"> = (ctx, failures) => {
+    if (!failures) {
+      return undefined;
+    }
+    return {
+      name: "ValidationException",
+      $fault: "client",
+      message: __generateValidationSummary(failures),
+      fieldList: failures.map((failure) => ({
+        path: failure.path,
+        message: __generateValidationMessage(failure),
+      })),
+    };
+  };
+  return new MalformedLengthOverrideHandler(
+    operation,
+    mux,
+    new MalformedLengthOverrideSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -146,79 +222,3 @@ export class MalformedLengthOverrideHandler<Context> implements __ServiceHandler
     );
   }
 }
-
-export type MalformedLengthOverride<Context> = __Operation<
-  MalformedLengthOverrideServerInput,
-  MalformedLengthOverrideServerOutput,
-  Context
->;
-
-export interface MalformedLengthOverrideServerInput extends MalformedLengthOverrideInput {}
-export namespace MalformedLengthOverrideServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof MalformedLengthOverrideInput.validate>[0]) => __ValidationFailure[] =
-    MalformedLengthOverrideInput.validate;
-}
-export interface MalformedLengthOverrideServerOutput {}
-
-export type MalformedLengthOverrideErrors = ValidationException;
-
-export class MalformedLengthOverrideSerializer
-  implements
-    __OperationSerializer<RestJsonValidationService<any>, "MalformedLengthOverride", MalformedLengthOverrideErrors>
-{
-  serialize = serializeMalformedLengthOverrideResponse;
-  deserialize = deserializeMalformedLengthOverrideRequest;
-
-  isOperationError(error: any): error is MalformedLengthOverrideErrors {
-    const names: MalformedLengthOverrideErrors["name"][] = ["ValidationException"];
-    return names.includes(error.name);
-  }
-
-  serializeError(error: MalformedLengthOverrideErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    switch (error.name) {
-      case "ValidationException": {
-        return serializeValidationExceptionError(error, ctx);
-      }
-      default: {
-        throw error;
-      }
-    }
-  }
-}
-
-export const getMalformedLengthOverrideHandler = <Context>(
-  operation: __Operation<MalformedLengthOverrideServerInput, MalformedLengthOverrideServerOutput, Context>
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJsonValidation", "MalformedLengthOverride">([
-    new httpbinding.UriSpec<"RestJsonValidation", "MalformedLengthOverride">(
-      "POST",
-      [{ type: "path_literal", value: "MalformedLengthOverride" }],
-      [],
-      { service: "RestJsonValidation", operation: "MalformedLengthOverride" }
-    ),
-  ]);
-  const customizer: __ValidationCustomizer<"MalformedLengthOverride"> = (ctx, failures) => {
-    if (!failures) {
-      return undefined;
-    }
-    return {
-      name: "ValidationException",
-      $fault: "client",
-      message: __generateValidationSummary(failures),
-      fieldList: failures.map((failure) => ({
-        path: failure.path,
-        message: __generateValidationMessage(failure),
-      })),
-    };
-  };
-  return new MalformedLengthOverrideHandler(
-    operation,
-    mux,
-    new MalformedLengthOverrideSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

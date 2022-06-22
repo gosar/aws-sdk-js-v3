@@ -30,6 +30,56 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type RecursiveShapes<Context> = __Operation<RecursiveShapesServerInput, RecursiveShapesServerOutput, Context>;
+
+export interface RecursiveShapesServerInput extends RecursiveShapesInputOutput {}
+export namespace RecursiveShapesServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof RecursiveShapesInputOutput.validate>[0]) => __ValidationFailure[] =
+    RecursiveShapesInputOutput.validate;
+}
+export interface RecursiveShapesServerOutput extends RecursiveShapesInputOutput {}
+
+export type RecursiveShapesErrors = never;
+
+export class RecursiveShapesSerializer
+  implements __OperationSerializer<RestJsonService<any>, "RecursiveShapes", RecursiveShapesErrors>
+{
+  serialize = serializeRecursiveShapesResponse;
+  deserialize = deserializeRecursiveShapesRequest;
+
+  isOperationError(error: any): error is RecursiveShapesErrors {
+    return false;
+  }
+
+  serializeError(error: RecursiveShapesErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getRecursiveShapesHandler = <Context>(
+  operation: __Operation<RecursiveShapesServerInput, RecursiveShapesServerOutput, Context>,
+  customizer: __ValidationCustomizer<"RecursiveShapes">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "RecursiveShapes">([
+    new httpbinding.UriSpec<"RestJson", "RecursiveShapes">(
+      "PUT",
+      [{ type: "path_literal", value: "RecursiveShapes" }],
+      [],
+      { service: "RestJson", operation: "RecursiveShapes" }
+    ),
+  ]);
+  return new RecursiveShapesHandler(
+    operation,
+    mux,
+    new RecursiveShapesSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -134,53 +184,3 @@ export class RecursiveShapesHandler<Context> implements __ServiceHandler<Context
     );
   }
 }
-
-export type RecursiveShapes<Context> = __Operation<RecursiveShapesServerInput, RecursiveShapesServerOutput, Context>;
-
-export interface RecursiveShapesServerInput extends RecursiveShapesInputOutput {}
-export namespace RecursiveShapesServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof RecursiveShapesInputOutput.validate>[0]) => __ValidationFailure[] =
-    RecursiveShapesInputOutput.validate;
-}
-export interface RecursiveShapesServerOutput extends RecursiveShapesInputOutput {}
-
-export type RecursiveShapesErrors = never;
-
-export class RecursiveShapesSerializer
-  implements __OperationSerializer<RestJsonService<any>, "RecursiveShapes", RecursiveShapesErrors>
-{
-  serialize = serializeRecursiveShapesResponse;
-  deserialize = deserializeRecursiveShapesRequest;
-
-  isOperationError(error: any): error is RecursiveShapesErrors {
-    return false;
-  }
-
-  serializeError(error: RecursiveShapesErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getRecursiveShapesHandler = <Context>(
-  operation: __Operation<RecursiveShapesServerInput, RecursiveShapesServerOutput, Context>,
-  customizer: __ValidationCustomizer<"RecursiveShapes">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "RecursiveShapes">([
-    new httpbinding.UriSpec<"RestJson", "RecursiveShapes">(
-      "PUT",
-      [{ type: "path_literal", value: "RecursiveShapes" }],
-      [],
-      { service: "RestJson", operation: "RecursiveShapes" }
-    ),
-  ]);
-  return new RecursiveShapesHandler(
-    operation,
-    mux,
-    new RecursiveShapesSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

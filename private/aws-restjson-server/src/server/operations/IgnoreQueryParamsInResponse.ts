@@ -30,6 +30,60 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type IgnoreQueryParamsInResponse<Context> = __Operation<
+  IgnoreQueryParamsInResponseServerInput,
+  IgnoreQueryParamsInResponseServerOutput,
+  Context
+>;
+
+export interface IgnoreQueryParamsInResponseServerInput {}
+export namespace IgnoreQueryParamsInResponseServerInput {
+  /**
+   * @internal
+   */
+  export const validate: () => __ValidationFailure[] = () => [];
+}
+export interface IgnoreQueryParamsInResponseServerOutput extends IgnoreQueryParamsInResponseOutput {}
+
+export type IgnoreQueryParamsInResponseErrors = never;
+
+export class IgnoreQueryParamsInResponseSerializer
+  implements
+    __OperationSerializer<RestJsonService<any>, "IgnoreQueryParamsInResponse", IgnoreQueryParamsInResponseErrors>
+{
+  serialize = serializeIgnoreQueryParamsInResponseResponse;
+  deserialize = deserializeIgnoreQueryParamsInResponseRequest;
+
+  isOperationError(error: any): error is IgnoreQueryParamsInResponseErrors {
+    return false;
+  }
+
+  serializeError(error: IgnoreQueryParamsInResponseErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getIgnoreQueryParamsInResponseHandler = <Context>(
+  operation: __Operation<IgnoreQueryParamsInResponseServerInput, IgnoreQueryParamsInResponseServerOutput, Context>,
+  customizer: __ValidationCustomizer<"IgnoreQueryParamsInResponse">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "IgnoreQueryParamsInResponse">([
+    new httpbinding.UriSpec<"RestJson", "IgnoreQueryParamsInResponse">(
+      "GET",
+      [{ type: "path_literal", value: "IgnoreQueryParamsInResponse" }],
+      [],
+      { service: "RestJson", operation: "IgnoreQueryParamsInResponse" }
+    ),
+  ]);
+  return new IgnoreQueryParamsInResponseHandler(
+    operation,
+    mux,
+    new IgnoreQueryParamsInResponseSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -142,57 +196,3 @@ export class IgnoreQueryParamsInResponseHandler<Context> implements __ServiceHan
     );
   }
 }
-
-export type IgnoreQueryParamsInResponse<Context> = __Operation<
-  IgnoreQueryParamsInResponseServerInput,
-  IgnoreQueryParamsInResponseServerOutput,
-  Context
->;
-
-export interface IgnoreQueryParamsInResponseServerInput {}
-export namespace IgnoreQueryParamsInResponseServerInput {
-  /**
-   * @internal
-   */
-  export const validate: () => __ValidationFailure[] = () => [];
-}
-export interface IgnoreQueryParamsInResponseServerOutput extends IgnoreQueryParamsInResponseOutput {}
-
-export type IgnoreQueryParamsInResponseErrors = never;
-
-export class IgnoreQueryParamsInResponseSerializer
-  implements
-    __OperationSerializer<RestJsonService<any>, "IgnoreQueryParamsInResponse", IgnoreQueryParamsInResponseErrors>
-{
-  serialize = serializeIgnoreQueryParamsInResponseResponse;
-  deserialize = deserializeIgnoreQueryParamsInResponseRequest;
-
-  isOperationError(error: any): error is IgnoreQueryParamsInResponseErrors {
-    return false;
-  }
-
-  serializeError(error: IgnoreQueryParamsInResponseErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getIgnoreQueryParamsInResponseHandler = <Context>(
-  operation: __Operation<IgnoreQueryParamsInResponseServerInput, IgnoreQueryParamsInResponseServerOutput, Context>,
-  customizer: __ValidationCustomizer<"IgnoreQueryParamsInResponse">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "IgnoreQueryParamsInResponse">([
-    new httpbinding.UriSpec<"RestJson", "IgnoreQueryParamsInResponse">(
-      "GET",
-      [{ type: "path_literal", value: "IgnoreQueryParamsInResponse" }],
-      [],
-      { service: "RestJson", operation: "IgnoreQueryParamsInResponse" }
-    ),
-  ]);
-  return new IgnoreQueryParamsInResponseHandler(
-    operation,
-    mux,
-    new IgnoreQueryParamsInResponseSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};
