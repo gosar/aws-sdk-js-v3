@@ -50,7 +50,7 @@
   },
   "license": "UNLICENSED",
   "dependencies": {
-    "glob": "^7.1.6",
+    "glob": "^8.0.3",
     "yargs": "17.5.1"
   },
   "devDependencies": {
