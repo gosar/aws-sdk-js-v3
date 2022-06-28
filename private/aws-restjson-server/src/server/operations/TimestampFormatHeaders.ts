@@ -30,6 +30,60 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type TimestampFormatHeaders<Context> = __Operation<
+  TimestampFormatHeadersServerInput,
+  TimestampFormatHeadersServerOutput,
+  Context
+>;
+
+export interface TimestampFormatHeadersServerInput extends TimestampFormatHeadersIO {}
+export namespace TimestampFormatHeadersServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof TimestampFormatHeadersIO.validate>[0]) => __ValidationFailure[] =
+    TimestampFormatHeadersIO.validate;
+}
+export interface TimestampFormatHeadersServerOutput extends TimestampFormatHeadersIO {}
+
+export type TimestampFormatHeadersErrors = never;
+
+export class TimestampFormatHeadersSerializer
+  implements __OperationSerializer<RestJsonService<any>, "TimestampFormatHeaders", TimestampFormatHeadersErrors>
+{
+  serialize = serializeTimestampFormatHeadersResponse;
+  deserialize = deserializeTimestampFormatHeadersRequest;
+
+  isOperationError(error: any): error is TimestampFormatHeadersErrors {
+    return false;
+  }
+
+  serializeError(error: TimestampFormatHeadersErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getTimestampFormatHeadersHandler = <Context>(
+  operation: __Operation<TimestampFormatHeadersServerInput, TimestampFormatHeadersServerOutput, Context>,
+  customizer: __ValidationCustomizer<"TimestampFormatHeaders">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "TimestampFormatHeaders">([
+    new httpbinding.UriSpec<"RestJson", "TimestampFormatHeaders">(
+      "POST",
+      [{ type: "path_literal", value: "TimestampFormatHeaders" }],
+      [],
+      { service: "RestJson", operation: "TimestampFormatHeaders" }
+    ),
+  ]);
+  return new TimestampFormatHeadersHandler(
+    operation,
+    mux,
+    new TimestampFormatHeadersSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -138,57 +192,3 @@ export class TimestampFormatHeadersHandler<Context> implements __ServiceHandler<
     );
   }
 }
-
-export type TimestampFormatHeaders<Context> = __Operation<
-  TimestampFormatHeadersServerInput,
-  TimestampFormatHeadersServerOutput,
-  Context
->;
-
-export interface TimestampFormatHeadersServerInput extends TimestampFormatHeadersIO {}
-export namespace TimestampFormatHeadersServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof TimestampFormatHeadersIO.validate>[0]) => __ValidationFailure[] =
-    TimestampFormatHeadersIO.validate;
-}
-export interface TimestampFormatHeadersServerOutput extends TimestampFormatHeadersIO {}
-
-export type TimestampFormatHeadersErrors = never;
-
-export class TimestampFormatHeadersSerializer
-  implements __OperationSerializer<RestJsonService<any>, "TimestampFormatHeaders", TimestampFormatHeadersErrors>
-{
-  serialize = serializeTimestampFormatHeadersResponse;
-  deserialize = deserializeTimestampFormatHeadersRequest;
-
-  isOperationError(error: any): error is TimestampFormatHeadersErrors {
-    return false;
-  }
-
-  serializeError(error: TimestampFormatHeadersErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getTimestampFormatHeadersHandler = <Context>(
-  operation: __Operation<TimestampFormatHeadersServerInput, TimestampFormatHeadersServerOutput, Context>,
-  customizer: __ValidationCustomizer<"TimestampFormatHeaders">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "TimestampFormatHeaders">([
-    new httpbinding.UriSpec<"RestJson", "TimestampFormatHeaders">(
-      "POST",
-      [{ type: "path_literal", value: "TimestampFormatHeaders" }],
-      [],
-      { service: "RestJson", operation: "TimestampFormatHeaders" }
-    ),
-  ]);
-  return new TimestampFormatHeadersHandler(
-    operation,
-    mux,
-    new TimestampFormatHeadersSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

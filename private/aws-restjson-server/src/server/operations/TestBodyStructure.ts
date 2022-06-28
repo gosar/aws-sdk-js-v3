@@ -30,6 +30,58 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type TestBodyStructure<Context> = __Operation<
+  TestBodyStructureServerInput,
+  TestBodyStructureServerOutput,
+  Context
+>;
+
+export interface TestBodyStructureServerInput extends TestBodyStructureInputOutput {}
+export namespace TestBodyStructureServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof TestBodyStructureInputOutput.validate>[0]) => __ValidationFailure[] =
+    TestBodyStructureInputOutput.validate;
+}
+export interface TestBodyStructureServerOutput extends TestBodyStructureInputOutput {}
+
+export type TestBodyStructureErrors = never;
+
+export class TestBodyStructureSerializer
+  implements __OperationSerializer<RestJsonService<any>, "TestBodyStructure", TestBodyStructureErrors>
+{
+  serialize = serializeTestBodyStructureResponse;
+  deserialize = deserializeTestBodyStructureRequest;
+
+  isOperationError(error: any): error is TestBodyStructureErrors {
+    return false;
+  }
+
+  serializeError(error: TestBodyStructureErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getTestBodyStructureHandler = <Context>(
+  operation: __Operation<TestBodyStructureServerInput, TestBodyStructureServerOutput, Context>,
+  customizer: __ValidationCustomizer<"TestBodyStructure">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "TestBodyStructure">([
+    new httpbinding.UriSpec<"RestJson", "TestBodyStructure">("POST", [{ type: "path_literal", value: "body" }], [], {
+      service: "RestJson",
+      operation: "TestBodyStructure",
+    }),
+  ]);
+  return new TestBodyStructureHandler(
+    operation,
+    mux,
+    new TestBodyStructureSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -134,55 +186,3 @@ export class TestBodyStructureHandler<Context> implements __ServiceHandler<Conte
     );
   }
 }
-
-export type TestBodyStructure<Context> = __Operation<
-  TestBodyStructureServerInput,
-  TestBodyStructureServerOutput,
-  Context
->;
-
-export interface TestBodyStructureServerInput extends TestBodyStructureInputOutput {}
-export namespace TestBodyStructureServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof TestBodyStructureInputOutput.validate>[0]) => __ValidationFailure[] =
-    TestBodyStructureInputOutput.validate;
-}
-export interface TestBodyStructureServerOutput extends TestBodyStructureInputOutput {}
-
-export type TestBodyStructureErrors = never;
-
-export class TestBodyStructureSerializer
-  implements __OperationSerializer<RestJsonService<any>, "TestBodyStructure", TestBodyStructureErrors>
-{
-  serialize = serializeTestBodyStructureResponse;
-  deserialize = deserializeTestBodyStructureRequest;
-
-  isOperationError(error: any): error is TestBodyStructureErrors {
-    return false;
-  }
-
-  serializeError(error: TestBodyStructureErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getTestBodyStructureHandler = <Context>(
-  operation: __Operation<TestBodyStructureServerInput, TestBodyStructureServerOutput, Context>,
-  customizer: __ValidationCustomizer<"TestBodyStructure">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "TestBodyStructure">([
-    new httpbinding.UriSpec<"RestJson", "TestBodyStructure">("POST", [{ type: "path_literal", value: "body" }], [], {
-      service: "RestJson",
-      operation: "TestBodyStructure",
-    }),
-  ]);
-  return new TestBodyStructureHandler(
-    operation,
-    mux,
-    new TestBodyStructureSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

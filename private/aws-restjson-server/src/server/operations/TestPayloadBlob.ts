@@ -30,6 +30,56 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type TestPayloadBlob<Context> = __Operation<TestPayloadBlobServerInput, TestPayloadBlobServerOutput, Context>;
+
+export interface TestPayloadBlobServerInput extends TestPayloadBlobInputOutput {}
+export namespace TestPayloadBlobServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof TestPayloadBlobInputOutput.validate>[0]) => __ValidationFailure[] =
+    TestPayloadBlobInputOutput.validate;
+}
+export interface TestPayloadBlobServerOutput extends TestPayloadBlobInputOutput {}
+
+export type TestPayloadBlobErrors = never;
+
+export class TestPayloadBlobSerializer
+  implements __OperationSerializer<RestJsonService<any>, "TestPayloadBlob", TestPayloadBlobErrors>
+{
+  serialize = serializeTestPayloadBlobResponse;
+  deserialize = deserializeTestPayloadBlobRequest;
+
+  isOperationError(error: any): error is TestPayloadBlobErrors {
+    return false;
+  }
+
+  serializeError(error: TestPayloadBlobErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getTestPayloadBlobHandler = <Context>(
+  operation: __Operation<TestPayloadBlobServerInput, TestPayloadBlobServerOutput, Context>,
+  customizer: __ValidationCustomizer<"TestPayloadBlob">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "TestPayloadBlob">([
+    new httpbinding.UriSpec<"RestJson", "TestPayloadBlob">(
+      "POST",
+      [{ type: "path_literal", value: "blob_payload" }],
+      [],
+      { service: "RestJson", operation: "TestPayloadBlob" }
+    ),
+  ]);
+  return new TestPayloadBlobHandler(
+    operation,
+    mux,
+    new TestPayloadBlobSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -134,53 +184,3 @@ export class TestPayloadBlobHandler<Context> implements __ServiceHandler<Context
     );
   }
 }
-
-export type TestPayloadBlob<Context> = __Operation<TestPayloadBlobServerInput, TestPayloadBlobServerOutput, Context>;
-
-export interface TestPayloadBlobServerInput extends TestPayloadBlobInputOutput {}
-export namespace TestPayloadBlobServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof TestPayloadBlobInputOutput.validate>[0]) => __ValidationFailure[] =
-    TestPayloadBlobInputOutput.validate;
-}
-export interface TestPayloadBlobServerOutput extends TestPayloadBlobInputOutput {}
-
-export type TestPayloadBlobErrors = never;
-
-export class TestPayloadBlobSerializer
-  implements __OperationSerializer<RestJsonService<any>, "TestPayloadBlob", TestPayloadBlobErrors>
-{
-  serialize = serializeTestPayloadBlobResponse;
-  deserialize = deserializeTestPayloadBlobRequest;
-
-  isOperationError(error: any): error is TestPayloadBlobErrors {
-    return false;
-  }
-
-  serializeError(error: TestPayloadBlobErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getTestPayloadBlobHandler = <Context>(
-  operation: __Operation<TestPayloadBlobServerInput, TestPayloadBlobServerOutput, Context>,
-  customizer: __ValidationCustomizer<"TestPayloadBlob">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "TestPayloadBlob">([
-    new httpbinding.UriSpec<"RestJson", "TestPayloadBlob">(
-      "POST",
-      [{ type: "path_literal", value: "blob_payload" }],
-      [],
-      { service: "RestJson", operation: "TestPayloadBlob" }
-    ),
-  ]);
-  return new TestPayloadBlobHandler(
-    operation,
-    mux,
-    new TestPayloadBlobSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

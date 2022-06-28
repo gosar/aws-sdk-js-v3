@@ -30,6 +30,46 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type JsonEnums<Context> = __Operation<JsonEnumsServerInput, JsonEnumsServerOutput, Context>;
+
+export interface JsonEnumsServerInput extends JsonEnumsInputOutput {}
+export namespace JsonEnumsServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof JsonEnumsInputOutput.validate>[0]) => __ValidationFailure[] =
+    JsonEnumsInputOutput.validate;
+}
+export interface JsonEnumsServerOutput extends JsonEnumsInputOutput {}
+
+export type JsonEnumsErrors = never;
+
+export class JsonEnumsSerializer implements __OperationSerializer<RestJsonService<any>, "JsonEnums", JsonEnumsErrors> {
+  serialize = serializeJsonEnumsResponse;
+  deserialize = deserializeJsonEnumsRequest;
+
+  isOperationError(error: any): error is JsonEnumsErrors {
+    return false;
+  }
+
+  serializeError(error: JsonEnumsErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getJsonEnumsHandler = <Context>(
+  operation: __Operation<JsonEnumsServerInput, JsonEnumsServerOutput, Context>,
+  customizer: __ValidationCustomizer<"JsonEnums">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "JsonEnums">([
+    new httpbinding.UriSpec<"RestJson", "JsonEnums">("PUT", [{ type: "path_literal", value: "JsonEnums" }], [], {
+      service: "RestJson",
+      operation: "JsonEnums",
+    }),
+  ]);
+  return new JsonEnumsHandler(operation, mux, new JsonEnumsSerializer(), serializeFrameworkException, customizer);
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -130,43 +170,3 @@ export class JsonEnumsHandler<Context> implements __ServiceHandler<Context> {
     );
   }
 }
-
-export type JsonEnums<Context> = __Operation<JsonEnumsServerInput, JsonEnumsServerOutput, Context>;
-
-export interface JsonEnumsServerInput extends JsonEnumsInputOutput {}
-export namespace JsonEnumsServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof JsonEnumsInputOutput.validate>[0]) => __ValidationFailure[] =
-    JsonEnumsInputOutput.validate;
-}
-export interface JsonEnumsServerOutput extends JsonEnumsInputOutput {}
-
-export type JsonEnumsErrors = never;
-
-export class JsonEnumsSerializer implements __OperationSerializer<RestJsonService<any>, "JsonEnums", JsonEnumsErrors> {
-  serialize = serializeJsonEnumsResponse;
-  deserialize = deserializeJsonEnumsRequest;
-
-  isOperationError(error: any): error is JsonEnumsErrors {
-    return false;
-  }
-
-  serializeError(error: JsonEnumsErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getJsonEnumsHandler = <Context>(
-  operation: __Operation<JsonEnumsServerInput, JsonEnumsServerOutput, Context>,
-  customizer: __ValidationCustomizer<"JsonEnums">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "JsonEnums">([
-    new httpbinding.UriSpec<"RestJson", "JsonEnums">("PUT", [{ type: "path_literal", value: "JsonEnums" }], [], {
-      service: "RestJson",
-      operation: "JsonEnums",
-    }),
-  ]);
-  return new JsonEnumsHandler(operation, mux, new JsonEnumsSerializer(), serializeFrameworkException, customizer);
-};

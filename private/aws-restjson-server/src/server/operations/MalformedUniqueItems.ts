@@ -22,64 +22,63 @@ import {
   ValidationFailure as __ValidationFailure,
 } from "@aws-smithy/server-common";
 
-import { DocumentTypeAsPayloadInputOutput } from "../../models/models_0";
+import { MalformedUniqueItemsInput } from "../../models/models_0";
 import {
-  deserializeDocumentTypeAsPayloadRequest,
-  serializeDocumentTypeAsPayloadResponse,
+  deserializeMalformedUniqueItemsRequest,
   serializeFrameworkException,
+  serializeMalformedUniqueItemsResponse,
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
-export type DocumentTypeAsPayload<Context> = __Operation<
-  DocumentTypeAsPayloadServerInput,
-  DocumentTypeAsPayloadServerOutput,
+export type MalformedUniqueItems<Context> = __Operation<
+  MalformedUniqueItemsServerInput,
+  MalformedUniqueItemsServerOutput,
   Context
 >;
 
-export interface DocumentTypeAsPayloadServerInput extends DocumentTypeAsPayloadInputOutput {}
-export namespace DocumentTypeAsPayloadServerInput {
+export interface MalformedUniqueItemsServerInput extends MalformedUniqueItemsInput {}
+export namespace MalformedUniqueItemsServerInput {
   /**
    * @internal
    */
-  export const validate: (
-    obj: Parameters<typeof DocumentTypeAsPayloadInputOutput.validate>[0]
-  ) => __ValidationFailure[] = DocumentTypeAsPayloadInputOutput.validate;
+  export const validate: (obj: Parameters<typeof MalformedUniqueItemsInput.validate>[0]) => __ValidationFailure[] =
+    MalformedUniqueItemsInput.validate;
 }
-export interface DocumentTypeAsPayloadServerOutput extends DocumentTypeAsPayloadInputOutput {}
+export interface MalformedUniqueItemsServerOutput {}
 
-export type DocumentTypeAsPayloadErrors = never;
+export type MalformedUniqueItemsErrors = never;
 
-export class DocumentTypeAsPayloadSerializer
-  implements __OperationSerializer<RestJsonService<any>, "DocumentTypeAsPayload", DocumentTypeAsPayloadErrors>
+export class MalformedUniqueItemsSerializer
+  implements __OperationSerializer<RestJsonService<any>, "MalformedUniqueItems", MalformedUniqueItemsErrors>
 {
-  serialize = serializeDocumentTypeAsPayloadResponse;
-  deserialize = deserializeDocumentTypeAsPayloadRequest;
+  serialize = serializeMalformedUniqueItemsResponse;
+  deserialize = deserializeMalformedUniqueItemsRequest;
 
-  isOperationError(error: any): error is DocumentTypeAsPayloadErrors {
+  isOperationError(error: any): error is MalformedUniqueItemsErrors {
     return false;
   }
 
-  serializeError(error: DocumentTypeAsPayloadErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+  serializeError(error: MalformedUniqueItemsErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
     throw error;
   }
 }
 
-export const getDocumentTypeAsPayloadHandler = <Context>(
-  operation: __Operation<DocumentTypeAsPayloadServerInput, DocumentTypeAsPayloadServerOutput, Context>,
-  customizer: __ValidationCustomizer<"DocumentTypeAsPayload">
+export const getMalformedUniqueItemsHandler = <Context>(
+  operation: __Operation<MalformedUniqueItemsServerInput, MalformedUniqueItemsServerOutput, Context>,
+  customizer: __ValidationCustomizer<"MalformedUniqueItems">
 ): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "DocumentTypeAsPayload">([
-    new httpbinding.UriSpec<"RestJson", "DocumentTypeAsPayload">(
-      "PUT",
-      [{ type: "path_literal", value: "DocumentTypeAsPayload" }],
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedUniqueItems">([
+    new httpbinding.UriSpec<"RestJson", "MalformedUniqueItems">(
+      "POST",
+      [{ type: "path_literal", value: "MalformedUniqueItems" }],
       [],
-      { service: "RestJson", operation: "DocumentTypeAsPayload" }
+      { service: "RestJson", operation: "MalformedUniqueItems" }
     ),
   ]);
-  return new DocumentTypeAsPayloadHandler(
+  return new MalformedUniqueItemsHandler(
     operation,
     mux,
-    new DocumentTypeAsPayloadSerializer(),
+    new MalformedUniqueItemsSerializer(),
     serializeFrameworkException,
     customizer
   );
@@ -134,34 +133,34 @@ async function handle<S, O extends keyof S & string, Context>(
     return serializeFrameworkException(new __InternalFailureException(), serdeContextBase);
   }
 }
-export class DocumentTypeAsPayloadHandler<Context> implements __ServiceHandler<Context> {
-  private readonly operation: __Operation<DocumentTypeAsPayloadServerInput, DocumentTypeAsPayloadServerOutput, Context>;
-  private readonly mux: __Mux<"RestJson", "DocumentTypeAsPayload">;
+export class MalformedUniqueItemsHandler<Context> implements __ServiceHandler<Context> {
+  private readonly operation: __Operation<MalformedUniqueItemsServerInput, MalformedUniqueItemsServerOutput, Context>;
+  private readonly mux: __Mux<"RestJson", "MalformedUniqueItems">;
   private readonly serializer: __OperationSerializer<
     RestJsonService<Context>,
-    "DocumentTypeAsPayload",
-    DocumentTypeAsPayloadErrors
+    "MalformedUniqueItems",
+    MalformedUniqueItemsErrors
   >;
   private readonly serializeFrameworkException: (
     e: __SmithyFrameworkException,
     ctx: __ServerSerdeContext
   ) => Promise<__HttpResponse>;
-  private readonly validationCustomizer: __ValidationCustomizer<"DocumentTypeAsPayload">;
+  private readonly validationCustomizer: __ValidationCustomizer<"MalformedUniqueItems">;
   /**
-   * Construct a DocumentTypeAsPayload handler.
-   * @param operation The {@link __Operation} implementation that supplies the business logic for DocumentTypeAsPayload
+   * Construct a MalformedUniqueItems handler.
+   * @param operation The {@link __Operation} implementation that supplies the business logic for MalformedUniqueItems
    * @param mux The {@link __Mux} that verifies which service and operation are being invoked by a given {@link __HttpRequest}
-   * @param serializer An {@link __OperationSerializer} for DocumentTypeAsPayload that
+   * @param serializer An {@link __OperationSerializer} for MalformedUniqueItems that
    *                   handles deserialization of requests and serialization of responses
    * @param serializeFrameworkException A function that can serialize {@link __SmithyFrameworkException}s
    * @param validationCustomizer A {@link __ValidationCustomizer} for turning validation failures into {@link __SmithyFrameworkException}s
    */
   constructor(
-    operation: __Operation<DocumentTypeAsPayloadServerInput, DocumentTypeAsPayloadServerOutput, Context>,
-    mux: __Mux<"RestJson", "DocumentTypeAsPayload">,
-    serializer: __OperationSerializer<RestJsonService<Context>, "DocumentTypeAsPayload", DocumentTypeAsPayloadErrors>,
+    operation: __Operation<MalformedUniqueItemsServerInput, MalformedUniqueItemsServerOutput, Context>,
+    mux: __Mux<"RestJson", "MalformedUniqueItems">,
+    serializer: __OperationSerializer<RestJsonService<Context>, "MalformedUniqueItems", MalformedUniqueItemsErrors>,
     serializeFrameworkException: (e: __SmithyFrameworkException, ctx: __ServerSerdeContext) => Promise<__HttpResponse>,
-    validationCustomizer: __ValidationCustomizer<"DocumentTypeAsPayload">
+    validationCustomizer: __ValidationCustomizer<"MalformedUniqueItems">
   ) {
     this.operation = operation;
     this.mux = mux;
@@ -173,18 +172,18 @@ export class DocumentTypeAsPayloadHandler<Context> implements __ServiceHandler<C
     const target = this.mux.match(request);
     if (target === undefined) {
       console.log(
-        "Received a request that did not match aws.protocoltests.restjson#RestJson.DocumentTypeAsPayload. This indicates a misconfiguration."
+        "Received a request that did not match aws.protocoltests.restjson#RestJson.MalformedUniqueItems. This indicates a misconfiguration."
       );
       return this.serializeFrameworkException(new __InternalFailureException(), serdeContextBase);
     }
     return handle(
       request,
       context,
-      "DocumentTypeAsPayload",
+      "MalformedUniqueItems",
       this.serializer,
       this.operation,
       this.serializeFrameworkException,
-      DocumentTypeAsPayloadServerInput.validate,
+      MalformedUniqueItemsServerInput.validate,
       this.validationCustomizer
     );
   }

@@ -30,6 +30,48 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type MalformedMap<Context> = __Operation<MalformedMapServerInput, MalformedMapServerOutput, Context>;
+
+export interface MalformedMapServerInput extends MalformedMapInput {}
+export namespace MalformedMapServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof MalformedMapInput.validate>[0]) => __ValidationFailure[] =
+    MalformedMapInput.validate;
+}
+export interface MalformedMapServerOutput {}
+
+export type MalformedMapErrors = never;
+
+export class MalformedMapSerializer
+  implements __OperationSerializer<RestJsonService<any>, "MalformedMap", MalformedMapErrors>
+{
+  serialize = serializeMalformedMapResponse;
+  deserialize = deserializeMalformedMapRequest;
+
+  isOperationError(error: any): error is MalformedMapErrors {
+    return false;
+  }
+
+  serializeError(error: MalformedMapErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getMalformedMapHandler = <Context>(
+  operation: __Operation<MalformedMapServerInput, MalformedMapServerOutput, Context>,
+  customizer: __ValidationCustomizer<"MalformedMap">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedMap">([
+    new httpbinding.UriSpec<"RestJson", "MalformedMap">("POST", [{ type: "path_literal", value: "MalformedMap" }], [], {
+      service: "RestJson",
+      operation: "MalformedMap",
+    }),
+  ]);
+  return new MalformedMapHandler(operation, mux, new MalformedMapSerializer(), serializeFrameworkException, customizer);
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -130,45 +172,3 @@ export class MalformedMapHandler<Context> implements __ServiceHandler<Context> {
     );
   }
 }
-
-export type MalformedMap<Context> = __Operation<MalformedMapServerInput, MalformedMapServerOutput, Context>;
-
-export interface MalformedMapServerInput extends MalformedMapInput {}
-export namespace MalformedMapServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof MalformedMapInput.validate>[0]) => __ValidationFailure[] =
-    MalformedMapInput.validate;
-}
-export interface MalformedMapServerOutput {}
-
-export type MalformedMapErrors = never;
-
-export class MalformedMapSerializer
-  implements __OperationSerializer<RestJsonService<any>, "MalformedMap", MalformedMapErrors>
-{
-  serialize = serializeMalformedMapResponse;
-  deserialize = deserializeMalformedMapRequest;
-
-  isOperationError(error: any): error is MalformedMapErrors {
-    return false;
-  }
-
-  serializeError(error: MalformedMapErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getMalformedMapHandler = <Context>(
-  operation: __Operation<MalformedMapServerInput, MalformedMapServerOutput, Context>,
-  customizer: __ValidationCustomizer<"MalformedMap">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedMap">([
-    new httpbinding.UriSpec<"RestJson", "MalformedMap">("POST", [{ type: "path_literal", value: "MalformedMap" }], [], {
-      service: "RestJson",
-      operation: "MalformedMap",
-    }),
-  ]);
-  return new MalformedMapHandler(operation, mux, new MalformedMapSerializer(), serializeFrameworkException, customizer);
-};

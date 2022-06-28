@@ -14,6 +14,7 @@ import {
   NoOpValidator as __NoOpValidator,
   RequiredValidator as __RequiredValidator,
   ServiceException as __BaseException,
+  UniqueItemsValidator as __UniqueItemsValidator,
   ValidationFailure as __ValidationFailure,
 } from "@aws-smithy/server-common";
 import { Readable } from "stream";
@@ -133,7 +134,7 @@ export namespace AllQueryStringTypesInput {
           }
           case "queryStringSet": {
             memberValidators["queryStringSet"] = new __CompositeCollectionValidator<string>(
-              new __NoOpValidator(),
+              new __CompositeValidator<string[]>([new __UniqueItemsValidator()]),
               new __NoOpValidator()
             );
             break;
@@ -159,7 +160,7 @@ export namespace AllQueryStringTypesInput {
           }
           case "queryIntegerSet": {
             memberValidators["queryIntegerSet"] = new __CompositeCollectionValidator<number>(
-              new __NoOpValidator(),
+              new __CompositeValidator<number[]>([new __UniqueItemsValidator()]),
               new __NoOpValidator()
             );
             break;
@@ -312,6 +313,50 @@ export class ComplexError extends __BaseException {
     this.TopLevel = opts.TopLevel;
     this.Nested = opts.Nested;
   }
+}
+
+export interface ComplexSetStruct {
+  foo?: boolean;
+  blob?: Uint8Array;
+}
+
+export namespace ComplexSetStruct {
+  /**
+   * @internal
+   */
+  export const filterSensitiveLog = (obj: ComplexSetStruct): any => ({
+    ...obj,
+  });
+  const memberValidators: {
+    foo?: __MultiConstraintValidator<boolean>;
+    blob?: __MultiConstraintValidator<Uint8Array>;
+  } = {};
+  /**
+   * @internal
+   */
+  export const validate = (obj: ComplexSetStruct, path = ""): __ValidationFailure[] => {
+    function getMemberValidator<T extends keyof typeof memberValidators>(
+      member: T
+    ): NonNullable<typeof memberValidators[T]> {
+      if (memberValidators[member] === undefined) {
+        switch (member) {
+          case "foo": {
+            memberValidators["foo"] = new __NoOpValidator();
+            break;
+          }
+          case "blob": {
+            memberValidators["blob"] = new __NoOpValidator();
+            break;
+          }
+        }
+      }
+      return memberValidators[member]!;
+    }
+    return [
+      ...getMemberValidator("foo").validate(obj.foo, `${path}/foo`),
+      ...getMemberValidator("blob").validate(obj.blob, `${path}/blob`),
+    ];
+  };
 }
 
 export interface ConstantAndVariableQueryStringInput {
@@ -1535,7 +1580,7 @@ export namespace InputAndOutputWithHeadersIO {
           }
           case "headerStringSet": {
             memberValidators["headerStringSet"] = new __CompositeCollectionValidator<string>(
-              new __NoOpValidator(),
+              new __CompositeValidator<string[]>([new __UniqueItemsValidator()]),
               new __NoOpValidator()
             );
             break;
@@ -1694,7 +1739,7 @@ export namespace JsonEnumsInputOutput {
           }
           case "fooEnumSet": {
             memberValidators["fooEnumSet"] = new __CompositeCollectionValidator<string>(
-              new __NoOpValidator(),
+              new __CompositeValidator<(FooEnum | string)[]>([new __UniqueItemsValidator()]),
               new __CompositeValidator<string>([new __EnumValidator(["Foo", "Baz", "Bar", "1", "0"])])
             );
             break;
@@ -1825,7 +1870,7 @@ export namespace JsonListsInputOutput {
           }
           case "stringSet": {
             memberValidators["stringSet"] = new __CompositeCollectionValidator<string>(
-              new __NoOpValidator(),
+              new __CompositeValidator<string[]>([new __UniqueItemsValidator()]),
               new __NoOpValidator()
             );
             break;
@@ -2002,7 +2047,10 @@ export namespace JsonMapsInputOutput {
             memberValidators["denseSetMap"] = new __CompositeMapValidator<string[]>(
               new __NoOpValidator(),
               new __NoOpValidator(),
-              new __CompositeCollectionValidator<string>(new __NoOpValidator(), new __NoOpValidator())
+              new __CompositeCollectionValidator<string>(
+                new __CompositeValidator<string[]>([new __UniqueItemsValidator()]),
+                new __NoOpValidator()
+              )
             );
             break;
           }
@@ -2010,7 +2058,10 @@ export namespace JsonMapsInputOutput {
             memberValidators["sparseSetMap"] = new __CompositeMapValidator<string[]>(
               new __NoOpValidator(),
               new __NoOpValidator(),
-              new __CompositeCollectionValidator<string>(new __NoOpValidator(), new __NoOpValidator())
+              new __CompositeCollectionValidator<string>(
+                new __CompositeValidator<string[]>([new __UniqueItemsValidator()]),
+                new __NoOpValidator()
+              )
             );
             break;
           }
@@ -2487,7 +2538,7 @@ export namespace UnionInputOutput {
 }
 
 export interface MalformedAcceptWithGenericStringInput {
-  payload?: Uint8Array;
+  payload?: string;
 }
 
 export namespace MalformedAcceptWithGenericStringInput {
@@ -2498,7 +2549,7 @@ export namespace MalformedAcceptWithGenericStringInput {
     ...obj,
   });
   const memberValidators: {
-    payload?: __MultiConstraintValidator<Uint8Array>;
+    payload?: __MultiConstraintValidator<string>;
   } = {};
   /**
    * @internal
@@ -3130,56 +3181,6 @@ export namespace MalformedRequestBodyInput {
   };
 }
 
-export interface MalformedSetInput {
-  set?: string[];
-  blobSet?: Uint8Array[];
-}
-
-export namespace MalformedSetInput {
-  /**
-   * @internal
-   */
-  export const filterSensitiveLog = (obj: MalformedSetInput): any => ({
-    ...obj,
-  });
-  const memberValidators: {
-    set?: __MultiConstraintValidator<Iterable<string>>;
-    blobSet?: __MultiConstraintValidator<Iterable<Uint8Array>>;
-  } = {};
-  /**
-   * @internal
-   */
-  export const validate = (obj: MalformedSetInput, path = ""): __ValidationFailure[] => {
-    function getMemberValidator<T extends keyof typeof memberValidators>(
-      member: T
-    ): NonNullable<typeof memberValidators[T]> {
-      if (memberValidators[member] === undefined) {
-        switch (member) {
-          case "set": {
-            memberValidators["set"] = new __CompositeCollectionValidator<string>(
-              new __NoOpValidator(),
-              new __NoOpValidator()
-            );
-            break;
-          }
-          case "blobSet": {
-            memberValidators["blobSet"] = new __CompositeCollectionValidator<Uint8Array>(
-              new __NoOpValidator(),
-              new __NoOpValidator()
-            );
-            break;
-          }
-        }
-      }
-      return memberValidators[member]!;
-    }
-    return [
-      ...getMemberValidator("set").validate(obj.set, `${path}/set`),
-      ...getMemberValidator("blobSet").validate(obj.blobSet, `${path}/blobSet`),
-    ];
-  };
-}
-
 export interface MalformedShortInput {
   shortInBody?: number;
   shortInPath: number | undefined;
@@ -3805,6 +3806,56 @@ export namespace MalformedUnionInput {
   };
 }
 
+export interface MalformedUniqueItemsInput {
+  set?: string[];
+  complexSet?: ComplexSetStruct[];
+}
+
+export namespace MalformedUniqueItemsInput {
+  /**
+   * @internal
+   */
+  export const filterSensitiveLog = (obj: MalformedUniqueItemsInput): any => ({
+    ...obj,
+  });
+  const memberValidators: {
+    set?: __MultiConstraintValidator<Iterable<string>>;
+    complexSet?: __MultiConstraintValidator<Iterable<ComplexSetStruct>>;
+  } = {};
+  /**
+   * @internal
+   */
+  export const validate = (obj: MalformedUniqueItemsInput, path = ""): __ValidationFailure[] => {
+    function getMemberValidator<T extends keyof typeof memberValidators>(
+      member: T
+    ): NonNullable<typeof memberValidators[T]> {
+      if (memberValidators[member] === undefined) {
+        switch (member) {
+          case "set": {
+            memberValidators["set"] = new __CompositeCollectionValidator<string>(
+              new __CompositeValidator<string[]>([new __UniqueItemsValidator()]),
+              new __NoOpValidator()
+            );
+            break;
+          }
+          case "complexSet": {
+            memberValidators["complexSet"] = new __CompositeCollectionValidator<ComplexSetStruct>(
+              new __CompositeValidator<ComplexSetStruct[]>([new __UniqueItemsValidator()]),
+              new __CompositeStructureValidator<ComplexSetStruct>(new __NoOpValidator(), ComplexSetStruct.validate)
+            );
+            break;
+          }
+        }
+      }
+      return memberValidators[member]!;
+    }
+    return [
+      ...getMemberValidator("set").validate(obj.set, `${path}/set`),
+      ...getMemberValidator("complexSet").validate(obj.complexSet, `${path}/complexSet`),
+    ];
+  };
+}
+
 export interface MediaTypeHeaderInput {
   json?: __LazyJsonString | string;
 }
@@ -4194,6 +4245,180 @@ export namespace PostPlayerActionOutput {
       return memberValidators[member]!;
     }
     return [...getMemberValidator("action").validate(obj.action, `${path}/action`)];
+  };
+}
+
+export type UnionWithJsonName =
+  | UnionWithJsonName.BarMember
+  | UnionWithJsonName.BazMember
+  | UnionWithJsonName.FooMember
+  | UnionWithJsonName.$UnknownMember;
+
+export namespace UnionWithJsonName {
+  export interface FooMember {
+    foo: string;
+    bar?: never;
+    baz?: never;
+    $unknown?: never;
+  }
+
+  export interface BarMember {
+    foo?: never;
+    bar: string;
+    baz?: never;
+    $unknown?: never;
+  }
+
+  export interface BazMember {
+    foo?: never;
+    bar?: never;
+    baz: string;
+    $unknown?: never;
+  }
+
+  export interface $UnknownMember {
+    foo?: never;
+    bar?: never;
+    baz?: never;
+    $unknown: [string, any];
+  }
+
+  export interface Visitor<T> {
+    foo: (value: string) => T;
+    bar: (value: string) => T;
+    baz: (value: string) => T;
+    _: (name: string, value: any) => T;
+  }
+
+  export const visit = <T>(value: UnionWithJsonName, visitor: Visitor<T>): T => {
+    if (value.foo !== undefined) return visitor.foo(value.foo);
+    if (value.bar !== undefined) return visitor.bar(value.bar);
+    if (value.baz !== undefined) return visitor.baz(value.baz);
+    return visitor._(value.$unknown[0], value.$unknown[1]);
+  };
+
+  /**
+   * @internal
+   */
+  export const filterSensitiveLog = (obj: UnionWithJsonName): any => {
+    if (obj.foo !== undefined) return { foo: obj.foo };
+    if (obj.bar !== undefined) return { bar: obj.bar };
+    if (obj.baz !== undefined) return { baz: obj.baz };
+    if (obj.$unknown !== undefined) return { [obj.$unknown[0]]: "UNKNOWN" };
+  };
+  const memberValidators: {
+    foo?: __MultiConstraintValidator<string>;
+    bar?: __MultiConstraintValidator<string>;
+    baz?: __MultiConstraintValidator<string>;
+  } = {};
+  /**
+   * @internal
+   */
+  export const validate = (obj: UnionWithJsonName, path = ""): __ValidationFailure[] => {
+    function getMemberValidator<T extends keyof typeof memberValidators>(
+      member: T
+    ): NonNullable<typeof memberValidators[T]> {
+      if (memberValidators[member] === undefined) {
+        switch (member) {
+          case "foo": {
+            memberValidators["foo"] = new __NoOpValidator();
+            break;
+          }
+          case "bar": {
+            memberValidators["bar"] = new __NoOpValidator();
+            break;
+          }
+          case "baz": {
+            memberValidators["baz"] = new __NoOpValidator();
+            break;
+          }
+        }
+      }
+      return memberValidators[member]!;
+    }
+    return [
+      ...getMemberValidator("foo").validate(obj.foo, `${path}/foo`),
+      ...getMemberValidator("bar").validate(obj.bar, `${path}/bar`),
+      ...getMemberValidator("baz").validate(obj.baz, `${path}/baz`),
+    ];
+  };
+}
+
+export interface PostUnionWithJsonNameInput {
+  value: UnionWithJsonName | undefined;
+}
+
+export namespace PostUnionWithJsonNameInput {
+  /**
+   * @internal
+   */
+  export const filterSensitiveLog = (obj: PostUnionWithJsonNameInput): any => ({
+    ...obj,
+    ...(obj.value && { value: UnionWithJsonName.filterSensitiveLog(obj.value) }),
+  });
+  const memberValidators: {
+    value?: __MultiConstraintValidator<UnionWithJsonName>;
+  } = {};
+  /**
+   * @internal
+   */
+  export const validate = (obj: PostUnionWithJsonNameInput, path = ""): __ValidationFailure[] => {
+    function getMemberValidator<T extends keyof typeof memberValidators>(
+      member: T
+    ): NonNullable<typeof memberValidators[T]> {
+      if (memberValidators[member] === undefined) {
+        switch (member) {
+          case "value": {
+            memberValidators["value"] = new __CompositeStructureValidator<UnionWithJsonName>(
+              new __CompositeValidator<UnionWithJsonName>([new __RequiredValidator()]),
+              UnionWithJsonName.validate
+            );
+            break;
+          }
+        }
+      }
+      return memberValidators[member]!;
+    }
+    return [...getMemberValidator("value").validate(obj.value, `${path}/value`)];
+  };
+}
+
+export interface PostUnionWithJsonNameOutput {
+  value: UnionWithJsonName | undefined;
+}
+
+export namespace PostUnionWithJsonNameOutput {
+  /**
+   * @internal
+   */
+  export const filterSensitiveLog = (obj: PostUnionWithJsonNameOutput): any => ({
+    ...obj,
+    ...(obj.value && { value: UnionWithJsonName.filterSensitiveLog(obj.value) }),
+  });
+  const memberValidators: {
+    value?: __MultiConstraintValidator<UnionWithJsonName>;
+  } = {};
+  /**
+   * @internal
+   */
+  export const validate = (obj: PostUnionWithJsonNameOutput, path = ""): __ValidationFailure[] => {
+    function getMemberValidator<T extends keyof typeof memberValidators>(
+      member: T
+    ): NonNullable<typeof memberValidators[T]> {
+      if (memberValidators[member] === undefined) {
+        switch (member) {
+          case "value": {
+            memberValidators["value"] = new __CompositeStructureValidator<UnionWithJsonName>(
+              new __CompositeValidator<UnionWithJsonName>([new __RequiredValidator()]),
+              UnionWithJsonName.validate
+            );
+            break;
+          }
+        }
+      }
+      return memberValidators[member]!;
+    }
+    return [...getMemberValidator("value").validate(obj.value, `${path}/value`)];
   };
 }
 

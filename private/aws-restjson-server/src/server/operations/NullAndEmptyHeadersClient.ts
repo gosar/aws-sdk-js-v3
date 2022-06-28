@@ -30,6 +30,60 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type NullAndEmptyHeadersClient<Context> = __Operation<
+  NullAndEmptyHeadersClientServerInput,
+  NullAndEmptyHeadersClientServerOutput,
+  Context
+>;
+
+export interface NullAndEmptyHeadersClientServerInput extends NullAndEmptyHeadersIO {}
+export namespace NullAndEmptyHeadersClientServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof NullAndEmptyHeadersIO.validate>[0]) => __ValidationFailure[] =
+    NullAndEmptyHeadersIO.validate;
+}
+export interface NullAndEmptyHeadersClientServerOutput extends NullAndEmptyHeadersIO {}
+
+export type NullAndEmptyHeadersClientErrors = never;
+
+export class NullAndEmptyHeadersClientSerializer
+  implements __OperationSerializer<RestJsonService<any>, "NullAndEmptyHeadersClient", NullAndEmptyHeadersClientErrors>
+{
+  serialize = serializeNullAndEmptyHeadersClientResponse;
+  deserialize = deserializeNullAndEmptyHeadersClientRequest;
+
+  isOperationError(error: any): error is NullAndEmptyHeadersClientErrors {
+    return false;
+  }
+
+  serializeError(error: NullAndEmptyHeadersClientErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getNullAndEmptyHeadersClientHandler = <Context>(
+  operation: __Operation<NullAndEmptyHeadersClientServerInput, NullAndEmptyHeadersClientServerOutput, Context>,
+  customizer: __ValidationCustomizer<"NullAndEmptyHeadersClient">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "NullAndEmptyHeadersClient">([
+    new httpbinding.UriSpec<"RestJson", "NullAndEmptyHeadersClient">(
+      "GET",
+      [{ type: "path_literal", value: "NullAndEmptyHeadersClient" }],
+      [],
+      { service: "RestJson", operation: "NullAndEmptyHeadersClient" }
+    ),
+  ]);
+  return new NullAndEmptyHeadersClientHandler(
+    operation,
+    mux,
+    new NullAndEmptyHeadersClientSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -142,57 +196,3 @@ export class NullAndEmptyHeadersClientHandler<Context> implements __ServiceHandl
     );
   }
 }
-
-export type NullAndEmptyHeadersClient<Context> = __Operation<
-  NullAndEmptyHeadersClientServerInput,
-  NullAndEmptyHeadersClientServerOutput,
-  Context
->;
-
-export interface NullAndEmptyHeadersClientServerInput extends NullAndEmptyHeadersIO {}
-export namespace NullAndEmptyHeadersClientServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof NullAndEmptyHeadersIO.validate>[0]) => __ValidationFailure[] =
-    NullAndEmptyHeadersIO.validate;
-}
-export interface NullAndEmptyHeadersClientServerOutput extends NullAndEmptyHeadersIO {}
-
-export type NullAndEmptyHeadersClientErrors = never;
-
-export class NullAndEmptyHeadersClientSerializer
-  implements __OperationSerializer<RestJsonService<any>, "NullAndEmptyHeadersClient", NullAndEmptyHeadersClientErrors>
-{
-  serialize = serializeNullAndEmptyHeadersClientResponse;
-  deserialize = deserializeNullAndEmptyHeadersClientRequest;
-
-  isOperationError(error: any): error is NullAndEmptyHeadersClientErrors {
-    return false;
-  }
-
-  serializeError(error: NullAndEmptyHeadersClientErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getNullAndEmptyHeadersClientHandler = <Context>(
-  operation: __Operation<NullAndEmptyHeadersClientServerInput, NullAndEmptyHeadersClientServerOutput, Context>,
-  customizer: __ValidationCustomizer<"NullAndEmptyHeadersClient">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "NullAndEmptyHeadersClient">([
-    new httpbinding.UriSpec<"RestJson", "NullAndEmptyHeadersClient">(
-      "GET",
-      [{ type: "path_literal", value: "NullAndEmptyHeadersClient" }],
-      [],
-      { service: "RestJson", operation: "NullAndEmptyHeadersClient" }
-    ),
-  ]);
-  return new NullAndEmptyHeadersClientHandler(
-    operation,
-    mux,
-    new NullAndEmptyHeadersClientSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

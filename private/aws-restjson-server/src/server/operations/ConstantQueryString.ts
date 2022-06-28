@@ -30,6 +30,63 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type ConstantQueryString<Context> = __Operation<
+  ConstantQueryStringServerInput,
+  ConstantQueryStringServerOutput,
+  Context
+>;
+
+export interface ConstantQueryStringServerInput extends ConstantQueryStringInput {}
+export namespace ConstantQueryStringServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof ConstantQueryStringInput.validate>[0]) => __ValidationFailure[] =
+    ConstantQueryStringInput.validate;
+}
+export interface ConstantQueryStringServerOutput {}
+
+export type ConstantQueryStringErrors = never;
+
+export class ConstantQueryStringSerializer
+  implements __OperationSerializer<RestJsonService<any>, "ConstantQueryString", ConstantQueryStringErrors>
+{
+  serialize = serializeConstantQueryStringResponse;
+  deserialize = deserializeConstantQueryStringRequest;
+
+  isOperationError(error: any): error is ConstantQueryStringErrors {
+    return false;
+  }
+
+  serializeError(error: ConstantQueryStringErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getConstantQueryStringHandler = <Context>(
+  operation: __Operation<ConstantQueryStringServerInput, ConstantQueryStringServerOutput, Context>,
+  customizer: __ValidationCustomizer<"ConstantQueryString">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "ConstantQueryString">([
+    new httpbinding.UriSpec<"RestJson", "ConstantQueryString">(
+      "GET",
+      [{ type: "path_literal", value: "ConstantQueryString" }, { type: "path" }],
+      [
+        { type: "query_literal", key: "foo", value: "bar" },
+        { type: "query_literal", key: "hello", value: "" },
+      ],
+      { service: "RestJson", operation: "ConstantQueryString" }
+    ),
+  ]);
+  return new ConstantQueryStringHandler(
+    operation,
+    mux,
+    new ConstantQueryStringSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -134,60 +191,3 @@ export class ConstantQueryStringHandler<Context> implements __ServiceHandler<Con
     );
   }
 }
-
-export type ConstantQueryString<Context> = __Operation<
-  ConstantQueryStringServerInput,
-  ConstantQueryStringServerOutput,
-  Context
->;
-
-export interface ConstantQueryStringServerInput extends ConstantQueryStringInput {}
-export namespace ConstantQueryStringServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof ConstantQueryStringInput.validate>[0]) => __ValidationFailure[] =
-    ConstantQueryStringInput.validate;
-}
-export interface ConstantQueryStringServerOutput {}
-
-export type ConstantQueryStringErrors = never;
-
-export class ConstantQueryStringSerializer
-  implements __OperationSerializer<RestJsonService<any>, "ConstantQueryString", ConstantQueryStringErrors>
-{
-  serialize = serializeConstantQueryStringResponse;
-  deserialize = deserializeConstantQueryStringRequest;
-
-  isOperationError(error: any): error is ConstantQueryStringErrors {
-    return false;
-  }
-
-  serializeError(error: ConstantQueryStringErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getConstantQueryStringHandler = <Context>(
-  operation: __Operation<ConstantQueryStringServerInput, ConstantQueryStringServerOutput, Context>,
-  customizer: __ValidationCustomizer<"ConstantQueryString">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "ConstantQueryString">([
-    new httpbinding.UriSpec<"RestJson", "ConstantQueryString">(
-      "GET",
-      [{ type: "path_literal", value: "ConstantQueryString" }, { type: "path" }],
-      [
-        { type: "query_literal", key: "foo", value: "bar" },
-        { type: "query_literal", key: "hello", value: "" },
-      ],
-      { service: "RestJson", operation: "ConstantQueryString" }
-    ),
-  ]);
-  return new ConstantQueryStringHandler(
-    operation,
-    mux,
-    new ConstantQueryStringSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

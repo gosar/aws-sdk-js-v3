@@ -208,7 +208,6 @@ import {
   MalformedRequestBodySerializer,
   MalformedRequestBodyServerInput,
 } from "./operations/MalformedRequestBody";
-import { MalformedSet, MalformedSetSerializer, MalformedSetServerInput } from "./operations/MalformedSet";
 import { MalformedShort, MalformedShortSerializer, MalformedShortServerInput } from "./operations/MalformedShort";
 import { MalformedString, MalformedStringSerializer, MalformedStringServerInput } from "./operations/MalformedString";
 import {
@@ -272,6 +271,11 @@ import {
   MalformedTimestampQueryHttpDateServerInput,
 } from "./operations/MalformedTimestampQueryHttpDate";
 import { MalformedUnion, MalformedUnionSerializer, MalformedUnionServerInput } from "./operations/MalformedUnion";
+import {
+  MalformedUniqueItems,
+  MalformedUniqueItemsSerializer,
+  MalformedUniqueItemsServerInput,
+} from "./operations/MalformedUniqueItems";
 import { MediaTypeHeader, MediaTypeHeaderSerializer, MediaTypeHeaderServerInput } from "./operations/MediaTypeHeader";
 import {
   NoInputAndNoOutput,
@@ -303,6 +307,11 @@ import {
   PostPlayerActionSerializer,
   PostPlayerActionServerInput,
 } from "./operations/PostPlayerAction";
+import {
+  PostUnionWithJsonName,
+  PostUnionWithJsonNameSerializer,
+  PostUnionWithJsonNameServerInput,
+} from "./operations/PostUnionWithJsonName";
 import {
   QueryIdempotencyTokenAutoFill,
   QueryIdempotencyTokenAutoFillSerializer,
@@ -404,7 +413,6 @@ export type RestJsonServiceOperations =
   | "MalformedLong"
   | "MalformedMap"
   | "MalformedRequestBody"
-  | "MalformedSet"
   | "MalformedShort"
   | "MalformedString"
   | "MalformedTimestampBodyDateTime"
@@ -420,6 +428,7 @@ export type RestJsonServiceOperations =
   | "MalformedTimestampQueryEpoch"
   | "MalformedTimestampQueryHttpDate"
   | "MalformedUnion"
+  | "MalformedUniqueItems"
   | "MediaTypeHeader"
   | "NoInputAndNoOutput"
   | "NoInputAndOutput"
@@ -427,6 +436,7 @@ export type RestJsonServiceOperations =
   | "NullAndEmptyHeadersServer"
   | "OmitsNullSerializesEmptyString"
   | "PostPlayerAction"
+  | "PostUnionWithJsonName"
   | "QueryIdempotencyTokenAutoFill"
   | "QueryParamsAsStringListMap"
   | "QueryPrecedence"
@@ -491,7 +501,6 @@ export interface RestJsonService<Context> {
   MalformedLong: MalformedLong<Context>;
   MalformedMap: MalformedMap<Context>;
   MalformedRequestBody: MalformedRequestBody<Context>;
-  MalformedSet: MalformedSet<Context>;
   MalformedShort: MalformedShort<Context>;
   MalformedString: MalformedString<Context>;
   MalformedTimestampBodyDateTime: MalformedTimestampBodyDateTime<Context>;
@@ -507,6 +516,7 @@ export interface RestJsonService<Context> {
   MalformedTimestampQueryEpoch: MalformedTimestampQueryEpoch<Context>;
   MalformedTimestampQueryHttpDate: MalformedTimestampQueryHttpDate<Context>;
   MalformedUnion: MalformedUnion<Context>;
+  MalformedUniqueItems: MalformedUniqueItems<Context>;
   MediaTypeHeader: MediaTypeHeader<Context>;
   NoInputAndNoOutput: NoInputAndNoOutput<Context>;
   NoInputAndOutput: NoInputAndOutput<Context>;
@@ -514,6 +524,7 @@ export interface RestJsonService<Context> {
   NullAndEmptyHeadersServer: NullAndEmptyHeadersServer<Context>;
   OmitsNullSerializesEmptyString: OmitsNullSerializesEmptyString<Context>;
   PostPlayerAction: PostPlayerAction<Context>;
+  PostUnionWithJsonName: PostUnionWithJsonName<Context>;
   QueryIdempotencyTokenAutoFill: QueryIdempotencyTokenAutoFill<Context>;
   QueryParamsAsStringListMap: QueryParamsAsStringListMap<Context>;
   QueryPrecedence: QueryPrecedence<Context>;
@@ -1207,18 +1218,6 @@ export class RestJsonServiceHandler<Context> implements __ServiceHandler<Context
           this.validationCustomizer
         );
       }
-      case "MalformedSet": {
-        return handle(
-          request,
-          context,
-          "MalformedSet",
-          this.serializerFactory("MalformedSet"),
-          this.service.MalformedSet,
-          this.serializeFrameworkException,
-          MalformedSetServerInput.validate,
-          this.validationCustomizer
-        );
-      }
       case "MalformedShort": {
         return handle(
           request,
@@ -1399,6 +1398,18 @@ export class RestJsonServiceHandler<Context> implements __ServiceHandler<Context
           this.validationCustomizer
         );
       }
+      case "MalformedUniqueItems": {
+        return handle(
+          request,
+          context,
+          "MalformedUniqueItems",
+          this.serializerFactory("MalformedUniqueItems"),
+          this.service.MalformedUniqueItems,
+          this.serializeFrameworkException,
+          MalformedUniqueItemsServerInput.validate,
+          this.validationCustomizer
+        );
+      }
       case "MediaTypeHeader": {
         return handle(
           request,
@@ -1480,6 +1491,18 @@ export class RestJsonServiceHandler<Context> implements __ServiceHandler<Context
           this.service.PostPlayerAction,
           this.serializeFrameworkException,
           PostPlayerActionServerInput.validate,
+          this.validationCustomizer
+        );
+      }
+      case "PostUnionWithJsonName": {
+        return handle(
+          request,
+          context,
+          "PostUnionWithJsonName",
+          this.serializerFactory("PostUnionWithJsonName"),
+          this.service.PostUnionWithJsonName,
+          this.serializeFrameworkException,
+          PostUnionWithJsonNameServerInput.validate,
           this.validationCustomizer
         );
       }
@@ -1968,10 +1991,6 @@ export const getRestJsonServiceHandler = <Context>(
       [],
       { service: "RestJson", operation: "MalformedRequestBody" }
     ),
-    new httpbinding.UriSpec<"RestJson", "MalformedSet">("POST", [{ type: "path_literal", value: "MalformedSet" }], [], {
-      service: "RestJson",
-      operation: "MalformedSet",
-    }),
     new httpbinding.UriSpec<"RestJson", "MalformedShort">(
       "POST",
       [{ type: "path_literal", value: "MalformedShort" }, { type: "path" }],
@@ -2062,6 +2081,12 @@ export const getRestJsonServiceHandler = <Context>(
       [],
       { service: "RestJson", operation: "MalformedUnion" }
     ),
+    new httpbinding.UriSpec<"RestJson", "MalformedUniqueItems">(
+      "POST",
+      [{ type: "path_literal", value: "MalformedUniqueItems" }],
+      [],
+      { service: "RestJson", operation: "MalformedUniqueItems" }
+    ),
     new httpbinding.UriSpec<"RestJson", "MediaTypeHeader">(
       "GET",
       [{ type: "path_literal", value: "MediaTypeHeader" }],
@@ -2103,6 +2128,12 @@ export const getRestJsonServiceHandler = <Context>(
       [{ type: "path_literal", value: "PostPlayerAction" }],
       [],
       { service: "RestJson", operation: "PostPlayerAction" }
+    ),
+    new httpbinding.UriSpec<"RestJson", "PostUnionWithJsonName">(
+      "POST",
+      [{ type: "path_literal", value: "PostUnionWithJsonName" }],
+      [],
+      { service: "RestJson", operation: "PostUnionWithJsonName" }
     ),
     new httpbinding.UriSpec<"RestJson", "QueryIdempotencyTokenAutoFill">(
       "POST",
@@ -2287,8 +2318,6 @@ export const getRestJsonServiceHandler = <Context>(
         return new MalformedMapSerializer();
       case "MalformedRequestBody":
         return new MalformedRequestBodySerializer();
-      case "MalformedSet":
-        return new MalformedSetSerializer();
       case "MalformedShort":
         return new MalformedShortSerializer();
       case "MalformedString":
@@ -2319,6 +2348,8 @@ export const getRestJsonServiceHandler = <Context>(
         return new MalformedTimestampQueryHttpDateSerializer();
       case "MalformedUnion":
         return new MalformedUnionSerializer();
+      case "MalformedUniqueItems":
+        return new MalformedUniqueItemsSerializer();
       case "MediaTypeHeader":
         return new MediaTypeHeaderSerializer();
       case "NoInputAndNoOutput":
@@ -2333,6 +2364,8 @@ export const getRestJsonServiceHandler = <Context>(
         return new OmitsNullSerializesEmptyStringSerializer();
       case "PostPlayerAction":
         return new PostPlayerActionSerializer();
+      case "PostUnionWithJsonName":
+        return new PostUnionWithJsonNameSerializer();
       case "QueryIdempotencyTokenAutoFill":
         return new QueryIdempotencyTokenAutoFillSerializer();
       case "QueryParamsAsStringListMap":

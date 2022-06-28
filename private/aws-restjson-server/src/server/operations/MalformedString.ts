@@ -30,6 +30,56 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type MalformedString<Context> = __Operation<MalformedStringServerInput, MalformedStringServerOutput, Context>;
+
+export interface MalformedStringServerInput extends MalformedStringInput {}
+export namespace MalformedStringServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof MalformedStringInput.validate>[0]) => __ValidationFailure[] =
+    MalformedStringInput.validate;
+}
+export interface MalformedStringServerOutput {}
+
+export type MalformedStringErrors = never;
+
+export class MalformedStringSerializer
+  implements __OperationSerializer<RestJsonService<any>, "MalformedString", MalformedStringErrors>
+{
+  serialize = serializeMalformedStringResponse;
+  deserialize = deserializeMalformedStringRequest;
+
+  isOperationError(error: any): error is MalformedStringErrors {
+    return false;
+  }
+
+  serializeError(error: MalformedStringErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getMalformedStringHandler = <Context>(
+  operation: __Operation<MalformedStringServerInput, MalformedStringServerOutput, Context>,
+  customizer: __ValidationCustomizer<"MalformedString">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedString">([
+    new httpbinding.UriSpec<"RestJson", "MalformedString">(
+      "POST",
+      [{ type: "path_literal", value: "MalformedString" }],
+      [],
+      { service: "RestJson", operation: "MalformedString" }
+    ),
+  ]);
+  return new MalformedStringHandler(
+    operation,
+    mux,
+    new MalformedStringSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -134,53 +184,3 @@ export class MalformedStringHandler<Context> implements __ServiceHandler<Context
     );
   }
 }
-
-export type MalformedString<Context> = __Operation<MalformedStringServerInput, MalformedStringServerOutput, Context>;
-
-export interface MalformedStringServerInput extends MalformedStringInput {}
-export namespace MalformedStringServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof MalformedStringInput.validate>[0]) => __ValidationFailure[] =
-    MalformedStringInput.validate;
-}
-export interface MalformedStringServerOutput {}
-
-export type MalformedStringErrors = never;
-
-export class MalformedStringSerializer
-  implements __OperationSerializer<RestJsonService<any>, "MalformedString", MalformedStringErrors>
-{
-  serialize = serializeMalformedStringResponse;
-  deserialize = deserializeMalformedStringRequest;
-
-  isOperationError(error: any): error is MalformedStringErrors {
-    return false;
-  }
-
-  serializeError(error: MalformedStringErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getMalformedStringHandler = <Context>(
-  operation: __Operation<MalformedStringServerInput, MalformedStringServerOutput, Context>,
-  customizer: __ValidationCustomizer<"MalformedString">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedString">([
-    new httpbinding.UriSpec<"RestJson", "MalformedString">(
-      "POST",
-      [{ type: "path_literal", value: "MalformedString" }],
-      [],
-      { service: "RestJson", operation: "MalformedString" }
-    ),
-  ]);
-  return new MalformedStringHandler(
-    operation,
-    mux,
-    new MalformedStringSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

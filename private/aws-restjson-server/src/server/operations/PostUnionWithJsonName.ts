@@ -22,13 +22,67 @@ import {
   ValidationFailure as __ValidationFailure,
 } from "@aws-smithy/server-common";
 
-import { MalformedSetInput } from "../../models/models_0";
+import { PostUnionWithJsonNameInput, PostUnionWithJsonNameOutput } from "../../models/models_0";
 import {
-  deserializeMalformedSetRequest,
+  deserializePostUnionWithJsonNameRequest,
   serializeFrameworkException,
-  serializeMalformedSetResponse,
+  serializePostUnionWithJsonNameResponse,
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
+
+export type PostUnionWithJsonName<Context> = __Operation<
+  PostUnionWithJsonNameServerInput,
+  PostUnionWithJsonNameServerOutput,
+  Context
+>;
+
+export interface PostUnionWithJsonNameServerInput extends PostUnionWithJsonNameInput {}
+export namespace PostUnionWithJsonNameServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof PostUnionWithJsonNameInput.validate>[0]) => __ValidationFailure[] =
+    PostUnionWithJsonNameInput.validate;
+}
+export interface PostUnionWithJsonNameServerOutput extends PostUnionWithJsonNameOutput {}
+
+export type PostUnionWithJsonNameErrors = never;
+
+export class PostUnionWithJsonNameSerializer
+  implements __OperationSerializer<RestJsonService<any>, "PostUnionWithJsonName", PostUnionWithJsonNameErrors>
+{
+  serialize = serializePostUnionWithJsonNameResponse;
+  deserialize = deserializePostUnionWithJsonNameRequest;
+
+  isOperationError(error: any): error is PostUnionWithJsonNameErrors {
+    return false;
+  }
+
+  serializeError(error: PostUnionWithJsonNameErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getPostUnionWithJsonNameHandler = <Context>(
+  operation: __Operation<PostUnionWithJsonNameServerInput, PostUnionWithJsonNameServerOutput, Context>,
+  customizer: __ValidationCustomizer<"PostUnionWithJsonName">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "PostUnionWithJsonName">([
+    new httpbinding.UriSpec<"RestJson", "PostUnionWithJsonName">(
+      "POST",
+      [{ type: "path_literal", value: "PostUnionWithJsonName" }],
+      [],
+      { service: "RestJson", operation: "PostUnionWithJsonName" }
+    ),
+  ]);
+  return new PostUnionWithJsonNameHandler(
+    operation,
+    mux,
+    new PostUnionWithJsonNameSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
 
 const serdeContextBase = {
   base64Encoder: toBase64,
@@ -79,30 +133,34 @@ async function handle<S, O extends keyof S & string, Context>(
     return serializeFrameworkException(new __InternalFailureException(), serdeContextBase);
   }
 }
-export class MalformedSetHandler<Context> implements __ServiceHandler<Context> {
-  private readonly operation: __Operation<MalformedSetServerInput, MalformedSetServerOutput, Context>;
-  private readonly mux: __Mux<"RestJson", "MalformedSet">;
-  private readonly serializer: __OperationSerializer<RestJsonService<Context>, "MalformedSet", MalformedSetErrors>;
+export class PostUnionWithJsonNameHandler<Context> implements __ServiceHandler<Context> {
+  private readonly operation: __Operation<PostUnionWithJsonNameServerInput, PostUnionWithJsonNameServerOutput, Context>;
+  private readonly mux: __Mux<"RestJson", "PostUnionWithJsonName">;
+  private readonly serializer: __OperationSerializer<
+    RestJsonService<Context>,
+    "PostUnionWithJsonName",
+    PostUnionWithJsonNameErrors
+  >;
   private readonly serializeFrameworkException: (
     e: __SmithyFrameworkException,
     ctx: __ServerSerdeContext
   ) => Promise<__HttpResponse>;
-  private readonly validationCustomizer: __ValidationCustomizer<"MalformedSet">;
+  private readonly validationCustomizer: __ValidationCustomizer<"PostUnionWithJsonName">;
   /**
-   * Construct a MalformedSet handler.
-   * @param operation The {@link __Operation} implementation that supplies the business logic for MalformedSet
+   * Construct a PostUnionWithJsonName handler.
+   * @param operation The {@link __Operation} implementation that supplies the business logic for PostUnionWithJsonName
    * @param mux The {@link __Mux} that verifies which service and operation are being invoked by a given {@link __HttpRequest}
-   * @param serializer An {@link __OperationSerializer} for MalformedSet that
+   * @param serializer An {@link __OperationSerializer} for PostUnionWithJsonName that
    *                   handles deserialization of requests and serialization of responses
    * @param serializeFrameworkException A function that can serialize {@link __SmithyFrameworkException}s
    * @param validationCustomizer A {@link __ValidationCustomizer} for turning validation failures into {@link __SmithyFrameworkException}s
    */
   constructor(
-    operation: __Operation<MalformedSetServerInput, MalformedSetServerOutput, Context>,
-    mux: __Mux<"RestJson", "MalformedSet">,
-    serializer: __OperationSerializer<RestJsonService<Context>, "MalformedSet", MalformedSetErrors>,
+    operation: __Operation<PostUnionWithJsonNameServerInput, PostUnionWithJsonNameServerOutput, Context>,
+    mux: __Mux<"RestJson", "PostUnionWithJsonName">,
+    serializer: __OperationSerializer<RestJsonService<Context>, "PostUnionWithJsonName", PostUnionWithJsonNameErrors>,
     serializeFrameworkException: (e: __SmithyFrameworkException, ctx: __ServerSerdeContext) => Promise<__HttpResponse>,
-    validationCustomizer: __ValidationCustomizer<"MalformedSet">
+    validationCustomizer: __ValidationCustomizer<"PostUnionWithJsonName">
   ) {
     this.operation = operation;
     this.mux = mux;
@@ -114,61 +172,19 @@ export class MalformedSetHandler<Context> implements __ServiceHandler<Context> {
     const target = this.mux.match(request);
     if (target === undefined) {
       console.log(
-        "Received a request that did not match aws.protocoltests.restjson#RestJson.MalformedSet. This indicates a misconfiguration."
+        "Received a request that did not match aws.protocoltests.restjson#RestJson.PostUnionWithJsonName. This indicates a misconfiguration."
       );
       return this.serializeFrameworkException(new __InternalFailureException(), serdeContextBase);
     }
     return handle(
       request,
       context,
-      "MalformedSet",
+      "PostUnionWithJsonName",
       this.serializer,
       this.operation,
       this.serializeFrameworkException,
-      MalformedSetServerInput.validate,
+      PostUnionWithJsonNameServerInput.validate,
       this.validationCustomizer
     );
   }
 }
-
-export type MalformedSet<Context> = __Operation<MalformedSetServerInput, MalformedSetServerOutput, Context>;
-
-export interface MalformedSetServerInput extends MalformedSetInput {}
-export namespace MalformedSetServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof MalformedSetInput.validate>[0]) => __ValidationFailure[] =
-    MalformedSetInput.validate;
-}
-export interface MalformedSetServerOutput {}
-
-export type MalformedSetErrors = never;
-
-export class MalformedSetSerializer
-  implements __OperationSerializer<RestJsonService<any>, "MalformedSet", MalformedSetErrors>
-{
-  serialize = serializeMalformedSetResponse;
-  deserialize = deserializeMalformedSetRequest;
-
-  isOperationError(error: any): error is MalformedSetErrors {
-    return false;
-  }
-
-  serializeError(error: MalformedSetErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getMalformedSetHandler = <Context>(
-  operation: __Operation<MalformedSetServerInput, MalformedSetServerOutput, Context>,
-  customizer: __ValidationCustomizer<"MalformedSet">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedSet">([
-    new httpbinding.UriSpec<"RestJson", "MalformedSet">("POST", [{ type: "path_literal", value: "MalformedSet" }], [], {
-      service: "RestJson",
-      operation: "MalformedSet",
-    }),
-  ]);
-  return new MalformedSetHandler(operation, mux, new MalformedSetSerializer(), serializeFrameworkException, customizer);
-};

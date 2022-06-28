@@ -30,6 +30,56 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type MalformedFloat<Context> = __Operation<MalformedFloatServerInput, MalformedFloatServerOutput, Context>;
+
+export interface MalformedFloatServerInput extends MalformedFloatInput {}
+export namespace MalformedFloatServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof MalformedFloatInput.validate>[0]) => __ValidationFailure[] =
+    MalformedFloatInput.validate;
+}
+export interface MalformedFloatServerOutput {}
+
+export type MalformedFloatErrors = never;
+
+export class MalformedFloatSerializer
+  implements __OperationSerializer<RestJsonService<any>, "MalformedFloat", MalformedFloatErrors>
+{
+  serialize = serializeMalformedFloatResponse;
+  deserialize = deserializeMalformedFloatRequest;
+
+  isOperationError(error: any): error is MalformedFloatErrors {
+    return false;
+  }
+
+  serializeError(error: MalformedFloatErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getMalformedFloatHandler = <Context>(
+  operation: __Operation<MalformedFloatServerInput, MalformedFloatServerOutput, Context>,
+  customizer: __ValidationCustomizer<"MalformedFloat">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedFloat">([
+    new httpbinding.UriSpec<"RestJson", "MalformedFloat">(
+      "POST",
+      [{ type: "path_literal", value: "MalformedFloat" }, { type: "path" }],
+      [],
+      { service: "RestJson", operation: "MalformedFloat" }
+    ),
+  ]);
+  return new MalformedFloatHandler(
+    operation,
+    mux,
+    new MalformedFloatSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -130,53 +180,3 @@ export class MalformedFloatHandler<Context> implements __ServiceHandler<Context>
     );
   }
 }
-
-export type MalformedFloat<Context> = __Operation<MalformedFloatServerInput, MalformedFloatServerOutput, Context>;
-
-export interface MalformedFloatServerInput extends MalformedFloatInput {}
-export namespace MalformedFloatServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof MalformedFloatInput.validate>[0]) => __ValidationFailure[] =
-    MalformedFloatInput.validate;
-}
-export interface MalformedFloatServerOutput {}
-
-export type MalformedFloatErrors = never;
-
-export class MalformedFloatSerializer
-  implements __OperationSerializer<RestJsonService<any>, "MalformedFloat", MalformedFloatErrors>
-{
-  serialize = serializeMalformedFloatResponse;
-  deserialize = deserializeMalformedFloatRequest;
-
-  isOperationError(error: any): error is MalformedFloatErrors {
-    return false;
-  }
-
-  serializeError(error: MalformedFloatErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getMalformedFloatHandler = <Context>(
-  operation: __Operation<MalformedFloatServerInput, MalformedFloatServerOutput, Context>,
-  customizer: __ValidationCustomizer<"MalformedFloat">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedFloat">([
-    new httpbinding.UriSpec<"RestJson", "MalformedFloat">(
-      "POST",
-      [{ type: "path_literal", value: "MalformedFloat" }, { type: "path" }],
-      [],
-      { service: "RestJson", operation: "MalformedFloat" }
-    ),
-  ]);
-  return new MalformedFloatHandler(
-    operation,
-    mux,
-    new MalformedFloatSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

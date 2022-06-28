@@ -30,6 +30,70 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type HttpRequestWithLabels<Context> = __Operation<
+  HttpRequestWithLabelsServerInput,
+  HttpRequestWithLabelsServerOutput,
+  Context
+>;
+
+export interface HttpRequestWithLabelsServerInput extends HttpRequestWithLabelsInput {}
+export namespace HttpRequestWithLabelsServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof HttpRequestWithLabelsInput.validate>[0]) => __ValidationFailure[] =
+    HttpRequestWithLabelsInput.validate;
+}
+export interface HttpRequestWithLabelsServerOutput {}
+
+export type HttpRequestWithLabelsErrors = never;
+
+export class HttpRequestWithLabelsSerializer
+  implements __OperationSerializer<RestJsonService<any>, "HttpRequestWithLabels", HttpRequestWithLabelsErrors>
+{
+  serialize = serializeHttpRequestWithLabelsResponse;
+  deserialize = deserializeHttpRequestWithLabelsRequest;
+
+  isOperationError(error: any): error is HttpRequestWithLabelsErrors {
+    return false;
+  }
+
+  serializeError(error: HttpRequestWithLabelsErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getHttpRequestWithLabelsHandler = <Context>(
+  operation: __Operation<HttpRequestWithLabelsServerInput, HttpRequestWithLabelsServerOutput, Context>,
+  customizer: __ValidationCustomizer<"HttpRequestWithLabels">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "HttpRequestWithLabels">([
+    new httpbinding.UriSpec<"RestJson", "HttpRequestWithLabels">(
+      "GET",
+      [
+        { type: "path_literal", value: "HttpRequestWithLabels" },
+        { type: "path" },
+        { type: "path" },
+        { type: "path" },
+        { type: "path" },
+        { type: "path" },
+        { type: "path" },
+        { type: "path" },
+        { type: "path" },
+      ],
+      [],
+      { service: "RestJson", operation: "HttpRequestWithLabels" }
+    ),
+  ]);
+  return new HttpRequestWithLabelsHandler(
+    operation,
+    mux,
+    new HttpRequestWithLabelsSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -134,67 +198,3 @@ export class HttpRequestWithLabelsHandler<Context> implements __ServiceHandler<C
     );
   }
 }
-
-export type HttpRequestWithLabels<Context> = __Operation<
-  HttpRequestWithLabelsServerInput,
-  HttpRequestWithLabelsServerOutput,
-  Context
->;
-
-export interface HttpRequestWithLabelsServerInput extends HttpRequestWithLabelsInput {}
-export namespace HttpRequestWithLabelsServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof HttpRequestWithLabelsInput.validate>[0]) => __ValidationFailure[] =
-    HttpRequestWithLabelsInput.validate;
-}
-export interface HttpRequestWithLabelsServerOutput {}
-
-export type HttpRequestWithLabelsErrors = never;
-
-export class HttpRequestWithLabelsSerializer
-  implements __OperationSerializer<RestJsonService<any>, "HttpRequestWithLabels", HttpRequestWithLabelsErrors>
-{
-  serialize = serializeHttpRequestWithLabelsResponse;
-  deserialize = deserializeHttpRequestWithLabelsRequest;
-
-  isOperationError(error: any): error is HttpRequestWithLabelsErrors {
-    return false;
-  }
-
-  serializeError(error: HttpRequestWithLabelsErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getHttpRequestWithLabelsHandler = <Context>(
-  operation: __Operation<HttpRequestWithLabelsServerInput, HttpRequestWithLabelsServerOutput, Context>,
-  customizer: __ValidationCustomizer<"HttpRequestWithLabels">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "HttpRequestWithLabels">([
-    new httpbinding.UriSpec<"RestJson", "HttpRequestWithLabels">(
-      "GET",
-      [
-        { type: "path_literal", value: "HttpRequestWithLabels" },
-        { type: "path" },
-        { type: "path" },
-        { type: "path" },
-        { type: "path" },
-        { type: "path" },
-        { type: "path" },
-        { type: "path" },
-        { type: "path" },
-      ],
-      [],
-      { service: "RestJson", operation: "HttpRequestWithLabels" }
-    ),
-  ]);
-  return new HttpRequestWithLabelsHandler(
-    operation,
-    mux,
-    new HttpRequestWithLabelsSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

@@ -30,6 +30,48 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type DocumentType<Context> = __Operation<DocumentTypeServerInput, DocumentTypeServerOutput, Context>;
+
+export interface DocumentTypeServerInput extends DocumentTypeInputOutput {}
+export namespace DocumentTypeServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof DocumentTypeInputOutput.validate>[0]) => __ValidationFailure[] =
+    DocumentTypeInputOutput.validate;
+}
+export interface DocumentTypeServerOutput extends DocumentTypeInputOutput {}
+
+export type DocumentTypeErrors = never;
+
+export class DocumentTypeSerializer
+  implements __OperationSerializer<RestJsonService<any>, "DocumentType", DocumentTypeErrors>
+{
+  serialize = serializeDocumentTypeResponse;
+  deserialize = deserializeDocumentTypeRequest;
+
+  isOperationError(error: any): error is DocumentTypeErrors {
+    return false;
+  }
+
+  serializeError(error: DocumentTypeErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getDocumentTypeHandler = <Context>(
+  operation: __Operation<DocumentTypeServerInput, DocumentTypeServerOutput, Context>,
+  customizer: __ValidationCustomizer<"DocumentType">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "DocumentType">([
+    new httpbinding.UriSpec<"RestJson", "DocumentType">("PUT", [{ type: "path_literal", value: "DocumentType" }], [], {
+      service: "RestJson",
+      operation: "DocumentType",
+    }),
+  ]);
+  return new DocumentTypeHandler(operation, mux, new DocumentTypeSerializer(), serializeFrameworkException, customizer);
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -130,45 +172,3 @@ export class DocumentTypeHandler<Context> implements __ServiceHandler<Context> {
     );
   }
 }
-
-export type DocumentType<Context> = __Operation<DocumentTypeServerInput, DocumentTypeServerOutput, Context>;
-
-export interface DocumentTypeServerInput extends DocumentTypeInputOutput {}
-export namespace DocumentTypeServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof DocumentTypeInputOutput.validate>[0]) => __ValidationFailure[] =
-    DocumentTypeInputOutput.validate;
-}
-export interface DocumentTypeServerOutput extends DocumentTypeInputOutput {}
-
-export type DocumentTypeErrors = never;
-
-export class DocumentTypeSerializer
-  implements __OperationSerializer<RestJsonService<any>, "DocumentType", DocumentTypeErrors>
-{
-  serialize = serializeDocumentTypeResponse;
-  deserialize = deserializeDocumentTypeRequest;
-
-  isOperationError(error: any): error is DocumentTypeErrors {
-    return false;
-  }
-
-  serializeError(error: DocumentTypeErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getDocumentTypeHandler = <Context>(
-  operation: __Operation<DocumentTypeServerInput, DocumentTypeServerOutput, Context>,
-  customizer: __ValidationCustomizer<"DocumentType">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "DocumentType">([
-    new httpbinding.UriSpec<"RestJson", "DocumentType">("PUT", [{ type: "path_literal", value: "DocumentType" }], [], {
-      service: "RestJson",
-      operation: "DocumentType",
-    }),
-  ]);
-  return new DocumentTypeHandler(operation, mux, new DocumentTypeSerializer(), serializeFrameworkException, customizer);
-};

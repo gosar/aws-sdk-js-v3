@@ -30,6 +30,71 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type StreamingTraitsRequireLength<Context> = __Operation<
+  StreamingTraitsRequireLengthServerInput,
+  StreamingTraitsRequireLengthServerOutput,
+  Context
+>;
+
+type StreamingTraitsRequireLengthServerInputType = Omit<StreamingTraitsRequireLengthInput, "blob"> & {
+  /**
+   * For *`StreamingTraitsRequireLengthInput["blob"]`*, see {@link StreamingTraitsRequireLengthInput.blob}.
+   */
+  blob?: StreamingTraitsRequireLengthInput["blob"] | string | Uint8Array | Buffer;
+};
+/**
+ * This interface extends from `StreamingTraitsRequireLengthInput` interface. There are more parameters than `blob` defined in {@link StreamingTraitsRequireLengthInput}
+ */
+export interface StreamingTraitsRequireLengthServerInput extends StreamingTraitsRequireLengthServerInputType {}
+export namespace StreamingTraitsRequireLengthServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (
+    obj: Parameters<typeof StreamingTraitsRequireLengthInput.validate>[0]
+  ) => __ValidationFailure[] = StreamingTraitsRequireLengthInput.validate;
+}
+export interface StreamingTraitsRequireLengthServerOutput {}
+
+export type StreamingTraitsRequireLengthErrors = never;
+
+export class StreamingTraitsRequireLengthSerializer
+  implements
+    __OperationSerializer<RestJsonService<any>, "StreamingTraitsRequireLength", StreamingTraitsRequireLengthErrors>
+{
+  serialize = serializeStreamingTraitsRequireLengthResponse;
+  deserialize = deserializeStreamingTraitsRequireLengthRequest;
+
+  isOperationError(error: any): error is StreamingTraitsRequireLengthErrors {
+    return false;
+  }
+
+  serializeError(error: StreamingTraitsRequireLengthErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getStreamingTraitsRequireLengthHandler = <Context>(
+  operation: __Operation<StreamingTraitsRequireLengthServerInput, StreamingTraitsRequireLengthServerOutput, Context>,
+  customizer: __ValidationCustomizer<"StreamingTraitsRequireLength">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "StreamingTraitsRequireLength">([
+    new httpbinding.UriSpec<"RestJson", "StreamingTraitsRequireLength">(
+      "POST",
+      [{ type: "path_literal", value: "StreamingTraitsRequireLength" }],
+      [],
+      { service: "RestJson", operation: "StreamingTraitsRequireLength" }
+    ),
+  ]);
+  return new StreamingTraitsRequireLengthHandler(
+    operation,
+    mux,
+    new StreamingTraitsRequireLengthSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -142,68 +207,3 @@ export class StreamingTraitsRequireLengthHandler<Context> implements __ServiceHa
     );
   }
 }
-
-export type StreamingTraitsRequireLength<Context> = __Operation<
-  StreamingTraitsRequireLengthServerInput,
-  StreamingTraitsRequireLengthServerOutput,
-  Context
->;
-
-type StreamingTraitsRequireLengthServerInputType = Omit<StreamingTraitsRequireLengthInput, "blob"> & {
-  /**
-   * For *`StreamingTraitsRequireLengthInput["blob"]`*, see {@link StreamingTraitsRequireLengthInput.blob}.
-   */
-  blob?: StreamingTraitsRequireLengthInput["blob"] | string | Uint8Array | Buffer;
-};
-/**
- * This interface extends from `StreamingTraitsRequireLengthInput` interface. There are more parameters than `blob` defined in {@link StreamingTraitsRequireLengthInput}
- */
-export interface StreamingTraitsRequireLengthServerInput extends StreamingTraitsRequireLengthServerInputType {}
-export namespace StreamingTraitsRequireLengthServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (
-    obj: Parameters<typeof StreamingTraitsRequireLengthInput.validate>[0]
-  ) => __ValidationFailure[] = StreamingTraitsRequireLengthInput.validate;
-}
-export interface StreamingTraitsRequireLengthServerOutput {}
-
-export type StreamingTraitsRequireLengthErrors = never;
-
-export class StreamingTraitsRequireLengthSerializer
-  implements
-    __OperationSerializer<RestJsonService<any>, "StreamingTraitsRequireLength", StreamingTraitsRequireLengthErrors>
-{
-  serialize = serializeStreamingTraitsRequireLengthResponse;
-  deserialize = deserializeStreamingTraitsRequireLengthRequest;
-
-  isOperationError(error: any): error is StreamingTraitsRequireLengthErrors {
-    return false;
-  }
-
-  serializeError(error: StreamingTraitsRequireLengthErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getStreamingTraitsRequireLengthHandler = <Context>(
-  operation: __Operation<StreamingTraitsRequireLengthServerInput, StreamingTraitsRequireLengthServerOutput, Context>,
-  customizer: __ValidationCustomizer<"StreamingTraitsRequireLength">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "StreamingTraitsRequireLength">([
-    new httpbinding.UriSpec<"RestJson", "StreamingTraitsRequireLength">(
-      "POST",
-      [{ type: "path_literal", value: "StreamingTraitsRequireLength" }],
-      [],
-      { service: "RestJson", operation: "StreamingTraitsRequireLength" }
-    ),
-  ]);
-  return new StreamingTraitsRequireLengthHandler(
-    operation,
-    mux,
-    new StreamingTraitsRequireLengthSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

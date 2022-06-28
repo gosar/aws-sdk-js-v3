@@ -30,6 +30,65 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type EndpointWithHostLabelOperation<Context> = __Operation<
+  EndpointWithHostLabelOperationServerInput,
+  EndpointWithHostLabelOperationServerOutput,
+  Context
+>;
+
+export interface EndpointWithHostLabelOperationServerInput extends HostLabelInput {}
+export namespace EndpointWithHostLabelOperationServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof HostLabelInput.validate>[0]) => __ValidationFailure[] =
+    HostLabelInput.validate;
+}
+export interface EndpointWithHostLabelOperationServerOutput {}
+
+export type EndpointWithHostLabelOperationErrors = never;
+
+export class EndpointWithHostLabelOperationSerializer
+  implements
+    __OperationSerializer<RestJsonService<any>, "EndpointWithHostLabelOperation", EndpointWithHostLabelOperationErrors>
+{
+  serialize = serializeEndpointWithHostLabelOperationResponse;
+  deserialize = deserializeEndpointWithHostLabelOperationRequest;
+
+  isOperationError(error: any): error is EndpointWithHostLabelOperationErrors {
+    return false;
+  }
+
+  serializeError(error: EndpointWithHostLabelOperationErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getEndpointWithHostLabelOperationHandler = <Context>(
+  operation: __Operation<
+    EndpointWithHostLabelOperationServerInput,
+    EndpointWithHostLabelOperationServerOutput,
+    Context
+  >,
+  customizer: __ValidationCustomizer<"EndpointWithHostLabelOperation">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "EndpointWithHostLabelOperation">([
+    new httpbinding.UriSpec<"RestJson", "EndpointWithHostLabelOperation">(
+      "POST",
+      [{ type: "path_literal", value: "EndpointWithHostLabelOperation" }],
+      [],
+      { service: "RestJson", operation: "EndpointWithHostLabelOperation" }
+    ),
+  ]);
+  return new EndpointWithHostLabelOperationHandler(
+    operation,
+    mux,
+    new EndpointWithHostLabelOperationSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -146,62 +205,3 @@ export class EndpointWithHostLabelOperationHandler<Context> implements __Service
     );
   }
 }
-
-export type EndpointWithHostLabelOperation<Context> = __Operation<
-  EndpointWithHostLabelOperationServerInput,
-  EndpointWithHostLabelOperationServerOutput,
-  Context
->;
-
-export interface EndpointWithHostLabelOperationServerInput extends HostLabelInput {}
-export namespace EndpointWithHostLabelOperationServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof HostLabelInput.validate>[0]) => __ValidationFailure[] =
-    HostLabelInput.validate;
-}
-export interface EndpointWithHostLabelOperationServerOutput {}
-
-export type EndpointWithHostLabelOperationErrors = never;
-
-export class EndpointWithHostLabelOperationSerializer
-  implements
-    __OperationSerializer<RestJsonService<any>, "EndpointWithHostLabelOperation", EndpointWithHostLabelOperationErrors>
-{
-  serialize = serializeEndpointWithHostLabelOperationResponse;
-  deserialize = deserializeEndpointWithHostLabelOperationRequest;
-
-  isOperationError(error: any): error is EndpointWithHostLabelOperationErrors {
-    return false;
-  }
-
-  serializeError(error: EndpointWithHostLabelOperationErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getEndpointWithHostLabelOperationHandler = <Context>(
-  operation: __Operation<
-    EndpointWithHostLabelOperationServerInput,
-    EndpointWithHostLabelOperationServerOutput,
-    Context
-  >,
-  customizer: __ValidationCustomizer<"EndpointWithHostLabelOperation">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "EndpointWithHostLabelOperation">([
-    new httpbinding.UriSpec<"RestJson", "EndpointWithHostLabelOperation">(
-      "POST",
-      [{ type: "path_literal", value: "EndpointWithHostLabelOperation" }],
-      [],
-      { service: "RestJson", operation: "EndpointWithHostLabelOperation" }
-    ),
-  ]);
-  return new EndpointWithHostLabelOperationHandler(
-    operation,
-    mux,
-    new EndpointWithHostLabelOperationSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

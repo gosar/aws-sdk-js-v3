@@ -30,6 +30,60 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type HttpPayloadTraits<Context> = __Operation<
+  HttpPayloadTraitsServerInput,
+  HttpPayloadTraitsServerOutput,
+  Context
+>;
+
+export interface HttpPayloadTraitsServerInput extends HttpPayloadTraitsInputOutput {}
+export namespace HttpPayloadTraitsServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof HttpPayloadTraitsInputOutput.validate>[0]) => __ValidationFailure[] =
+    HttpPayloadTraitsInputOutput.validate;
+}
+export interface HttpPayloadTraitsServerOutput extends HttpPayloadTraitsInputOutput {}
+
+export type HttpPayloadTraitsErrors = never;
+
+export class HttpPayloadTraitsSerializer
+  implements __OperationSerializer<RestJsonService<any>, "HttpPayloadTraits", HttpPayloadTraitsErrors>
+{
+  serialize = serializeHttpPayloadTraitsResponse;
+  deserialize = deserializeHttpPayloadTraitsRequest;
+
+  isOperationError(error: any): error is HttpPayloadTraitsErrors {
+    return false;
+  }
+
+  serializeError(error: HttpPayloadTraitsErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getHttpPayloadTraitsHandler = <Context>(
+  operation: __Operation<HttpPayloadTraitsServerInput, HttpPayloadTraitsServerOutput, Context>,
+  customizer: __ValidationCustomizer<"HttpPayloadTraits">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "HttpPayloadTraits">([
+    new httpbinding.UriSpec<"RestJson", "HttpPayloadTraits">(
+      "POST",
+      [{ type: "path_literal", value: "HttpPayloadTraits" }],
+      [],
+      { service: "RestJson", operation: "HttpPayloadTraits" }
+    ),
+  ]);
+  return new HttpPayloadTraitsHandler(
+    operation,
+    mux,
+    new HttpPayloadTraitsSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -134,57 +188,3 @@ export class HttpPayloadTraitsHandler<Context> implements __ServiceHandler<Conte
     );
   }
 }
-
-export type HttpPayloadTraits<Context> = __Operation<
-  HttpPayloadTraitsServerInput,
-  HttpPayloadTraitsServerOutput,
-  Context
->;
-
-export interface HttpPayloadTraitsServerInput extends HttpPayloadTraitsInputOutput {}
-export namespace HttpPayloadTraitsServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof HttpPayloadTraitsInputOutput.validate>[0]) => __ValidationFailure[] =
-    HttpPayloadTraitsInputOutput.validate;
-}
-export interface HttpPayloadTraitsServerOutput extends HttpPayloadTraitsInputOutput {}
-
-export type HttpPayloadTraitsErrors = never;
-
-export class HttpPayloadTraitsSerializer
-  implements __OperationSerializer<RestJsonService<any>, "HttpPayloadTraits", HttpPayloadTraitsErrors>
-{
-  serialize = serializeHttpPayloadTraitsResponse;
-  deserialize = deserializeHttpPayloadTraitsRequest;
-
-  isOperationError(error: any): error is HttpPayloadTraitsErrors {
-    return false;
-  }
-
-  serializeError(error: HttpPayloadTraitsErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getHttpPayloadTraitsHandler = <Context>(
-  operation: __Operation<HttpPayloadTraitsServerInput, HttpPayloadTraitsServerOutput, Context>,
-  customizer: __ValidationCustomizer<"HttpPayloadTraits">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "HttpPayloadTraits">([
-    new httpbinding.UriSpec<"RestJson", "HttpPayloadTraits">(
-      "POST",
-      [{ type: "path_literal", value: "HttpPayloadTraits" }],
-      [],
-      { service: "RestJson", operation: "HttpPayloadTraits" }
-    ),
-  ]);
-  return new HttpPayloadTraitsHandler(
-    operation,
-    mux,
-    new HttpPayloadTraitsSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

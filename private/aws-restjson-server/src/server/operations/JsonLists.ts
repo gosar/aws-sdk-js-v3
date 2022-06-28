@@ -30,6 +30,46 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type JsonLists<Context> = __Operation<JsonListsServerInput, JsonListsServerOutput, Context>;
+
+export interface JsonListsServerInput extends JsonListsInputOutput {}
+export namespace JsonListsServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof JsonListsInputOutput.validate>[0]) => __ValidationFailure[] =
+    JsonListsInputOutput.validate;
+}
+export interface JsonListsServerOutput extends JsonListsInputOutput {}
+
+export type JsonListsErrors = never;
+
+export class JsonListsSerializer implements __OperationSerializer<RestJsonService<any>, "JsonLists", JsonListsErrors> {
+  serialize = serializeJsonListsResponse;
+  deserialize = deserializeJsonListsRequest;
+
+  isOperationError(error: any): error is JsonListsErrors {
+    return false;
+  }
+
+  serializeError(error: JsonListsErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getJsonListsHandler = <Context>(
+  operation: __Operation<JsonListsServerInput, JsonListsServerOutput, Context>,
+  customizer: __ValidationCustomizer<"JsonLists">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "JsonLists">([
+    new httpbinding.UriSpec<"RestJson", "JsonLists">("PUT", [{ type: "path_literal", value: "JsonLists" }], [], {
+      service: "RestJson",
+      operation: "JsonLists",
+    }),
+  ]);
+  return new JsonListsHandler(operation, mux, new JsonListsSerializer(), serializeFrameworkException, customizer);
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -130,43 +170,3 @@ export class JsonListsHandler<Context> implements __ServiceHandler<Context> {
     );
   }
 }
-
-export type JsonLists<Context> = __Operation<JsonListsServerInput, JsonListsServerOutput, Context>;
-
-export interface JsonListsServerInput extends JsonListsInputOutput {}
-export namespace JsonListsServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof JsonListsInputOutput.validate>[0]) => __ValidationFailure[] =
-    JsonListsInputOutput.validate;
-}
-export interface JsonListsServerOutput extends JsonListsInputOutput {}
-
-export type JsonListsErrors = never;
-
-export class JsonListsSerializer implements __OperationSerializer<RestJsonService<any>, "JsonLists", JsonListsErrors> {
-  serialize = serializeJsonListsResponse;
-  deserialize = deserializeJsonListsRequest;
-
-  isOperationError(error: any): error is JsonListsErrors {
-    return false;
-  }
-
-  serializeError(error: JsonListsErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getJsonListsHandler = <Context>(
-  operation: __Operation<JsonListsServerInput, JsonListsServerOutput, Context>,
-  customizer: __ValidationCustomizer<"JsonLists">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "JsonLists">([
-    new httpbinding.UriSpec<"RestJson", "JsonLists">("PUT", [{ type: "path_literal", value: "JsonLists" }], [], {
-      service: "RestJson",
-      operation: "JsonLists",
-    }),
-  ]);
-  return new JsonListsHandler(operation, mux, new JsonListsSerializer(), serializeFrameworkException, customizer);
-};

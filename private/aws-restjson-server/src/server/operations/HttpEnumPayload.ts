@@ -30,6 +30,56 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type HttpEnumPayload<Context> = __Operation<HttpEnumPayloadServerInput, HttpEnumPayloadServerOutput, Context>;
+
+export interface HttpEnumPayloadServerInput extends EnumPayloadInput {}
+export namespace HttpEnumPayloadServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof EnumPayloadInput.validate>[0]) => __ValidationFailure[] =
+    EnumPayloadInput.validate;
+}
+export interface HttpEnumPayloadServerOutput extends EnumPayloadInput {}
+
+export type HttpEnumPayloadErrors = never;
+
+export class HttpEnumPayloadSerializer
+  implements __OperationSerializer<RestJsonService<any>, "HttpEnumPayload", HttpEnumPayloadErrors>
+{
+  serialize = serializeHttpEnumPayloadResponse;
+  deserialize = deserializeHttpEnumPayloadRequest;
+
+  isOperationError(error: any): error is HttpEnumPayloadErrors {
+    return false;
+  }
+
+  serializeError(error: HttpEnumPayloadErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getHttpEnumPayloadHandler = <Context>(
+  operation: __Operation<HttpEnumPayloadServerInput, HttpEnumPayloadServerOutput, Context>,
+  customizer: __ValidationCustomizer<"HttpEnumPayload">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "HttpEnumPayload">([
+    new httpbinding.UriSpec<"RestJson", "HttpEnumPayload">(
+      "POST",
+      [{ type: "path_literal", value: "EnumPayload" }],
+      [],
+      { service: "RestJson", operation: "HttpEnumPayload" }
+    ),
+  ]);
+  return new HttpEnumPayloadHandler(
+    operation,
+    mux,
+    new HttpEnumPayloadSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -134,53 +184,3 @@ export class HttpEnumPayloadHandler<Context> implements __ServiceHandler<Context
     );
   }
 }
-
-export type HttpEnumPayload<Context> = __Operation<HttpEnumPayloadServerInput, HttpEnumPayloadServerOutput, Context>;
-
-export interface HttpEnumPayloadServerInput extends EnumPayloadInput {}
-export namespace HttpEnumPayloadServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof EnumPayloadInput.validate>[0]) => __ValidationFailure[] =
-    EnumPayloadInput.validate;
-}
-export interface HttpEnumPayloadServerOutput extends EnumPayloadInput {}
-
-export type HttpEnumPayloadErrors = never;
-
-export class HttpEnumPayloadSerializer
-  implements __OperationSerializer<RestJsonService<any>, "HttpEnumPayload", HttpEnumPayloadErrors>
-{
-  serialize = serializeHttpEnumPayloadResponse;
-  deserialize = deserializeHttpEnumPayloadRequest;
-
-  isOperationError(error: any): error is HttpEnumPayloadErrors {
-    return false;
-  }
-
-  serializeError(error: HttpEnumPayloadErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getHttpEnumPayloadHandler = <Context>(
-  operation: __Operation<HttpEnumPayloadServerInput, HttpEnumPayloadServerOutput, Context>,
-  customizer: __ValidationCustomizer<"HttpEnumPayload">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "HttpEnumPayload">([
-    new httpbinding.UriSpec<"RestJson", "HttpEnumPayload">(
-      "POST",
-      [{ type: "path_literal", value: "EnumPayload" }],
-      [],
-      { service: "RestJson", operation: "HttpEnumPayload" }
-    ),
-  ]);
-  return new HttpEnumPayloadHandler(
-    operation,
-    mux,
-    new HttpEnumPayloadSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

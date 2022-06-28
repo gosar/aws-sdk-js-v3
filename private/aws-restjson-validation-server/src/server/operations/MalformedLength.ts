@@ -34,6 +34,77 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonValidationService } from "../RestJsonValidationService";
 
+export type MalformedLength<Context> = __Operation<MalformedLengthServerInput, MalformedLengthServerOutput, Context>;
+
+export interface MalformedLengthServerInput extends MalformedLengthInput {}
+export namespace MalformedLengthServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof MalformedLengthInput.validate>[0]) => __ValidationFailure[] =
+    MalformedLengthInput.validate;
+}
+export interface MalformedLengthServerOutput {}
+
+export type MalformedLengthErrors = ValidationException;
+
+export class MalformedLengthSerializer
+  implements __OperationSerializer<RestJsonValidationService<any>, "MalformedLength", MalformedLengthErrors>
+{
+  serialize = serializeMalformedLengthResponse;
+  deserialize = deserializeMalformedLengthRequest;
+
+  isOperationError(error: any): error is MalformedLengthErrors {
+    const names: MalformedLengthErrors["name"][] = ["ValidationException"];
+    return names.includes(error.name);
+  }
+
+  serializeError(error: MalformedLengthErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    switch (error.name) {
+      case "ValidationException": {
+        return serializeValidationExceptionError(error, ctx);
+      }
+      default: {
+        throw error;
+      }
+    }
+  }
+}
+
+export const getMalformedLengthHandler = <Context>(
+  operation: __Operation<MalformedLengthServerInput, MalformedLengthServerOutput, Context>
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJsonValidation", "MalformedLength">([
+    new httpbinding.UriSpec<"RestJsonValidation", "MalformedLength">(
+      "POST",
+      [{ type: "path_literal", value: "MalformedLength" }],
+      [],
+      { service: "RestJsonValidation", operation: "MalformedLength" }
+    ),
+  ]);
+  const customizer: __ValidationCustomizer<"MalformedLength"> = (ctx, failures) => {
+    if (!failures) {
+      return undefined;
+    }
+    return {
+      name: "ValidationException",
+      $fault: "client",
+      message: __generateValidationSummary(failures),
+      fieldList: failures.map((failure) => ({
+        path: failure.path,
+        message: __generateValidationMessage(failure),
+      })),
+    };
+  };
+  return new MalformedLengthHandler(
+    operation,
+    mux,
+    new MalformedLengthSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -138,74 +209,3 @@ export class MalformedLengthHandler<Context> implements __ServiceHandler<Context
     );
   }
 }
-
-export type MalformedLength<Context> = __Operation<MalformedLengthServerInput, MalformedLengthServerOutput, Context>;
-
-export interface MalformedLengthServerInput extends MalformedLengthInput {}
-export namespace MalformedLengthServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof MalformedLengthInput.validate>[0]) => __ValidationFailure[] =
-    MalformedLengthInput.validate;
-}
-export interface MalformedLengthServerOutput {}
-
-export type MalformedLengthErrors = ValidationException;
-
-export class MalformedLengthSerializer
-  implements __OperationSerializer<RestJsonValidationService<any>, "MalformedLength", MalformedLengthErrors>
-{
-  serialize = serializeMalformedLengthResponse;
-  deserialize = deserializeMalformedLengthRequest;
-
-  isOperationError(error: any): error is MalformedLengthErrors {
-    const names: MalformedLengthErrors["name"][] = ["ValidationException"];
-    return names.includes(error.name);
-  }
-
-  serializeError(error: MalformedLengthErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    switch (error.name) {
-      case "ValidationException": {
-        return serializeValidationExceptionError(error, ctx);
-      }
-      default: {
-        throw error;
-      }
-    }
-  }
-}
-
-export const getMalformedLengthHandler = <Context>(
-  operation: __Operation<MalformedLengthServerInput, MalformedLengthServerOutput, Context>
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJsonValidation", "MalformedLength">([
-    new httpbinding.UriSpec<"RestJsonValidation", "MalformedLength">(
-      "POST",
-      [{ type: "path_literal", value: "MalformedLength" }],
-      [],
-      { service: "RestJsonValidation", operation: "MalformedLength" }
-    ),
-  ]);
-  const customizer: __ValidationCustomizer<"MalformedLength"> = (ctx, failures) => {
-    if (!failures) {
-      return undefined;
-    }
-    return {
-      name: "ValidationException",
-      $fault: "client",
-      message: __generateValidationSummary(failures),
-      fieldList: failures.map((failure) => ({
-        path: failure.path,
-        message: __generateValidationMessage(failure),
-      })),
-    };
-  };
-  return new MalformedLengthHandler(
-    operation,
-    mux,
-    new MalformedLengthSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

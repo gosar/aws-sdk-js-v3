@@ -30,6 +30,60 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type AllQueryStringTypes<Context> = __Operation<
+  AllQueryStringTypesServerInput,
+  AllQueryStringTypesServerOutput,
+  Context
+>;
+
+export interface AllQueryStringTypesServerInput extends AllQueryStringTypesInput {}
+export namespace AllQueryStringTypesServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof AllQueryStringTypesInput.validate>[0]) => __ValidationFailure[] =
+    AllQueryStringTypesInput.validate;
+}
+export interface AllQueryStringTypesServerOutput {}
+
+export type AllQueryStringTypesErrors = never;
+
+export class AllQueryStringTypesSerializer
+  implements __OperationSerializer<RestJsonService<any>, "AllQueryStringTypes", AllQueryStringTypesErrors>
+{
+  serialize = serializeAllQueryStringTypesResponse;
+  deserialize = deserializeAllQueryStringTypesRequest;
+
+  isOperationError(error: any): error is AllQueryStringTypesErrors {
+    return false;
+  }
+
+  serializeError(error: AllQueryStringTypesErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getAllQueryStringTypesHandler = <Context>(
+  operation: __Operation<AllQueryStringTypesServerInput, AllQueryStringTypesServerOutput, Context>,
+  customizer: __ValidationCustomizer<"AllQueryStringTypes">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "AllQueryStringTypes">([
+    new httpbinding.UriSpec<"RestJson", "AllQueryStringTypes">(
+      "GET",
+      [{ type: "path_literal", value: "AllQueryStringTypesInput" }],
+      [],
+      { service: "RestJson", operation: "AllQueryStringTypes" }
+    ),
+  ]);
+  return new AllQueryStringTypesHandler(
+    operation,
+    mux,
+    new AllQueryStringTypesSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -134,57 +188,3 @@ export class AllQueryStringTypesHandler<Context> implements __ServiceHandler<Con
     );
   }
 }
-
-export type AllQueryStringTypes<Context> = __Operation<
-  AllQueryStringTypesServerInput,
-  AllQueryStringTypesServerOutput,
-  Context
->;
-
-export interface AllQueryStringTypesServerInput extends AllQueryStringTypesInput {}
-export namespace AllQueryStringTypesServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof AllQueryStringTypesInput.validate>[0]) => __ValidationFailure[] =
-    AllQueryStringTypesInput.validate;
-}
-export interface AllQueryStringTypesServerOutput {}
-
-export type AllQueryStringTypesErrors = never;
-
-export class AllQueryStringTypesSerializer
-  implements __OperationSerializer<RestJsonService<any>, "AllQueryStringTypes", AllQueryStringTypesErrors>
-{
-  serialize = serializeAllQueryStringTypesResponse;
-  deserialize = deserializeAllQueryStringTypesRequest;
-
-  isOperationError(error: any): error is AllQueryStringTypesErrors {
-    return false;
-  }
-
-  serializeError(error: AllQueryStringTypesErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getAllQueryStringTypesHandler = <Context>(
-  operation: __Operation<AllQueryStringTypesServerInput, AllQueryStringTypesServerOutput, Context>,
-  customizer: __ValidationCustomizer<"AllQueryStringTypes">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "AllQueryStringTypes">([
-    new httpbinding.UriSpec<"RestJson", "AllQueryStringTypes">(
-      "GET",
-      [{ type: "path_literal", value: "AllQueryStringTypesInput" }],
-      [],
-      { service: "RestJson", operation: "AllQueryStringTypes" }
-    ),
-  ]);
-  return new AllQueryStringTypesHandler(
-    operation,
-    mux,
-    new AllQueryStringTypesSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

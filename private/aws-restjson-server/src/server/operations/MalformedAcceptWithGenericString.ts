@@ -30,6 +30,70 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type MalformedAcceptWithGenericString<Context> = __Operation<
+  MalformedAcceptWithGenericStringServerInput,
+  MalformedAcceptWithGenericStringServerOutput,
+  Context
+>;
+
+export interface MalformedAcceptWithGenericStringServerInput extends MalformedAcceptWithGenericStringInput {}
+export namespace MalformedAcceptWithGenericStringServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (
+    obj: Parameters<typeof MalformedAcceptWithGenericStringInput.validate>[0]
+  ) => __ValidationFailure[] = MalformedAcceptWithGenericStringInput.validate;
+}
+export interface MalformedAcceptWithGenericStringServerOutput {}
+
+export type MalformedAcceptWithGenericStringErrors = never;
+
+export class MalformedAcceptWithGenericStringSerializer
+  implements
+    __OperationSerializer<
+      RestJsonService<any>,
+      "MalformedAcceptWithGenericString",
+      MalformedAcceptWithGenericStringErrors
+    >
+{
+  serialize = serializeMalformedAcceptWithGenericStringResponse;
+  deserialize = deserializeMalformedAcceptWithGenericStringRequest;
+
+  isOperationError(error: any): error is MalformedAcceptWithGenericStringErrors {
+    return false;
+  }
+
+  serializeError(error: MalformedAcceptWithGenericStringErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getMalformedAcceptWithGenericStringHandler = <Context>(
+  operation: __Operation<
+    MalformedAcceptWithGenericStringServerInput,
+    MalformedAcceptWithGenericStringServerOutput,
+    Context
+  >,
+  customizer: __ValidationCustomizer<"MalformedAcceptWithGenericString">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedAcceptWithGenericString">([
+    new httpbinding.UriSpec<"RestJson", "MalformedAcceptWithGenericString">(
+      "POST",
+      [{ type: "path_literal", value: "MalformedAcceptWithGenericString" }],
+      [],
+      { service: "RestJson", operation: "MalformedAcceptWithGenericString" }
+    ),
+  ]);
+  return new MalformedAcceptWithGenericStringHandler(
+    operation,
+    mux,
+    new MalformedAcceptWithGenericStringSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -146,67 +210,3 @@ export class MalformedAcceptWithGenericStringHandler<Context> implements __Servi
     );
   }
 }
-
-export type MalformedAcceptWithGenericString<Context> = __Operation<
-  MalformedAcceptWithGenericStringServerInput,
-  MalformedAcceptWithGenericStringServerOutput,
-  Context
->;
-
-export interface MalformedAcceptWithGenericStringServerInput extends MalformedAcceptWithGenericStringInput {}
-export namespace MalformedAcceptWithGenericStringServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (
-    obj: Parameters<typeof MalformedAcceptWithGenericStringInput.validate>[0]
-  ) => __ValidationFailure[] = MalformedAcceptWithGenericStringInput.validate;
-}
-export interface MalformedAcceptWithGenericStringServerOutput {}
-
-export type MalformedAcceptWithGenericStringErrors = never;
-
-export class MalformedAcceptWithGenericStringSerializer
-  implements
-    __OperationSerializer<
-      RestJsonService<any>,
-      "MalformedAcceptWithGenericString",
-      MalformedAcceptWithGenericStringErrors
-    >
-{
-  serialize = serializeMalformedAcceptWithGenericStringResponse;
-  deserialize = deserializeMalformedAcceptWithGenericStringRequest;
-
-  isOperationError(error: any): error is MalformedAcceptWithGenericStringErrors {
-    return false;
-  }
-
-  serializeError(error: MalformedAcceptWithGenericStringErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getMalformedAcceptWithGenericStringHandler = <Context>(
-  operation: __Operation<
-    MalformedAcceptWithGenericStringServerInput,
-    MalformedAcceptWithGenericStringServerOutput,
-    Context
-  >,
-  customizer: __ValidationCustomizer<"MalformedAcceptWithGenericString">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedAcceptWithGenericString">([
-    new httpbinding.UriSpec<"RestJson", "MalformedAcceptWithGenericString">(
-      "POST",
-      [{ type: "path_literal", value: "MalformedAcceptWithGenericString" }],
-      [],
-      { service: "RestJson", operation: "MalformedAcceptWithGenericString" }
-    ),
-  ]);
-  return new MalformedAcceptWithGenericStringHandler(
-    operation,
-    mux,
-    new MalformedAcceptWithGenericStringSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

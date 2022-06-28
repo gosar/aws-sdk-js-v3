@@ -34,6 +34,77 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonValidationService } from "../RestJsonValidationService";
 
+export type MalformedRange<Context> = __Operation<MalformedRangeServerInput, MalformedRangeServerOutput, Context>;
+
+export interface MalformedRangeServerInput extends MalformedRangeInput {}
+export namespace MalformedRangeServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof MalformedRangeInput.validate>[0]) => __ValidationFailure[] =
+    MalformedRangeInput.validate;
+}
+export interface MalformedRangeServerOutput {}
+
+export type MalformedRangeErrors = ValidationException;
+
+export class MalformedRangeSerializer
+  implements __OperationSerializer<RestJsonValidationService<any>, "MalformedRange", MalformedRangeErrors>
+{
+  serialize = serializeMalformedRangeResponse;
+  deserialize = deserializeMalformedRangeRequest;
+
+  isOperationError(error: any): error is MalformedRangeErrors {
+    const names: MalformedRangeErrors["name"][] = ["ValidationException"];
+    return names.includes(error.name);
+  }
+
+  serializeError(error: MalformedRangeErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    switch (error.name) {
+      case "ValidationException": {
+        return serializeValidationExceptionError(error, ctx);
+      }
+      default: {
+        throw error;
+      }
+    }
+  }
+}
+
+export const getMalformedRangeHandler = <Context>(
+  operation: __Operation<MalformedRangeServerInput, MalformedRangeServerOutput, Context>
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJsonValidation", "MalformedRange">([
+    new httpbinding.UriSpec<"RestJsonValidation", "MalformedRange">(
+      "POST",
+      [{ type: "path_literal", value: "MalformedRange" }],
+      [],
+      { service: "RestJsonValidation", operation: "MalformedRange" }
+    ),
+  ]);
+  const customizer: __ValidationCustomizer<"MalformedRange"> = (ctx, failures) => {
+    if (!failures) {
+      return undefined;
+    }
+    return {
+      name: "ValidationException",
+      $fault: "client",
+      message: __generateValidationSummary(failures),
+      fieldList: failures.map((failure) => ({
+        path: failure.path,
+        message: __generateValidationMessage(failure),
+      })),
+    };
+  };
+  return new MalformedRangeHandler(
+    operation,
+    mux,
+    new MalformedRangeSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -138,74 +209,3 @@ export class MalformedRangeHandler<Context> implements __ServiceHandler<Context>
     );
   }
 }
-
-export type MalformedRange<Context> = __Operation<MalformedRangeServerInput, MalformedRangeServerOutput, Context>;
-
-export interface MalformedRangeServerInput extends MalformedRangeInput {}
-export namespace MalformedRangeServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof MalformedRangeInput.validate>[0]) => __ValidationFailure[] =
-    MalformedRangeInput.validate;
-}
-export interface MalformedRangeServerOutput {}
-
-export type MalformedRangeErrors = ValidationException;
-
-export class MalformedRangeSerializer
-  implements __OperationSerializer<RestJsonValidationService<any>, "MalformedRange", MalformedRangeErrors>
-{
-  serialize = serializeMalformedRangeResponse;
-  deserialize = deserializeMalformedRangeRequest;
-
-  isOperationError(error: any): error is MalformedRangeErrors {
-    const names: MalformedRangeErrors["name"][] = ["ValidationException"];
-    return names.includes(error.name);
-  }
-
-  serializeError(error: MalformedRangeErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    switch (error.name) {
-      case "ValidationException": {
-        return serializeValidationExceptionError(error, ctx);
-      }
-      default: {
-        throw error;
-      }
-    }
-  }
-}
-
-export const getMalformedRangeHandler = <Context>(
-  operation: __Operation<MalformedRangeServerInput, MalformedRangeServerOutput, Context>
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJsonValidation", "MalformedRange">([
-    new httpbinding.UriSpec<"RestJsonValidation", "MalformedRange">(
-      "POST",
-      [{ type: "path_literal", value: "MalformedRange" }],
-      [],
-      { service: "RestJsonValidation", operation: "MalformedRange" }
-    ),
-  ]);
-  const customizer: __ValidationCustomizer<"MalformedRange"> = (ctx, failures) => {
-    if (!failures) {
-      return undefined;
-    }
-    return {
-      name: "ValidationException",
-      $fault: "client",
-      message: __generateValidationSummary(failures),
-      fieldList: failures.map((failure) => ({
-        path: failure.path,
-        message: __generateValidationMessage(failure),
-      })),
-    };
-  };
-  return new MalformedRangeHandler(
-    operation,
-    mux,
-    new MalformedRangeSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

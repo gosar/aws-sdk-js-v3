@@ -30,6 +30,66 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type HttpPayloadTraitsWithMediaType<Context> = __Operation<
+  HttpPayloadTraitsWithMediaTypeServerInput,
+  HttpPayloadTraitsWithMediaTypeServerOutput,
+  Context
+>;
+
+export interface HttpPayloadTraitsWithMediaTypeServerInput extends HttpPayloadTraitsWithMediaTypeInputOutput {}
+export namespace HttpPayloadTraitsWithMediaTypeServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (
+    obj: Parameters<typeof HttpPayloadTraitsWithMediaTypeInputOutput.validate>[0]
+  ) => __ValidationFailure[] = HttpPayloadTraitsWithMediaTypeInputOutput.validate;
+}
+export interface HttpPayloadTraitsWithMediaTypeServerOutput extends HttpPayloadTraitsWithMediaTypeInputOutput {}
+
+export type HttpPayloadTraitsWithMediaTypeErrors = never;
+
+export class HttpPayloadTraitsWithMediaTypeSerializer
+  implements
+    __OperationSerializer<RestJsonService<any>, "HttpPayloadTraitsWithMediaType", HttpPayloadTraitsWithMediaTypeErrors>
+{
+  serialize = serializeHttpPayloadTraitsWithMediaTypeResponse;
+  deserialize = deserializeHttpPayloadTraitsWithMediaTypeRequest;
+
+  isOperationError(error: any): error is HttpPayloadTraitsWithMediaTypeErrors {
+    return false;
+  }
+
+  serializeError(error: HttpPayloadTraitsWithMediaTypeErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getHttpPayloadTraitsWithMediaTypeHandler = <Context>(
+  operation: __Operation<
+    HttpPayloadTraitsWithMediaTypeServerInput,
+    HttpPayloadTraitsWithMediaTypeServerOutput,
+    Context
+  >,
+  customizer: __ValidationCustomizer<"HttpPayloadTraitsWithMediaType">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "HttpPayloadTraitsWithMediaType">([
+    new httpbinding.UriSpec<"RestJson", "HttpPayloadTraitsWithMediaType">(
+      "POST",
+      [{ type: "path_literal", value: "HttpPayloadTraitsWithMediaType" }],
+      [],
+      { service: "RestJson", operation: "HttpPayloadTraitsWithMediaType" }
+    ),
+  ]);
+  return new HttpPayloadTraitsWithMediaTypeHandler(
+    operation,
+    mux,
+    new HttpPayloadTraitsWithMediaTypeSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -146,63 +206,3 @@ export class HttpPayloadTraitsWithMediaTypeHandler<Context> implements __Service
     );
   }
 }
-
-export type HttpPayloadTraitsWithMediaType<Context> = __Operation<
-  HttpPayloadTraitsWithMediaTypeServerInput,
-  HttpPayloadTraitsWithMediaTypeServerOutput,
-  Context
->;
-
-export interface HttpPayloadTraitsWithMediaTypeServerInput extends HttpPayloadTraitsWithMediaTypeInputOutput {}
-export namespace HttpPayloadTraitsWithMediaTypeServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (
-    obj: Parameters<typeof HttpPayloadTraitsWithMediaTypeInputOutput.validate>[0]
-  ) => __ValidationFailure[] = HttpPayloadTraitsWithMediaTypeInputOutput.validate;
-}
-export interface HttpPayloadTraitsWithMediaTypeServerOutput extends HttpPayloadTraitsWithMediaTypeInputOutput {}
-
-export type HttpPayloadTraitsWithMediaTypeErrors = never;
-
-export class HttpPayloadTraitsWithMediaTypeSerializer
-  implements
-    __OperationSerializer<RestJsonService<any>, "HttpPayloadTraitsWithMediaType", HttpPayloadTraitsWithMediaTypeErrors>
-{
-  serialize = serializeHttpPayloadTraitsWithMediaTypeResponse;
-  deserialize = deserializeHttpPayloadTraitsWithMediaTypeRequest;
-
-  isOperationError(error: any): error is HttpPayloadTraitsWithMediaTypeErrors {
-    return false;
-  }
-
-  serializeError(error: HttpPayloadTraitsWithMediaTypeErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getHttpPayloadTraitsWithMediaTypeHandler = <Context>(
-  operation: __Operation<
-    HttpPayloadTraitsWithMediaTypeServerInput,
-    HttpPayloadTraitsWithMediaTypeServerOutput,
-    Context
-  >,
-  customizer: __ValidationCustomizer<"HttpPayloadTraitsWithMediaType">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "HttpPayloadTraitsWithMediaType">([
-    new httpbinding.UriSpec<"RestJson", "HttpPayloadTraitsWithMediaType">(
-      "POST",
-      [{ type: "path_literal", value: "HttpPayloadTraitsWithMediaType" }],
-      [],
-      { service: "RestJson", operation: "HttpPayloadTraitsWithMediaType" }
-    ),
-  ]);
-  return new HttpPayloadTraitsWithMediaTypeHandler(
-    operation,
-    mux,
-    new HttpPayloadTraitsWithMediaTypeSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

@@ -30,6 +30,62 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type HttpRequestWithFloatLabels<Context> = __Operation<
+  HttpRequestWithFloatLabelsServerInput,
+  HttpRequestWithFloatLabelsServerOutput,
+  Context
+>;
+
+export interface HttpRequestWithFloatLabelsServerInput extends HttpRequestWithFloatLabelsInput {}
+export namespace HttpRequestWithFloatLabelsServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (
+    obj: Parameters<typeof HttpRequestWithFloatLabelsInput.validate>[0]
+  ) => __ValidationFailure[] = HttpRequestWithFloatLabelsInput.validate;
+}
+export interface HttpRequestWithFloatLabelsServerOutput {}
+
+export type HttpRequestWithFloatLabelsErrors = never;
+
+export class HttpRequestWithFloatLabelsSerializer
+  implements
+    __OperationSerializer<RestJsonService<any>, "HttpRequestWithFloatLabels", HttpRequestWithFloatLabelsErrors>
+{
+  serialize = serializeHttpRequestWithFloatLabelsResponse;
+  deserialize = deserializeHttpRequestWithFloatLabelsRequest;
+
+  isOperationError(error: any): error is HttpRequestWithFloatLabelsErrors {
+    return false;
+  }
+
+  serializeError(error: HttpRequestWithFloatLabelsErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getHttpRequestWithFloatLabelsHandler = <Context>(
+  operation: __Operation<HttpRequestWithFloatLabelsServerInput, HttpRequestWithFloatLabelsServerOutput, Context>,
+  customizer: __ValidationCustomizer<"HttpRequestWithFloatLabels">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "HttpRequestWithFloatLabels">([
+    new httpbinding.UriSpec<"RestJson", "HttpRequestWithFloatLabels">(
+      "GET",
+      [{ type: "path_literal", value: "FloatHttpLabels" }, { type: "path" }, { type: "path" }],
+      [],
+      { service: "RestJson", operation: "HttpRequestWithFloatLabels" }
+    ),
+  ]);
+  return new HttpRequestWithFloatLabelsHandler(
+    operation,
+    mux,
+    new HttpRequestWithFloatLabelsSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -142,59 +198,3 @@ export class HttpRequestWithFloatLabelsHandler<Context> implements __ServiceHand
     );
   }
 }
-
-export type HttpRequestWithFloatLabels<Context> = __Operation<
-  HttpRequestWithFloatLabelsServerInput,
-  HttpRequestWithFloatLabelsServerOutput,
-  Context
->;
-
-export interface HttpRequestWithFloatLabelsServerInput extends HttpRequestWithFloatLabelsInput {}
-export namespace HttpRequestWithFloatLabelsServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (
-    obj: Parameters<typeof HttpRequestWithFloatLabelsInput.validate>[0]
-  ) => __ValidationFailure[] = HttpRequestWithFloatLabelsInput.validate;
-}
-export interface HttpRequestWithFloatLabelsServerOutput {}
-
-export type HttpRequestWithFloatLabelsErrors = never;
-
-export class HttpRequestWithFloatLabelsSerializer
-  implements
-    __OperationSerializer<RestJsonService<any>, "HttpRequestWithFloatLabels", HttpRequestWithFloatLabelsErrors>
-{
-  serialize = serializeHttpRequestWithFloatLabelsResponse;
-  deserialize = deserializeHttpRequestWithFloatLabelsRequest;
-
-  isOperationError(error: any): error is HttpRequestWithFloatLabelsErrors {
-    return false;
-  }
-
-  serializeError(error: HttpRequestWithFloatLabelsErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getHttpRequestWithFloatLabelsHandler = <Context>(
-  operation: __Operation<HttpRequestWithFloatLabelsServerInput, HttpRequestWithFloatLabelsServerOutput, Context>,
-  customizer: __ValidationCustomizer<"HttpRequestWithFloatLabels">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "HttpRequestWithFloatLabels">([
-    new httpbinding.UriSpec<"RestJson", "HttpRequestWithFloatLabels">(
-      "GET",
-      [{ type: "path_literal", value: "FloatHttpLabels" }, { type: "path" }, { type: "path" }],
-      [],
-      { service: "RestJson", operation: "HttpRequestWithFloatLabels" }
-    ),
-  ]);
-  return new HttpRequestWithFloatLabelsHandler(
-    operation,
-    mux,
-    new HttpRequestWithFloatLabelsSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

@@ -30,6 +30,70 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type MalformedContentTypeWithPayload<Context> = __Operation<
+  MalformedContentTypeWithPayloadServerInput,
+  MalformedContentTypeWithPayloadServerOutput,
+  Context
+>;
+
+export interface MalformedContentTypeWithPayloadServerInput extends MalformedContentTypeWithPayloadInput {}
+export namespace MalformedContentTypeWithPayloadServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (
+    obj: Parameters<typeof MalformedContentTypeWithPayloadInput.validate>[0]
+  ) => __ValidationFailure[] = MalformedContentTypeWithPayloadInput.validate;
+}
+export interface MalformedContentTypeWithPayloadServerOutput {}
+
+export type MalformedContentTypeWithPayloadErrors = never;
+
+export class MalformedContentTypeWithPayloadSerializer
+  implements
+    __OperationSerializer<
+      RestJsonService<any>,
+      "MalformedContentTypeWithPayload",
+      MalformedContentTypeWithPayloadErrors
+    >
+{
+  serialize = serializeMalformedContentTypeWithPayloadResponse;
+  deserialize = deserializeMalformedContentTypeWithPayloadRequest;
+
+  isOperationError(error: any): error is MalformedContentTypeWithPayloadErrors {
+    return false;
+  }
+
+  serializeError(error: MalformedContentTypeWithPayloadErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getMalformedContentTypeWithPayloadHandler = <Context>(
+  operation: __Operation<
+    MalformedContentTypeWithPayloadServerInput,
+    MalformedContentTypeWithPayloadServerOutput,
+    Context
+  >,
+  customizer: __ValidationCustomizer<"MalformedContentTypeWithPayload">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedContentTypeWithPayload">([
+    new httpbinding.UriSpec<"RestJson", "MalformedContentTypeWithPayload">(
+      "POST",
+      [{ type: "path_literal", value: "MalformedContentTypeWithPayload" }],
+      [],
+      { service: "RestJson", operation: "MalformedContentTypeWithPayload" }
+    ),
+  ]);
+  return new MalformedContentTypeWithPayloadHandler(
+    operation,
+    mux,
+    new MalformedContentTypeWithPayloadSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -146,67 +210,3 @@ export class MalformedContentTypeWithPayloadHandler<Context> implements __Servic
     );
   }
 }
-
-export type MalformedContentTypeWithPayload<Context> = __Operation<
-  MalformedContentTypeWithPayloadServerInput,
-  MalformedContentTypeWithPayloadServerOutput,
-  Context
->;
-
-export interface MalformedContentTypeWithPayloadServerInput extends MalformedContentTypeWithPayloadInput {}
-export namespace MalformedContentTypeWithPayloadServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (
-    obj: Parameters<typeof MalformedContentTypeWithPayloadInput.validate>[0]
-  ) => __ValidationFailure[] = MalformedContentTypeWithPayloadInput.validate;
-}
-export interface MalformedContentTypeWithPayloadServerOutput {}
-
-export type MalformedContentTypeWithPayloadErrors = never;
-
-export class MalformedContentTypeWithPayloadSerializer
-  implements
-    __OperationSerializer<
-      RestJsonService<any>,
-      "MalformedContentTypeWithPayload",
-      MalformedContentTypeWithPayloadErrors
-    >
-{
-  serialize = serializeMalformedContentTypeWithPayloadResponse;
-  deserialize = deserializeMalformedContentTypeWithPayloadRequest;
-
-  isOperationError(error: any): error is MalformedContentTypeWithPayloadErrors {
-    return false;
-  }
-
-  serializeError(error: MalformedContentTypeWithPayloadErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getMalformedContentTypeWithPayloadHandler = <Context>(
-  operation: __Operation<
-    MalformedContentTypeWithPayloadServerInput,
-    MalformedContentTypeWithPayloadServerOutput,
-    Context
-  >,
-  customizer: __ValidationCustomizer<"MalformedContentTypeWithPayload">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedContentTypeWithPayload">([
-    new httpbinding.UriSpec<"RestJson", "MalformedContentTypeWithPayload">(
-      "POST",
-      [{ type: "path_literal", value: "MalformedContentTypeWithPayload" }],
-      [],
-      { service: "RestJson", operation: "MalformedContentTypeWithPayload" }
-    ),
-  ]);
-  return new MalformedContentTypeWithPayloadHandler(
-    operation,
-    mux,
-    new MalformedContentTypeWithPayloadSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

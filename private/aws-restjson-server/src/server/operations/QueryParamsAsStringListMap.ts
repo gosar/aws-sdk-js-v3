@@ -30,6 +30,62 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type QueryParamsAsStringListMap<Context> = __Operation<
+  QueryParamsAsStringListMapServerInput,
+  QueryParamsAsStringListMapServerOutput,
+  Context
+>;
+
+export interface QueryParamsAsStringListMapServerInput extends QueryParamsAsStringListMapInput {}
+export namespace QueryParamsAsStringListMapServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (
+    obj: Parameters<typeof QueryParamsAsStringListMapInput.validate>[0]
+  ) => __ValidationFailure[] = QueryParamsAsStringListMapInput.validate;
+}
+export interface QueryParamsAsStringListMapServerOutput {}
+
+export type QueryParamsAsStringListMapErrors = never;
+
+export class QueryParamsAsStringListMapSerializer
+  implements
+    __OperationSerializer<RestJsonService<any>, "QueryParamsAsStringListMap", QueryParamsAsStringListMapErrors>
+{
+  serialize = serializeQueryParamsAsStringListMapResponse;
+  deserialize = deserializeQueryParamsAsStringListMapRequest;
+
+  isOperationError(error: any): error is QueryParamsAsStringListMapErrors {
+    return false;
+  }
+
+  serializeError(error: QueryParamsAsStringListMapErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getQueryParamsAsStringListMapHandler = <Context>(
+  operation: __Operation<QueryParamsAsStringListMapServerInput, QueryParamsAsStringListMapServerOutput, Context>,
+  customizer: __ValidationCustomizer<"QueryParamsAsStringListMap">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "QueryParamsAsStringListMap">([
+    new httpbinding.UriSpec<"RestJson", "QueryParamsAsStringListMap">(
+      "POST",
+      [{ type: "path_literal", value: "StringListMap" }],
+      [],
+      { service: "RestJson", operation: "QueryParamsAsStringListMap" }
+    ),
+  ]);
+  return new QueryParamsAsStringListMapHandler(
+    operation,
+    mux,
+    new QueryParamsAsStringListMapSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -142,59 +198,3 @@ export class QueryParamsAsStringListMapHandler<Context> implements __ServiceHand
     );
   }
 }
-
-export type QueryParamsAsStringListMap<Context> = __Operation<
-  QueryParamsAsStringListMapServerInput,
-  QueryParamsAsStringListMapServerOutput,
-  Context
->;
-
-export interface QueryParamsAsStringListMapServerInput extends QueryParamsAsStringListMapInput {}
-export namespace QueryParamsAsStringListMapServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (
-    obj: Parameters<typeof QueryParamsAsStringListMapInput.validate>[0]
-  ) => __ValidationFailure[] = QueryParamsAsStringListMapInput.validate;
-}
-export interface QueryParamsAsStringListMapServerOutput {}
-
-export type QueryParamsAsStringListMapErrors = never;
-
-export class QueryParamsAsStringListMapSerializer
-  implements
-    __OperationSerializer<RestJsonService<any>, "QueryParamsAsStringListMap", QueryParamsAsStringListMapErrors>
-{
-  serialize = serializeQueryParamsAsStringListMapResponse;
-  deserialize = deserializeQueryParamsAsStringListMapRequest;
-
-  isOperationError(error: any): error is QueryParamsAsStringListMapErrors {
-    return false;
-  }
-
-  serializeError(error: QueryParamsAsStringListMapErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getQueryParamsAsStringListMapHandler = <Context>(
-  operation: __Operation<QueryParamsAsStringListMapServerInput, QueryParamsAsStringListMapServerOutput, Context>,
-  customizer: __ValidationCustomizer<"QueryParamsAsStringListMap">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "QueryParamsAsStringListMap">([
-    new httpbinding.UriSpec<"RestJson", "QueryParamsAsStringListMap">(
-      "POST",
-      [{ type: "path_literal", value: "StringListMap" }],
-      [],
-      { service: "RestJson", operation: "QueryParamsAsStringListMap" }
-    ),
-  ]);
-  return new QueryParamsAsStringListMapHandler(
-    operation,
-    mux,
-    new QueryParamsAsStringListMapSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

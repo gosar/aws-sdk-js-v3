@@ -29,6 +29,59 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type HostWithPathOperation<Context> = __Operation<
+  HostWithPathOperationServerInput,
+  HostWithPathOperationServerOutput,
+  Context
+>;
+
+export interface HostWithPathOperationServerInput {}
+export namespace HostWithPathOperationServerInput {
+  /**
+   * @internal
+   */
+  export const validate: () => __ValidationFailure[] = () => [];
+}
+export interface HostWithPathOperationServerOutput {}
+
+export type HostWithPathOperationErrors = never;
+
+export class HostWithPathOperationSerializer
+  implements __OperationSerializer<RestJsonService<any>, "HostWithPathOperation", HostWithPathOperationErrors>
+{
+  serialize = serializeHostWithPathOperationResponse;
+  deserialize = deserializeHostWithPathOperationRequest;
+
+  isOperationError(error: any): error is HostWithPathOperationErrors {
+    return false;
+  }
+
+  serializeError(error: HostWithPathOperationErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getHostWithPathOperationHandler = <Context>(
+  operation: __Operation<HostWithPathOperationServerInput, HostWithPathOperationServerOutput, Context>,
+  customizer: __ValidationCustomizer<"HostWithPathOperation">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "HostWithPathOperation">([
+    new httpbinding.UriSpec<"RestJson", "HostWithPathOperation">(
+      "GET",
+      [{ type: "path_literal", value: "HostWithPathOperation" }],
+      [],
+      { service: "RestJson", operation: "HostWithPathOperation" }
+    ),
+  ]);
+  return new HostWithPathOperationHandler(
+    operation,
+    mux,
+    new HostWithPathOperationSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -133,56 +186,3 @@ export class HostWithPathOperationHandler<Context> implements __ServiceHandler<C
     );
   }
 }
-
-export type HostWithPathOperation<Context> = __Operation<
-  HostWithPathOperationServerInput,
-  HostWithPathOperationServerOutput,
-  Context
->;
-
-export interface HostWithPathOperationServerInput {}
-export namespace HostWithPathOperationServerInput {
-  /**
-   * @internal
-   */
-  export const validate: () => __ValidationFailure[] = () => [];
-}
-export interface HostWithPathOperationServerOutput {}
-
-export type HostWithPathOperationErrors = never;
-
-export class HostWithPathOperationSerializer
-  implements __OperationSerializer<RestJsonService<any>, "HostWithPathOperation", HostWithPathOperationErrors>
-{
-  serialize = serializeHostWithPathOperationResponse;
-  deserialize = deserializeHostWithPathOperationRequest;
-
-  isOperationError(error: any): error is HostWithPathOperationErrors {
-    return false;
-  }
-
-  serializeError(error: HostWithPathOperationErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getHostWithPathOperationHandler = <Context>(
-  operation: __Operation<HostWithPathOperationServerInput, HostWithPathOperationServerOutput, Context>,
-  customizer: __ValidationCustomizer<"HostWithPathOperation">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "HostWithPathOperation">([
-    new httpbinding.UriSpec<"RestJson", "HostWithPathOperation">(
-      "GET",
-      [{ type: "path_literal", value: "HostWithPathOperation" }],
-      [],
-      { service: "RestJson", operation: "HostWithPathOperation" }
-    ),
-  ]);
-  return new HostWithPathOperationHandler(
-    operation,
-    mux,
-    new HostWithPathOperationSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

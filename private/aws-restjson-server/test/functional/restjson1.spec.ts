@@ -116,7 +116,6 @@ import { MalformedInteger } from "../../src/server/operations/MalformedInteger";
 import { MalformedList } from "../../src/server/operations/MalformedList";
 import { MalformedLong } from "../../src/server/operations/MalformedLong";
 import { MalformedRequestBody } from "../../src/server/operations/MalformedRequestBody";
-import { MalformedSet } from "../../src/server/operations/MalformedSet";
 import { MalformedShort } from "../../src/server/operations/MalformedShort";
 import { MalformedString } from "../../src/server/operations/MalformedString";
 import { MalformedTimestampBodyDateTime } from "../../src/server/operations/MalformedTimestampBodyDateTime";
@@ -132,6 +131,7 @@ import { MalformedTimestampQueryDefault } from "../../src/server/operations/Malf
 import { MalformedTimestampQueryEpoch } from "../../src/server/operations/MalformedTimestampQueryEpoch";
 import { MalformedTimestampQueryHttpDate } from "../../src/server/operations/MalformedTimestampQueryHttpDate";
 import { MalformedUnion } from "../../src/server/operations/MalformedUnion";
+import { MalformedUniqueItems } from "../../src/server/operations/MalformedUniqueItems";
 import {
   MediaTypeHeader,
   MediaTypeHeaderSerializer,
@@ -157,6 +157,11 @@ import {
   PostPlayerActionSerializer,
   PostPlayerActionServerOutput,
 } from "../../src/server/operations/PostPlayerAction";
+import {
+  PostUnionWithJsonName,
+  PostUnionWithJsonNameSerializer,
+  PostUnionWithJsonNameServerOutput,
+} from "../../src/server/operations/PostUnionWithJsonName";
 import { QueryParamsAsStringListMap } from "../../src/server/operations/QueryParamsAsStringListMap";
 import { QueryPrecedence } from "../../src/server/operations/QueryPrecedence";
 import {
@@ -7493,7 +7498,7 @@ it("RestJsonWithPayloadExpectsImpliedAccept:MalformedRequest", async () => {
   const request = new HttpRequest({
     method: "POST",
     hostname: "foo.example.com",
-    path: "/MalformedAcceptWithPayload",
+    path: "/MalformedAcceptWithGenericString",
     query: {},
     headers: {
       accept: "application/json",
@@ -19126,123 +19131,6 @@ it("RestJsonTechnicallyValidJsonBody_case2:MalformedRequest", async () => {
 });
 
 /**
- * When the set has duplicated items, the response should be a 400
- * SerializationException.
- */
-it("RestJsonMalformedSetDuplicateItems:MalformedRequest", async () => {
-  const testFunction = jest.fn();
-  testFunction.mockImplementation(() => {
-    throw new Error("This request should have been rejected.");
-  });
-  const testService: Partial<RestJsonService<{}>> = {
-    MalformedSet: testFunction as MalformedSet<{}>,
-  };
-  const handler = getRestJsonServiceHandler(
-    testService as RestJsonService<{}>,
-    (ctx: {}, failures: __ValidationFailure[]) => {
-      if (failures) {
-        throw failures;
-      }
-      return undefined;
-    }
-  );
-  const request = new HttpRequest({
-    method: "POST",
-    hostname: "foo.example.com",
-    path: "/MalformedSet",
-    query: {},
-    headers: {
-      "content-type": "application/json",
-    },
-    body: Readable.from(['{ "set" : ["a", "a", "b", "c"] }']),
-  });
-  const r = await handler.handle(request, {});
-
-  expect(testFunction.mock.calls.length).toBe(0);
-  expect(r.statusCode).toBe(400);
-  expect(r.headers["x-amzn-errortype"]).toBeDefined();
-  expect(r.headers["x-amzn-errortype"]).toBe("SerializationException");
-});
-
-/**
- * When the set has duplicated blobs, the response should be a 400
- * SerializationException.
- */
-it("RestJsonMalformedSetDuplicateBlobs:MalformedRequest", async () => {
-  const testFunction = jest.fn();
-  testFunction.mockImplementation(() => {
-    throw new Error("This request should have been rejected.");
-  });
-  const testService: Partial<RestJsonService<{}>> = {
-    MalformedSet: testFunction as MalformedSet<{}>,
-  };
-  const handler = getRestJsonServiceHandler(
-    testService as RestJsonService<{}>,
-    (ctx: {}, failures: __ValidationFailure[]) => {
-      if (failures) {
-        throw failures;
-      }
-      return undefined;
-    }
-  );
-  const request = new HttpRequest({
-    method: "POST",
-    hostname: "foo.example.com",
-    path: "/MalformedSet",
-    query: {},
-    headers: {
-      "content-type": "application/json",
-    },
-    body: Readable.from(['{ "blobSet" : ["YmxvYg==", "b3RoZXJibG9i", "YmxvYg=="] }']),
-  });
-  const r = await handler.handle(request, {});
-
-  expect(testFunction.mock.calls.length).toBe(0);
-  expect(r.statusCode).toBe(400);
-  expect(r.headers["x-amzn-errortype"]).toBeDefined();
-  expect(r.headers["x-amzn-errortype"]).toBe("SerializationException");
-});
-
-/**
- * When the set contains null, the response should be a 400
- * SerializationException.
- */
-it("RestJsonMalformedSetNullItem:MalformedRequest", async () => {
-  const testFunction = jest.fn();
-  testFunction.mockImplementation(() => {
-    throw new Error("This request should have been rejected.");
-  });
-  const testService: Partial<RestJsonService<{}>> = {
-    MalformedSet: testFunction as MalformedSet<{}>,
-  };
-  const handler = getRestJsonServiceHandler(
-    testService as RestJsonService<{}>,
-    (ctx: {}, failures: __ValidationFailure[]) => {
-      if (failures) {
-        throw failures;
-      }
-      return undefined;
-    }
-  );
-  const request = new HttpRequest({
-    method: "POST",
-    hostname: "foo.example.com",
-    path: "/MalformedSet",
-    query: {},
-    headers: {
-      "content-type": "application/json",
-    },
-    body: Readable.from(['{ "set" : ["a", null, "b", "c"] }']),
-  });
-  const r = await handler.handle(request, {});
-
-  expect(testFunction.mock.calls.length).toBe(0);
-  expect(r.statusCode).toBe(400);
-  expect(r.headers["x-amzn-errortype"]).toBeDefined();
-  expect(r.headers["x-amzn-errortype"]).toBe("SerializationException");
-});
-
-/**
  * Underflow or overflow should result in SerializationException
  */
 it("RestJsonBodyShortUnderflowOverflow_case0:MalformedRequest", async () => {
@@ -27188,6 +27076,125 @@ it("RestJsonMalformedUnionValueIsArray:MalformedRequest", async () => {
 });
 
 /**
+ * When the list has duplicated items, the response should be a 400
+ * SerializationException.
+ */
+it("RestJsonMalformedUniqueItemsDuplicateItems:MalformedRequest", async () => {
+  const testFunction = jest.fn();
+  testFunction.mockImplementation(() => {
+    throw new Error("This request should have been rejected.");
+  });
+  const testService: Partial<RestJsonService<{}>> = {
+    MalformedUniqueItems: testFunction as MalformedUniqueItems<{}>,
+  };
+  const handler = getRestJsonServiceHandler(
+    testService as RestJsonService<{}>,
+    (ctx: {}, failures: __ValidationFailure[]) => {
+      if (failures) {
+        throw failures;
+      }
+      return undefined;
+    }
+  );
+  const request = new HttpRequest({
+    method: "POST",
+    hostname: "foo.example.com",
+    path: "/MalformedUniqueItems",
+    query: {},
+    headers: {
+      "content-type": "application/json",
+    },
+    body: Readable.from(['{ "set" : ["a", "a", "b", "c"] }']),
+  });
+  const r = await handler.handle(request, {});
+
+  expect(testFunction.mock.calls.length).toBe(0);
+  expect(r.statusCode).toBe(400);
+  expect(r.headers["x-amzn-errortype"]).toBeDefined();
+  expect(r.headers["x-amzn-errortype"]).toBe("SerializationException");
+});
+
+/**
+ * When the list has duplicated blobs, the response should be a 400
+ * SerializationException.
+ */
+it("RestJsonMalformedUniqueItemsDuplicateBlobs:MalformedRequest", async () => {
+  const testFunction = jest.fn();
+  testFunction.mockImplementation(() => {
+    throw new Error("This request should have been rejected.");
+  });
+  const testService: Partial<RestJsonService<{}>> = {
+    MalformedUniqueItems: testFunction as MalformedUniqueItems<{}>,
+  };
+  const handler = getRestJsonServiceHandler(
+    testService as RestJsonService<{}>,
+    (ctx: {}, failures: __ValidationFailure[]) => {
+      if (failures) {
+        throw failures;
+      }
+      return undefined;
+    }
+  );
+  const request = new HttpRequest({
+    method: "POST",
+    hostname: "foo.example.com",
+    path: "/MalformedUniqueItems",
+    query: {},
+    headers: {
+      "content-type": "application/json",
+    },
+    body: Readable.from([
+      '{ "complexSet" : [{"foo": true, "blob": "YmxvYg=="}, {"foo": true, "blob": "b3RoZXJibG9i"}, {"foo": true, "blob": "YmxvYg=="}] }',
+    ]),
+  });
+  const r = await handler.handle(request, {});
+
+  expect(testFunction.mock.calls.length).toBe(0);
+  expect(r.statusCode).toBe(400);
+  expect(r.headers["x-amzn-errortype"]).toBeDefined();
+  expect(r.headers["x-amzn-errortype"]).toBe("SerializationException");
+});
+
+/**
+ * When the list contains null, the response should be a 400
+ * SerializationException.
+ */
+it("RestJsonMalformedUniqueItemsNullItem:MalformedRequest", async () => {
+  const testFunction = jest.fn();
+  testFunction.mockImplementation(() => {
+    throw new Error("This request should have been rejected.");
+  });
+  const testService: Partial<RestJsonService<{}>> = {
+    MalformedUniqueItems: testFunction as MalformedUniqueItems<{}>,
+  };
+  const handler = getRestJsonServiceHandler(
+    testService as RestJsonService<{}>,
+    (ctx: {}, failures: __ValidationFailure[]) => {
+      if (failures) {
+        throw failures;
+      }
+      return undefined;
+    }
+  );
+  const request = new HttpRequest({
+    method: "POST",
+    hostname: "foo.example.com",
+    path: "/MalformedUniqueItems",
+    query: {},
+    headers: {
+      "content-type": "application/json",
+    },
+    body: Readable.from(['{ "set" : ["a", null, "b", "c"] }']),
+  });
+  const r = await handler.handle(request, {});
+
+  expect(testFunction.mock.calls.length).toBe(0);
+  expect(r.statusCode).toBe(400);
+  expect(r.headers["x-amzn-errortype"]).toBeDefined();
+  expect(r.headers["x-amzn-errortype"]).toBe("SerializationException");
+});
+
+/**
  * Headers that target strings with a mediaType are base64 encoded
  */
 it("MediaTypeHeaderInputBase64:ServerRequest", async () => {
@@ -27774,6 +27781,330 @@ it("RestJsonOutputUnionWithUnitMember:ServerResponse", async () => {
 });
 
 /**
+ * Tests that jsonName works with union members.
+ */
+it("PostUnionWithJsonNameRequest1:ServerRequest", async () => {
+  const testFunction = jest.fn();
+  testFunction.mockReturnValue(Promise.resolve({}));
+  const testService: Partial<RestJsonService<{}>> = {
+    PostUnionWithJsonName: testFunction as PostUnionWithJsonName<{}>,
+  };
+  const handler = getRestJsonServiceHandler(
+    testService as RestJsonService<{}>,
+    (ctx: {}, failures: __ValidationFailure[]) => {
+      if (failures) {
+        throw failures;
+      }
+      return undefined;
+    }
+  );
+  const request = new HttpRequest({
+    method: "POST",
+    hostname: "foo.example.com",
+    path: "/PostUnionWithJsonName",
+    query: {},
+    headers: {
+      "content-type": "application/json",
+    },
+    body: Readable.from(['{\n    "value": {\n        "FOO": "hi"\n    }\n}']),
+  });
+  await handler.handle(request, {});
+
+  expect(testFunction.mock.calls.length).toBe(1);
+  const r: any = testFunction.mock.calls[0][0];
+
+  const paramsToValidate: any = [
+    {
+      value: {
+        foo: "hi",
+      },
+    },
+  ][0];
+  Object.keys(paramsToValidate).forEach((param) => {
+    expect(r[param]).toBeDefined();
+    expect(equivalentContents(r[param], paramsToValidate[param])).toBe(true);
+  });
+});
+
+/**
+ * Tests that jsonName works with union members.
+ */
+it("PostUnionWithJsonNameRequest2:ServerRequest", async () => {
+  const testFunction = jest.fn();
+  testFunction.mockReturnValue(Promise.resolve({}));
+  const testService: Partial<RestJsonService<{}>> = {
+    PostUnionWithJsonName: testFunction as PostUnionWithJsonName<{}>,
+  };
+  const handler = getRestJsonServiceHandler(
+    testService as RestJsonService<{}>,
+    (ctx: {}, failures: __ValidationFailure[]) => {
+      if (failures) {
+        throw failures;
+      }
+      return undefined;
+    }
+  );
+  const request = new HttpRequest({
+    method: "POST",
+    hostname: "foo.example.com",
+    path: "/PostUnionWithJsonName",
+    query: {},
+    headers: {
+      "content-type": "application/json",
+    },
+    body: Readable.from(['{\n    "value": {\n        "_baz": "hi"\n    }\n}']),
+  });
+  await handler.handle(request, {});
+
+  expect(testFunction.mock.calls.length).toBe(1);
+  const r: any = testFunction.mock.calls[0][0];
+
+  const paramsToValidate: any = [
+    {
+      value: {
+        baz: "hi",
+      },
+    },
+  ][0];
+  Object.keys(paramsToValidate).forEach((param) => {
+    expect(r[param]).toBeDefined();
+    expect(equivalentContents(r[param], paramsToValidate[param])).toBe(true);
+  });
+});
+
+/**
+ * Tests that jsonName works with union members.
+ */
+it("PostUnionWithJsonNameRequest3:ServerRequest", async () => {
+  const testFunction = jest.fn();
+  testFunction.mockReturnValue(Promise.resolve({}));
+  const testService: Partial<RestJsonService<{}>> = {
+    PostUnionWithJsonName: testFunction as PostUnionWithJsonName<{}>,
+  };
+  const handler = getRestJsonServiceHandler(
+    testService as RestJsonService<{}>,
+    (ctx: {}, failures: __ValidationFailure[]) => {
+      if (failures) {
+        throw failures;
+      }
+      return undefined;
+    }
+  );
+  const request = new HttpRequest({
+    method: "POST",
+    hostname: "foo.example.com",
+    path: "/PostUnionWithJsonName",
+    query: {},
+    headers: {
+      "content-type": "application/json",
+    },
+    body: Readable.from(['{\n    "value": {\n        "bar": "hi"\n    }\n}']),
+  });
+  await handler.handle(request, {});
+
+  expect(testFunction.mock.calls.length).toBe(1);
+  const r: any = testFunction.mock.calls[0][0];
+
+  const paramsToValidate: any = [
+    {
+      value: {
+        bar: "hi",
+      },
+    },
+  ][0];
+  Object.keys(paramsToValidate).forEach((param) => {
+    expect(r[param]).toBeDefined();
+    expect(equivalentContents(r[param], paramsToValidate[param])).toBe(true);
+  });
+});
+
+/**
+ * Tests that jsonName works with union members.
+ */
+it("PostUnionWithJsonNameResponse1:ServerResponse", async () => {
+  class TestService implements Partial<RestJsonService<{}>> {
+    PostUnionWithJsonName(input: any, ctx: {}): Promise<PostUnionWithJsonNameServerOutput> {
+      const response = {
+        value: {
+          foo: "hi",
+        } as any,
+      } as any;
+      return Promise.resolve({ ...response, $metadata: {} });
+    }
+  }
+  const service: any = new TestService();
+  const testMux = new httpbinding.HttpBindingMux<"RestJson", keyof RestJsonService<{}>>([
+    new httpbinding.UriSpec<"RestJson", "PostUnionWithJsonName">("POST", [], [], {
+      service: "RestJson",
+      operation: "PostUnionWithJsonName",
+    }),
+  ]);
+  class TestSerializer extends PostUnionWithJsonNameSerializer {
+    deserialize = (output: any, context: any): Promise<any> => {
+      return Promise.resolve({});
+    };
+  }
+  const request = new HttpRequest({ method: "POST", hostname: "example.com" });
+  const serFn: (
+    op: RestJsonServiceOperations
+  ) => __OperationSerializer<RestJsonService<{}>, RestJsonServiceOperations, __ServiceException> = (op) => {
+    return new TestSerializer();
+  };
+  const handler = new RestJsonServiceHandler(
+    service,
+    testMux,
+    serFn,
+    serializeFrameworkException,
+    (ctx: {}, f: __ValidationFailure[]) => {
+      if (f) {
+        throw f;
+      }
+      return undefined;
+    }
+  );
+  const r = await handler.handle(request, {});
+
+  expect(r.statusCode).toBe(200);
+
+  expect(r.headers["content-type"]).toBeDefined();
+  expect(r.headers["content-type"]).toBe("application/json");
+
+  expect(r.body).toBeDefined();
+  const utf8Encoder = __utf8Encoder;
+  const bodyString = `{
+                                                                                                                                  \"value\": {
+                                                                                                                                      \"FOO\": \"hi\"
+                                                                                                                                  }
+                                                                                                                              }`;
+  const unequalParts: any = compareEquivalentJsonBodies(bodyString, r.body.toString());
+  expect(unequalParts).toBeUndefined();
+});
+
+/**
+ * Tests that jsonName works with union members.
+ */
+it("PostUnionWithJsonNameResponse2:ServerResponse", async () => {
+  class TestService implements Partial<RestJsonService<{}>> {
+    PostUnionWithJsonName(input: any, ctx: {}): Promise<PostUnionWithJsonNameServerOutput> {
+      const response = {
+        value: {
+          baz: "hi",
+        } as any,
+      } as any;
+      return Promise.resolve({ ...response, $metadata: {} });
+    }
+  }
+  const service: any = new TestService();
+  const testMux = new httpbinding.HttpBindingMux<"RestJson", keyof RestJsonService<{}>>([
+    new httpbinding.UriSpec<"RestJson", "PostUnionWithJsonName">("POST", [], [], {
+      service: "RestJson",
+      operation: "PostUnionWithJsonName",
+    }),
+  ]);
+  class TestSerializer extends PostUnionWithJsonNameSerializer {
+    deserialize = (output: any, context: any): Promise<any> => {
+      return Promise.resolve({});
+    };
+  }
+  const request = new HttpRequest({ method: "POST", hostname: "example.com" });
+  const serFn: (
+    op: RestJsonServiceOperations
+  ) => __OperationSerializer<RestJsonService<{}>, RestJsonServiceOperations, __ServiceException> = (op) => {
+    return new TestSerializer();
+  };
+  const handler = new RestJsonServiceHandler(
+    service,
+    testMux,
+    serFn,
+    serializeFrameworkException,
+    (ctx: {}, f: __ValidationFailure[]) => {
+      if (f) {
+        throw f;
+      }
+      return undefined;
+    }
+  );
+  const r = await handler.handle(request, {});
+
+  expect(r.statusCode).toBe(200);
+
+  expect(r.headers["content-type"]).toBeDefined();
+  expect(r.headers["content-type"]).toBe("application/json");
+
+  expect(r.body).toBeDefined();
+  const utf8Encoder = __utf8Encoder;
+  const bodyString = `{
+                                                                                                                                    \"value\": {
+                                                                                                                                        \"_baz\": \"hi\"
+                                                                                                                                    }
+                                                                                                                                }`;
+  const unequalParts: any = compareEquivalentJsonBodies(bodyString, r.body.toString());
+  expect(unequalParts).toBeUndefined();
+});
+
+/**
+ * Tests that jsonName works with union members.
+ */
+it("PostUnionWithJsonNameResponse3:ServerResponse", async () => {
+  class TestService implements Partial<RestJsonService<{}>> {
+    PostUnionWithJsonName(input: any, ctx: {}): Promise<PostUnionWithJsonNameServerOutput> {
+      const response = {
+        value: {
+          bar: "hi",
+        } as any,
+      } as any;
+      return Promise.resolve({ ...response, $metadata: {} });
+    }
+  }
+  const service: any = new TestService();
+  const testMux = new httpbinding.HttpBindingMux<"RestJson", keyof RestJsonService<{}>>([
+    new httpbinding.UriSpec<"RestJson", "PostUnionWithJsonName">("POST", [], [], {
+      service: "RestJson",
+      operation: "PostUnionWithJsonName",
+    }),
+  ]);
+  class TestSerializer extends PostUnionWithJsonNameSerializer {
+    deserialize = (output: any, context: any): Promise<any> => {
+      return Promise.resolve({});
+    };
+  }
+  const request = new HttpRequest({ method: "POST", hostname: "example.com" });
+  const serFn: (
+    op: RestJsonServiceOperations
+  ) => __OperationSerializer<RestJsonService<{}>, RestJsonServiceOperations, __ServiceException> = (op) => {
+    return new TestSerializer();
+  };
+  const handler = new RestJsonServiceHandler(
+    service,
+    testMux,
+    serFn,
+    serializeFrameworkException,
+    (ctx: {}, f: __ValidationFailure[]) => {
+      if (f) {
+        throw f;
+      }
+      return undefined;
+    }
+  );
+  const r = await handler.handle(request, {});
+
+  expect(r.statusCode).toBe(200);
+
+  expect(r.headers["content-type"]).toBeDefined();
+  expect(r.headers["content-type"]).toBe("application/json");
+
+  expect(r.body).toBeDefined();
+  const utf8Encoder = __utf8Encoder;
+  const bodyString = `{
+                                                                                                                                      \"value\": {
+                                                                                                                                          \"bar\": \"hi\"
+                                                                                                                                      }
+                                                                                                                                  }`;
+  const unequalParts: any = compareEquivalentJsonBodies(bodyString, r.body.toString());
+  expect(unequalParts).toBeUndefined();
+});
+
+/**
  * Servers put all query params in map
  */
 it("RestJsonServersQueryParamsStringListMap:ServerRequest", async () => {
@@ -28001,19 +28332,19 @@ it("RestJsonRecursiveShapes:ServerResponse", async () => {
   expect(r.body).toBeDefined();
   const utf8Encoder = __utf8Encoder;
   const bodyString = `{
-                                                                                                                                  \"nested\": {
-                                                                                                                                      \"foo\": \"Foo1\",
-                                                                                                                                      \"nested\": {
-                                                                                                                                          \"bar\": \"Bar1\",
-                                                                                                                                          \"recursiveMember\": {
-                                                                                                                                              \"foo\": \"Foo2\",
-                                                                                                                                              \"nested\": {
-                                                                                                                                                  \"bar\": \"Bar2\"
-                                                                                                                                              }
-                                                                                                                                          }
-                                                                                                                                      }
-                                                                                                                                  }
-                                                                                                                              }`;
+                                                                                                                                        \"nested\": {
+                                                                                                                                            \"foo\": \"Foo1\",
+                                                                                                                                            \"nested\": {
+                                                                                                                                                \"bar\": \"Bar1\",
+                                                                                                                                                \"recursiveMember\": {
+                                                                                                                                                    \"foo\": \"Foo2\",
+                                                                                                                                                    \"nested\": {
+                                                                                                                                                        \"bar\": \"Bar2\"
+                                                                                                                                                    }
+                                                                                                                                                }
+                                                                                                                                            }
+                                                                                                                                        }
+                                                                                                                                    }`;
   const unequalParts: any = compareEquivalentJsonBodies(bodyString, r.body.toString());
   expect(unequalParts).toBeUndefined();
 });
@@ -28327,16 +28658,16 @@ it("RestJsonSimpleScalarProperties:ServerResponse", async () => {
   expect(r.body).toBeDefined();
   const utf8Encoder = __utf8Encoder;
   const bodyString = `{
-                                                                                                                                    \"stringValue\": \"string\",
-                                                                                                                                    \"trueBooleanValue\": true,
-                                                                                                                                    \"falseBooleanValue\": false,
-                                                                                                                                    \"byteValue\": 1,
-                                                                                                                                    \"shortValue\": 2,
-                                                                                                                                    \"integerValue\": 3,
-                                                                                                                                    \"longValue\": 4,
-                                                                                                                                    \"floatValue\": 5.5,
-                                                                                                                                    \"DoubleDribble\": 6.5
-                                                                                                                                }`;
+                                                                                                                                          \"stringValue\": \"string\",
+                                                                                                                                          \"trueBooleanValue\": true,
+                                                                                                                                          \"falseBooleanValue\": false,
+                                                                                                                                          \"byteValue\": 1,
+                                                                                                                                          \"shortValue\": 2,
+                                                                                                                                          \"integerValue\": 3,
+                                                                                                                                          \"longValue\": 4,
+                                                                                                                                          \"floatValue\": 5.5,
+                                                                                                                                          \"DoubleDribble\": 6.5
+                                                                                                                                      }`;
   const unequalParts: any = compareEquivalentJsonBodies(bodyString, r.body.toString());
   expect(unequalParts).toBeUndefined();
 });
@@ -28451,9 +28782,9 @@ it("RestJsonSupportsNaNFloatInputs:ServerResponse", async () => {
   expect(r.body).toBeDefined();
   const utf8Encoder = __utf8Encoder;
   const bodyString = `{
-                                                                                                                                        \"floatValue\": \"NaN\",
-                                                                                                                                        \"DoubleDribble\": \"NaN\"
-                                                                                                                                    }`;
+                                                                                                                                              \"floatValue\": \"NaN\",
+                                                                                                                                              \"DoubleDribble\": \"NaN\"
+                                                                                                                                          }`;
   const unequalParts: any = compareEquivalentJsonBodies(bodyString, r.body.toString());
   expect(unequalParts).toBeUndefined();
 });
@@ -28512,9 +28843,9 @@ it("RestJsonSupportsInfinityFloatInputs:ServerResponse", async () => {
   expect(r.body).toBeDefined();
   const utf8Encoder = __utf8Encoder;
   const bodyString = `{
-                                                                                                                                          \"floatValue\": \"Infinity\",
-                                                                                                                                          \"DoubleDribble\": \"Infinity\"
-                                                                                                                                      }`;
+                                                                                                                                                \"floatValue\": \"Infinity\",
+                                                                                                                                                \"DoubleDribble\": \"Infinity\"
+                                                                                                                                            }`;
   const unequalParts: any = compareEquivalentJsonBodies(bodyString, r.body.toString());
   expect(unequalParts).toBeUndefined();
 });
@@ -28573,9 +28904,9 @@ it("RestJsonSupportsNegativeInfinityFloatInputs:ServerResponse", async () => {
   expect(r.body).toBeDefined();
   const utf8Encoder = __utf8Encoder;
   const bodyString = `{
-                                                                                                                                            \"floatValue\": \"-Infinity\",
-                                                                                                                                            \"DoubleDribble\": \"-Infinity\"
-                                                                                                                                        }`;
+                                                                                                                                                  \"floatValue\": \"-Infinity\",
+                                                                                                                                                  \"DoubleDribble\": \"-Infinity\"
+                                                                                                                                              }`;
   const unequalParts: any = compareEquivalentJsonBodies(bodyString, r.body.toString());
   expect(unequalParts).toBeUndefined();
 });

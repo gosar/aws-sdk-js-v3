@@ -34,6 +34,81 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonValidationService } from "../RestJsonValidationService";
 
+export type RecursiveStructures<Context> = __Operation<
+  RecursiveStructuresServerInput,
+  RecursiveStructuresServerOutput,
+  Context
+>;
+
+export interface RecursiveStructuresServerInput extends RecursiveStructuresInput {}
+export namespace RecursiveStructuresServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof RecursiveStructuresInput.validate>[0]) => __ValidationFailure[] =
+    RecursiveStructuresInput.validate;
+}
+export interface RecursiveStructuresServerOutput {}
+
+export type RecursiveStructuresErrors = ValidationException;
+
+export class RecursiveStructuresSerializer
+  implements __OperationSerializer<RestJsonValidationService<any>, "RecursiveStructures", RecursiveStructuresErrors>
+{
+  serialize = serializeRecursiveStructuresResponse;
+  deserialize = deserializeRecursiveStructuresRequest;
+
+  isOperationError(error: any): error is RecursiveStructuresErrors {
+    const names: RecursiveStructuresErrors["name"][] = ["ValidationException"];
+    return names.includes(error.name);
+  }
+
+  serializeError(error: RecursiveStructuresErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    switch (error.name) {
+      case "ValidationException": {
+        return serializeValidationExceptionError(error, ctx);
+      }
+      default: {
+        throw error;
+      }
+    }
+  }
+}
+
+export const getRecursiveStructuresHandler = <Context>(
+  operation: __Operation<RecursiveStructuresServerInput, RecursiveStructuresServerOutput, Context>
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJsonValidation", "RecursiveStructures">([
+    new httpbinding.UriSpec<"RestJsonValidation", "RecursiveStructures">(
+      "POST",
+      [{ type: "path_literal", value: "RecursiveStructures" }],
+      [],
+      { service: "RestJsonValidation", operation: "RecursiveStructures" }
+    ),
+  ]);
+  const customizer: __ValidationCustomizer<"RecursiveStructures"> = (ctx, failures) => {
+    if (!failures) {
+      return undefined;
+    }
+    return {
+      name: "ValidationException",
+      $fault: "client",
+      message: __generateValidationSummary(failures),
+      fieldList: failures.map((failure) => ({
+        path: failure.path,
+        message: __generateValidationMessage(failure),
+      })),
+    };
+  };
+  return new RecursiveStructuresHandler(
+    operation,
+    mux,
+    new RecursiveStructuresSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -142,78 +217,3 @@ export class RecursiveStructuresHandler<Context> implements __ServiceHandler<Con
     );
   }
 }
-
-export type RecursiveStructures<Context> = __Operation<
-  RecursiveStructuresServerInput,
-  RecursiveStructuresServerOutput,
-  Context
->;
-
-export interface RecursiveStructuresServerInput extends RecursiveStructuresInput {}
-export namespace RecursiveStructuresServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof RecursiveStructuresInput.validate>[0]) => __ValidationFailure[] =
-    RecursiveStructuresInput.validate;
-}
-export interface RecursiveStructuresServerOutput {}
-
-export type RecursiveStructuresErrors = ValidationException;
-
-export class RecursiveStructuresSerializer
-  implements __OperationSerializer<RestJsonValidationService<any>, "RecursiveStructures", RecursiveStructuresErrors>
-{
-  serialize = serializeRecursiveStructuresResponse;
-  deserialize = deserializeRecursiveStructuresRequest;
-
-  isOperationError(error: any): error is RecursiveStructuresErrors {
-    const names: RecursiveStructuresErrors["name"][] = ["ValidationException"];
-    return names.includes(error.name);
-  }
-
-  serializeError(error: RecursiveStructuresErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    switch (error.name) {
-      case "ValidationException": {
-        return serializeValidationExceptionError(error, ctx);
-      }
-      default: {
-        throw error;
-      }
-    }
-  }
-}
-
-export const getRecursiveStructuresHandler = <Context>(
-  operation: __Operation<RecursiveStructuresServerInput, RecursiveStructuresServerOutput, Context>
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJsonValidation", "RecursiveStructures">([
-    new httpbinding.UriSpec<"RestJsonValidation", "RecursiveStructures">(
-      "POST",
-      [{ type: "path_literal", value: "RecursiveStructures" }],
-      [],
-      { service: "RestJsonValidation", operation: "RecursiveStructures" }
-    ),
-  ]);
-  const customizer: __ValidationCustomizer<"RecursiveStructures"> = (ctx, failures) => {
-    if (!failures) {
-      return undefined;
-    }
-    return {
-      name: "ValidationException",
-      $fault: "client",
-      message: __generateValidationSummary(failures),
-      fieldList: failures.map((failure) => ({
-        path: failure.path,
-        message: __generateValidationMessage(failure),
-      })),
-    };
-  };
-  return new RecursiveStructuresHandler(
-    operation,
-    mux,
-    new RecursiveStructuresSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

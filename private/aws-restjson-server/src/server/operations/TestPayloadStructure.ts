@@ -30,6 +30,61 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type TestPayloadStructure<Context> = __Operation<
+  TestPayloadStructureServerInput,
+  TestPayloadStructureServerOutput,
+  Context
+>;
+
+export interface TestPayloadStructureServerInput extends TestPayloadStructureInputOutput {}
+export namespace TestPayloadStructureServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (
+    obj: Parameters<typeof TestPayloadStructureInputOutput.validate>[0]
+  ) => __ValidationFailure[] = TestPayloadStructureInputOutput.validate;
+}
+export interface TestPayloadStructureServerOutput extends TestPayloadStructureInputOutput {}
+
+export type TestPayloadStructureErrors = never;
+
+export class TestPayloadStructureSerializer
+  implements __OperationSerializer<RestJsonService<any>, "TestPayloadStructure", TestPayloadStructureErrors>
+{
+  serialize = serializeTestPayloadStructureResponse;
+  deserialize = deserializeTestPayloadStructureRequest;
+
+  isOperationError(error: any): error is TestPayloadStructureErrors {
+    return false;
+  }
+
+  serializeError(error: TestPayloadStructureErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getTestPayloadStructureHandler = <Context>(
+  operation: __Operation<TestPayloadStructureServerInput, TestPayloadStructureServerOutput, Context>,
+  customizer: __ValidationCustomizer<"TestPayloadStructure">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "TestPayloadStructure">([
+    new httpbinding.UriSpec<"RestJson", "TestPayloadStructure">(
+      "POST",
+      [{ type: "path_literal", value: "payload" }],
+      [],
+      { service: "RestJson", operation: "TestPayloadStructure" }
+    ),
+  ]);
+  return new TestPayloadStructureHandler(
+    operation,
+    mux,
+    new TestPayloadStructureSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -134,58 +189,3 @@ export class TestPayloadStructureHandler<Context> implements __ServiceHandler<Co
     );
   }
 }
-
-export type TestPayloadStructure<Context> = __Operation<
-  TestPayloadStructureServerInput,
-  TestPayloadStructureServerOutput,
-  Context
->;
-
-export interface TestPayloadStructureServerInput extends TestPayloadStructureInputOutput {}
-export namespace TestPayloadStructureServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (
-    obj: Parameters<typeof TestPayloadStructureInputOutput.validate>[0]
-  ) => __ValidationFailure[] = TestPayloadStructureInputOutput.validate;
-}
-export interface TestPayloadStructureServerOutput extends TestPayloadStructureInputOutput {}
-
-export type TestPayloadStructureErrors = never;
-
-export class TestPayloadStructureSerializer
-  implements __OperationSerializer<RestJsonService<any>, "TestPayloadStructure", TestPayloadStructureErrors>
-{
-  serialize = serializeTestPayloadStructureResponse;
-  deserialize = deserializeTestPayloadStructureRequest;
-
-  isOperationError(error: any): error is TestPayloadStructureErrors {
-    return false;
-  }
-
-  serializeError(error: TestPayloadStructureErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getTestPayloadStructureHandler = <Context>(
-  operation: __Operation<TestPayloadStructureServerInput, TestPayloadStructureServerOutput, Context>,
-  customizer: __ValidationCustomizer<"TestPayloadStructure">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "TestPayloadStructure">([
-    new httpbinding.UriSpec<"RestJson", "TestPayloadStructure">(
-      "POST",
-      [{ type: "path_literal", value: "payload" }],
-      [],
-      { service: "RestJson", operation: "TestPayloadStructure" }
-    ),
-  ]);
-  return new TestPayloadStructureHandler(
-    operation,
-    mux,
-    new TestPayloadStructureSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

@@ -29,6 +29,59 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type EndpointOperation<Context> = __Operation<
+  EndpointOperationServerInput,
+  EndpointOperationServerOutput,
+  Context
+>;
+
+export interface EndpointOperationServerInput {}
+export namespace EndpointOperationServerInput {
+  /**
+   * @internal
+   */
+  export const validate: () => __ValidationFailure[] = () => [];
+}
+export interface EndpointOperationServerOutput {}
+
+export type EndpointOperationErrors = never;
+
+export class EndpointOperationSerializer
+  implements __OperationSerializer<RestJsonService<any>, "EndpointOperation", EndpointOperationErrors>
+{
+  serialize = serializeEndpointOperationResponse;
+  deserialize = deserializeEndpointOperationRequest;
+
+  isOperationError(error: any): error is EndpointOperationErrors {
+    return false;
+  }
+
+  serializeError(error: EndpointOperationErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getEndpointOperationHandler = <Context>(
+  operation: __Operation<EndpointOperationServerInput, EndpointOperationServerOutput, Context>,
+  customizer: __ValidationCustomizer<"EndpointOperation">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "EndpointOperation">([
+    new httpbinding.UriSpec<"RestJson", "EndpointOperation">(
+      "POST",
+      [{ type: "path_literal", value: "EndpointOperation" }],
+      [],
+      { service: "RestJson", operation: "EndpointOperation" }
+    ),
+  ]);
+  return new EndpointOperationHandler(
+    operation,
+    mux,
+    new EndpointOperationSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -133,56 +186,3 @@ export class EndpointOperationHandler<Context> implements __ServiceHandler<Conte
     );
   }
 }
-
-export type EndpointOperation<Context> = __Operation<
-  EndpointOperationServerInput,
-  EndpointOperationServerOutput,
-  Context
->;
-
-export interface EndpointOperationServerInput {}
-export namespace EndpointOperationServerInput {
-  /**
-   * @internal
-   */
-  export const validate: () => __ValidationFailure[] = () => [];
-}
-export interface EndpointOperationServerOutput {}
-
-export type EndpointOperationErrors = never;
-
-export class EndpointOperationSerializer
-  implements __OperationSerializer<RestJsonService<any>, "EndpointOperation", EndpointOperationErrors>
-{
-  serialize = serializeEndpointOperationResponse;
-  deserialize = deserializeEndpointOperationRequest;
-
-  isOperationError(error: any): error is EndpointOperationErrors {
-    return false;
-  }
-
-  serializeError(error: EndpointOperationErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getEndpointOperationHandler = <Context>(
-  operation: __Operation<EndpointOperationServerInput, EndpointOperationServerOutput, Context>,
-  customizer: __ValidationCustomizer<"EndpointOperation">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "EndpointOperation">([
-    new httpbinding.UriSpec<"RestJson", "EndpointOperation">(
-      "POST",
-      [{ type: "path_literal", value: "EndpointOperation" }],
-      [],
-      { service: "RestJson", operation: "EndpointOperation" }
-    ),
-  ]);
-  return new EndpointOperationHandler(
-    operation,
-    mux,
-    new EndpointOperationSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

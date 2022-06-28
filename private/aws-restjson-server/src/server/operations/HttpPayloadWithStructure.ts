@@ -30,6 +30,61 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type HttpPayloadWithStructure<Context> = __Operation<
+  HttpPayloadWithStructureServerInput,
+  HttpPayloadWithStructureServerOutput,
+  Context
+>;
+
+export interface HttpPayloadWithStructureServerInput extends HttpPayloadWithStructureInputOutput {}
+export namespace HttpPayloadWithStructureServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (
+    obj: Parameters<typeof HttpPayloadWithStructureInputOutput.validate>[0]
+  ) => __ValidationFailure[] = HttpPayloadWithStructureInputOutput.validate;
+}
+export interface HttpPayloadWithStructureServerOutput extends HttpPayloadWithStructureInputOutput {}
+
+export type HttpPayloadWithStructureErrors = never;
+
+export class HttpPayloadWithStructureSerializer
+  implements __OperationSerializer<RestJsonService<any>, "HttpPayloadWithStructure", HttpPayloadWithStructureErrors>
+{
+  serialize = serializeHttpPayloadWithStructureResponse;
+  deserialize = deserializeHttpPayloadWithStructureRequest;
+
+  isOperationError(error: any): error is HttpPayloadWithStructureErrors {
+    return false;
+  }
+
+  serializeError(error: HttpPayloadWithStructureErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getHttpPayloadWithStructureHandler = <Context>(
+  operation: __Operation<HttpPayloadWithStructureServerInput, HttpPayloadWithStructureServerOutput, Context>,
+  customizer: __ValidationCustomizer<"HttpPayloadWithStructure">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "HttpPayloadWithStructure">([
+    new httpbinding.UriSpec<"RestJson", "HttpPayloadWithStructure">(
+      "PUT",
+      [{ type: "path_literal", value: "HttpPayloadWithStructure" }],
+      [],
+      { service: "RestJson", operation: "HttpPayloadWithStructure" }
+    ),
+  ]);
+  return new HttpPayloadWithStructureHandler(
+    operation,
+    mux,
+    new HttpPayloadWithStructureSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -142,58 +197,3 @@ export class HttpPayloadWithStructureHandler<Context> implements __ServiceHandle
     );
   }
 }
-
-export type HttpPayloadWithStructure<Context> = __Operation<
-  HttpPayloadWithStructureServerInput,
-  HttpPayloadWithStructureServerOutput,
-  Context
->;
-
-export interface HttpPayloadWithStructureServerInput extends HttpPayloadWithStructureInputOutput {}
-export namespace HttpPayloadWithStructureServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (
-    obj: Parameters<typeof HttpPayloadWithStructureInputOutput.validate>[0]
-  ) => __ValidationFailure[] = HttpPayloadWithStructureInputOutput.validate;
-}
-export interface HttpPayloadWithStructureServerOutput extends HttpPayloadWithStructureInputOutput {}
-
-export type HttpPayloadWithStructureErrors = never;
-
-export class HttpPayloadWithStructureSerializer
-  implements __OperationSerializer<RestJsonService<any>, "HttpPayloadWithStructure", HttpPayloadWithStructureErrors>
-{
-  serialize = serializeHttpPayloadWithStructureResponse;
-  deserialize = deserializeHttpPayloadWithStructureRequest;
-
-  isOperationError(error: any): error is HttpPayloadWithStructureErrors {
-    return false;
-  }
-
-  serializeError(error: HttpPayloadWithStructureErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getHttpPayloadWithStructureHandler = <Context>(
-  operation: __Operation<HttpPayloadWithStructureServerInput, HttpPayloadWithStructureServerOutput, Context>,
-  customizer: __ValidationCustomizer<"HttpPayloadWithStructure">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "HttpPayloadWithStructure">([
-    new httpbinding.UriSpec<"RestJson", "HttpPayloadWithStructure">(
-      "PUT",
-      [{ type: "path_literal", value: "HttpPayloadWithStructure" }],
-      [],
-      { service: "RestJson", operation: "HttpPayloadWithStructure" }
-    ),
-  ]);
-  return new HttpPayloadWithStructureHandler(
-    operation,
-    mux,
-    new HttpPayloadWithStructureSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

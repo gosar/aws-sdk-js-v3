@@ -30,6 +30,48 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type JsonUnions<Context> = __Operation<JsonUnionsServerInput, JsonUnionsServerOutput, Context>;
+
+export interface JsonUnionsServerInput extends UnionInputOutput {}
+export namespace JsonUnionsServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof UnionInputOutput.validate>[0]) => __ValidationFailure[] =
+    UnionInputOutput.validate;
+}
+export interface JsonUnionsServerOutput extends UnionInputOutput {}
+
+export type JsonUnionsErrors = never;
+
+export class JsonUnionsSerializer
+  implements __OperationSerializer<RestJsonService<any>, "JsonUnions", JsonUnionsErrors>
+{
+  serialize = serializeJsonUnionsResponse;
+  deserialize = deserializeJsonUnionsRequest;
+
+  isOperationError(error: any): error is JsonUnionsErrors {
+    return false;
+  }
+
+  serializeError(error: JsonUnionsErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getJsonUnionsHandler = <Context>(
+  operation: __Operation<JsonUnionsServerInput, JsonUnionsServerOutput, Context>,
+  customizer: __ValidationCustomizer<"JsonUnions">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "JsonUnions">([
+    new httpbinding.UriSpec<"RestJson", "JsonUnions">("PUT", [{ type: "path_literal", value: "JsonUnions" }], [], {
+      service: "RestJson",
+      operation: "JsonUnions",
+    }),
+  ]);
+  return new JsonUnionsHandler(operation, mux, new JsonUnionsSerializer(), serializeFrameworkException, customizer);
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -130,45 +172,3 @@ export class JsonUnionsHandler<Context> implements __ServiceHandler<Context> {
     );
   }
 }
-
-export type JsonUnions<Context> = __Operation<JsonUnionsServerInput, JsonUnionsServerOutput, Context>;
-
-export interface JsonUnionsServerInput extends UnionInputOutput {}
-export namespace JsonUnionsServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof UnionInputOutput.validate>[0]) => __ValidationFailure[] =
-    UnionInputOutput.validate;
-}
-export interface JsonUnionsServerOutput extends UnionInputOutput {}
-
-export type JsonUnionsErrors = never;
-
-export class JsonUnionsSerializer
-  implements __OperationSerializer<RestJsonService<any>, "JsonUnions", JsonUnionsErrors>
-{
-  serialize = serializeJsonUnionsResponse;
-  deserialize = deserializeJsonUnionsRequest;
-
-  isOperationError(error: any): error is JsonUnionsErrors {
-    return false;
-  }
-
-  serializeError(error: JsonUnionsErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getJsonUnionsHandler = <Context>(
-  operation: __Operation<JsonUnionsServerInput, JsonUnionsServerOutput, Context>,
-  customizer: __ValidationCustomizer<"JsonUnions">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "JsonUnions">([
-    new httpbinding.UriSpec<"RestJson", "JsonUnions">("PUT", [{ type: "path_literal", value: "JsonUnions" }], [], {
-      service: "RestJson",
-      operation: "JsonUnions",
-    }),
-  ]);
-  return new JsonUnionsHandler(operation, mux, new JsonUnionsSerializer(), serializeFrameworkException, customizer);
-};

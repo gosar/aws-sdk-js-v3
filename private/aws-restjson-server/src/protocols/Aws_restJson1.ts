@@ -37,7 +37,6 @@ import {
 import { calculateBodyLength } from "@aws-sdk/util-body-length-node";
 import {
   acceptMatches as __acceptMatches,
-  findDuplicates as __findDuplicates,
   NotAcceptableException as __NotAcceptableException,
   SerializationException as __SerializationException,
   ServerSerdeContext,
@@ -49,6 +48,7 @@ import {
 import {
   ComplexError,
   ComplexNestedErrorData,
+  ComplexSetStruct,
   FooEnum,
   FooError,
   GreetingStruct,
@@ -63,6 +63,7 @@ import {
   SimpleUnion,
   StructureListMember,
   TestConfig,
+  UnionWithJsonName,
   Unit,
 } from "../models/models_0";
 import {
@@ -192,7 +193,6 @@ import {
   MalformedRequestBodyServerInput,
   MalformedRequestBodyServerOutput,
 } from "../server/operations/MalformedRequestBody";
-import { MalformedSetServerInput, MalformedSetServerOutput } from "../server/operations/MalformedSet";
 import { MalformedShortServerInput, MalformedShortServerOutput } from "../server/operations/MalformedShort";
 import { MalformedStringServerInput, MalformedStringServerOutput } from "../server/operations/MalformedString";
 import {
@@ -244,6 +244,10 @@ import {
   MalformedTimestampQueryHttpDateServerOutput,
 } from "../server/operations/MalformedTimestampQueryHttpDate";
 import { MalformedUnionServerInput, MalformedUnionServerOutput } from "../server/operations/MalformedUnion";
+import {
+  MalformedUniqueItemsServerInput,
+  MalformedUniqueItemsServerOutput,
+} from "../server/operations/MalformedUniqueItems";
 import { MediaTypeHeaderServerInput, MediaTypeHeaderServerOutput } from "../server/operations/MediaTypeHeader";
 import { NoInputAndNoOutputServerInput, NoInputAndNoOutputServerOutput } from "../server/operations/NoInputAndNoOutput";
 import { NoInputAndOutputServerInput, NoInputAndOutputServerOutput } from "../server/operations/NoInputAndOutput";
@@ -260,6 +264,10 @@ import {
   OmitsNullSerializesEmptyStringServerOutput,
 } from "../server/operations/OmitsNullSerializesEmptyString";
 import { PostPlayerActionServerInput, PostPlayerActionServerOutput } from "../server/operations/PostPlayerAction";
+import {
+  PostUnionWithJsonNameServerInput,
+  PostUnionWithJsonNameServerOutput,
+} from "../server/operations/PostUnionWithJsonName";
 import {
   QueryIdempotencyTokenAutoFillServerInput,
   QueryIdempotencyTokenAutoFillServerOutput,
@@ -1707,6 +1715,15 @@ export const deserializeMalformedAcceptWithGenericStringRequest = async (
   output: __HttpRequest,
   context: __SerdeContext
 ): Promise<MalformedAcceptWithGenericStringServerInput> => {
+  const contentTypeHeaderKey: string | undefined = Object.keys(output.headers).find(
+    (key) => key.toLowerCase() === "content-type"
+  );
+  if (contentTypeHeaderKey !== undefined && contentTypeHeaderKey !== null) {
+    const contentType = output.headers[contentTypeHeaderKey];
+    if (contentType !== undefined && contentType !== "text/plain") {
+      throw new __UnsupportedMediaTypeException();
+    }
+  }
   const acceptHeaderKey: string | undefined = Object.keys(output.headers).find((key) => key.toLowerCase() === "accept");
   if (acceptHeaderKey !== undefined && acceptHeaderKey !== null) {
     const accept = output.headers[acceptHeaderKey];
@@ -1717,8 +1734,8 @@ export const deserializeMalformedAcceptWithGenericStringRequest = async (
   const contents: MalformedAcceptWithGenericStringServerInput = {
     payload: undefined,
   };
-  const data: any = await collectBody(output.body, context);
-  contents.payload = data;
+  const data: any = await collectBodyString(output.body, context);
+  contents.payload = __expectString(data);
   return Promise.resolve(contents);
 };
 
@@ -2324,40 +2341,6 @@ export const deserializeMalformedRequestBodyRequest = async (
   return Promise.resolve(contents);
 };
 
-export const deserializeMalformedSetRequest = async (
-  output: __HttpRequest,
-  context: __SerdeContext
-): Promise<MalformedSetServerInput> => {
-  const contentTypeHeaderKey: string | undefined = Object.keys(output.headers).find(
-    (key) => key.toLowerCase() === "content-type"
-  );
-  if (contentTypeHeaderKey !== undefined && contentTypeHeaderKey !== null) {
-    const contentType = output.headers[contentTypeHeaderKey];
-    if (contentType !== undefined && contentType !== "application/json") {
-      throw new __UnsupportedMediaTypeException();
-    }
-  }
-  const acceptHeaderKey: string | undefined = Object.keys(output.headers).find((key) => key.toLowerCase() === "accept");
-  if (acceptHeaderKey !== undefined && acceptHeaderKey !== null) {
-    const accept = output.headers[acceptHeaderKey];
-    if (!__acceptMatches(accept, "application/json")) {
-      throw new __NotAcceptableException();
-    }
-  }
-  const contents: MalformedSetServerInput = {
-    blobSet: undefined,
-    set: undefined,
-  };
-  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
-  if (data.blobSet !== undefined && data.blobSet !== null) {
-    contents.blobSet = deserializeAws_restJson1BlobSet(data.blobSet, context);
-  }
-  if (data.set !== undefined && data.set !== null) {
-    contents.set = deserializeAws_restJson1SimpleSet(data.set, context);
-  }
-  return Promise.resolve(contents);
-};
-
 export const deserializeMalformedShortRequest = async (
   output: __HttpRequest,
   context: __SerdeContext
@@ -2882,6 +2865,40 @@ export const deserializeMalformedUnionRequest = async (
   return Promise.resolve(contents);
 };
 
+export const deserializeMalformedUniqueItemsRequest = async (
+  output: __HttpRequest,
+  context: __SerdeContext
+): Promise<MalformedUniqueItemsServerInput> => {
+  const contentTypeHeaderKey: string | undefined = Object.keys(output.headers).find(
+    (key) => key.toLowerCase() === "content-type"
+  );
+  if (contentTypeHeaderKey !== undefined && contentTypeHeaderKey !== null) {
+    const contentType = output.headers[contentTypeHeaderKey];
+    if (contentType !== undefined && contentType !== "application/json") {
+      throw new __UnsupportedMediaTypeException();
+    }
+  }
+  const acceptHeaderKey: string | undefined = Object.keys(output.headers).find((key) => key.toLowerCase() === "accept");
+  if (acceptHeaderKey !== undefined && acceptHeaderKey !== null) {
+    const accept = output.headers[acceptHeaderKey];
+    if (!__acceptMatches(accept, "application/json")) {
+      throw new __NotAcceptableException();
+    }
+  }
+  const contents: MalformedUniqueItemsServerInput = {
+    complexSet: undefined,
+    set: undefined,
+  };
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  if (data.complexSet !== undefined && data.complexSet !== null) {
+    contents.complexSet = deserializeAws_restJson1ComplexSet(data.complexSet, context);
+  }
+  if (data.set !== undefined && data.set !== null) {
+    contents.set = deserializeAws_restJson1SimpleSet(data.set, context);
+  }
+  return Promise.resolve(contents);
+};
+
 export const deserializeMediaTypeHeaderRequest = async (
   output: __HttpRequest,
   context: __SerdeContext
@@ -3121,6 +3138,36 @@ export const deserializePostPlayerActionRequest = async (
   const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.action !== undefined && data.action !== null) {
     contents.action = deserializeAws_restJson1PlayerAction(__expectUnion(data.action), context);
+  }
+  return Promise.resolve(contents);
+};
+
+export const deserializePostUnionWithJsonNameRequest = async (
+  output: __HttpRequest,
+  context: __SerdeContext
+): Promise<PostUnionWithJsonNameServerInput> => {
+  const contentTypeHeaderKey: string | undefined = Object.keys(output.headers).find(
+    (key) => key.toLowerCase() === "content-type"
+  );
+  if (contentTypeHeaderKey !== undefined && contentTypeHeaderKey !== null) {
+    const contentType = output.headers[contentTypeHeaderKey];
+    if (contentType !== undefined && contentType !== "application/json") {
+      throw new __UnsupportedMediaTypeException();
+    }
+  }
+  const acceptHeaderKey: string | undefined = Object.keys(output.headers).find((key) => key.toLowerCase() === "accept");
+  if (acceptHeaderKey !== undefined && acceptHeaderKey !== null) {
+    const accept = output.headers[acceptHeaderKey];
+    if (!__acceptMatches(accept, "application/json")) {
+      throw new __NotAcceptableException();
+    }
+  }
+  const contents: PostUnionWithJsonNameServerInput = {
+    value: undefined,
+  };
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  if (data.value !== undefined && data.value !== null) {
+    contents.value = deserializeAws_restJson1UnionWithJsonName(__expectUnion(data.value), context);
   }
   return Promise.resolve(contents);
 };
@@ -4613,7 +4660,7 @@ export const serializeInputAndOutputWithHeadersResponse = async (
       "x-stringlist": (input.headerStringList! || []).map((_entry) => _entry as any).join(", "),
     }),
     ...(isSerializableHeaderValue(input.headerStringSet) && {
-      "x-stringset": (Array.from(input.headerStringSet!.values()) || []).map((_entry) => _entry as any).join(", "),
+      "x-stringset": (input.headerStringSet! || []).map((_entry) => _entry as any).join(", "),
     }),
     ...(isSerializableHeaderValue(input.headerIntegerList) && {
       "x-integerlist": (input.headerIntegerList! || []).map((_entry) => _entry.toString() as any).join(", "),
@@ -5547,40 +5594,6 @@ export const serializeMalformedRequestBodyResponse = async (
   });
 };
 
-export const serializeMalformedSetResponse = async (
-  input: MalformedSetServerOutput,
-  ctx: ServerSerdeContext
-): Promise<__HttpResponse> => {
-  const context: __SerdeContext = {
-    ...ctx,
-    endpoint: () =>
-      Promise.resolve({
-        protocol: "",
-        hostname: "",
-        path: "",
-      }),
-  };
-  const statusCode = 200;
-  let headers: any = {};
-  let body: any;
-  if (
-    body &&
-    Object.keys(headers)
-      .map((str) => str.toLowerCase())
-      .indexOf("content-length") === -1
-  ) {
-    const length = calculateBodyLength(body);
-    if (length !== undefined) {
-      headers = { ...headers, "content-length": String(length) };
-    }
-  }
-  return new __HttpResponse({
-    headers,
-    body,
-    statusCode,
-  });
-};
-
 export const serializeMalformedShortResponse = async (
   input: MalformedShortServerOutput,
   ctx: ServerSerdeContext
@@ -6091,6 +6104,40 @@ export const serializeMalformedUnionResponse = async (
   });
 };
 
+export const serializeMalformedUniqueItemsResponse = async (
+  input: MalformedUniqueItemsServerOutput,
+  ctx: ServerSerdeContext
+): Promise<__HttpResponse> => {
+  const context: __SerdeContext = {
+    ...ctx,
+    endpoint: () =>
+      Promise.resolve({
+        protocol: "",
+        hostname: "",
+        path: "",
+      }),
+  };
+  const statusCode = 200;
+  let headers: any = {};
+  let body: any;
+  if (
+    body &&
+    Object.keys(headers)
+      .map((str) => str.toLowerCase())
+      .indexOf("content-length") === -1
+  ) {
+    const length = calculateBodyLength(body);
+    if (length !== undefined) {
+      headers = { ...headers, "content-length": String(length) };
+    }
+  }
+  return new __HttpResponse({
+    headers,
+    body,
+    statusCode,
+  });
+};
+
 export const serializeMediaTypeHeaderResponse = async (
   input: MediaTypeHeaderServerOutput,
   ctx: ServerSerdeContext
@@ -6337,6 +6384,46 @@ export const serializePostPlayerActionResponse = async (
   body = JSON.stringify({
     ...(input.action !== undefined &&
       input.action !== null && { action: serializeAws_restJson1PlayerAction(input.action, context) }),
+  });
+  if (
+    body &&
+    Object.keys(headers)
+      .map((str) => str.toLowerCase())
+      .indexOf("content-length") === -1
+  ) {
+    const length = calculateBodyLength(body);
+    if (length !== undefined) {
+      headers = { ...headers, "content-length": String(length) };
+    }
+  }
+  return new __HttpResponse({
+    headers,
+    body,
+    statusCode,
+  });
+};
+
+export const serializePostUnionWithJsonNameResponse = async (
+  input: PostUnionWithJsonNameServerOutput,
+  ctx: ServerSerdeContext
+): Promise<__HttpResponse> => {
+  const context: __SerdeContext = {
+    ...ctx,
+    endpoint: () =>
+      Promise.resolve({
+        protocol: "",
+        hostname: "",
+        path: "",
+      }),
+  };
+  const statusCode = 200;
+  let headers: any = {
+    "content-type": "application/json",
+  };
+  let body: any;
+  body = JSON.stringify({
+    ...(input.value !== undefined &&
+      input.value !== null && { value: serializeAws_restJson1UnionWithJsonName(input.value, context) }),
   });
   if (
     body &&
@@ -7299,6 +7386,15 @@ const serializeAws_restJson1TestConfig = (input: TestConfig, context: __SerdeCon
   };
 };
 
+const serializeAws_restJson1UnionWithJsonName = (input: UnionWithJsonName, context: __SerdeContext): any => {
+  return UnionWithJsonName.visit(input, {
+    bar: (value) => ({ bar: value }),
+    baz: (value) => ({ _baz: value }),
+    foo: (value) => ({ FOO: value }),
+    _: (name, value) => ({ name: value } as any),
+  });
+};
+
 const serializeAws_restJson1RenamedGreeting = (input: RenamedGreeting, context: __SerdeContext): any => {
   return {
     ...(input.salutation !== undefined && input.salutation !== null && { salutation: input.salutation }),
@@ -7448,17 +7544,23 @@ const serializeAws_restJson1Unit = (input: Unit, context: __SerdeContext): any =
   return {};
 };
 
-const deserializeAws_restJson1BlobSet = (output: any, context: __SerdeContext): Uint8Array[] => {
+const deserializeAws_restJson1ComplexSet = (output: any, context: __SerdeContext): ComplexSetStruct[] => {
   const retVal = (output || []).map((entry: any) => {
     if (entry === null) {
-      throw new TypeError('All elements of the non-sparse list "aws.protocoltests.restjson#BlobSet" must be non-null.');
+      throw new TypeError(
+        'All elements of the non-sparse list "aws.protocoltests.restjson#ComplexSet" must be non-null.'
+      );
     }
-    return context.base64Decoder(entry);
+    return deserializeAws_restJson1ComplexSetStruct(entry, context);
   });
-  if (__findDuplicates(retVal).length > 0) {
-    throw new TypeError('All elements of the set "aws.protocoltests.restjson#BlobSet" must be unique.');
-  }
   return retVal;
+};
+
+const deserializeAws_restJson1ComplexSetStruct = (output: any, context: __SerdeContext): ComplexSetStruct => {
+  return {
+    blob: output.blob !== undefined && output.blob !== null ? context.base64Decoder(output.blob) : undefined,
+    foo: __expectBoolean(output.foo),
+  } as any;
 };
 
 const deserializeAws_restJson1DenseBooleanMap = (output: any, context: __SerdeContext): Record<string, boolean> => {
@@ -7655,9 +7757,6 @@ const deserializeAws_restJson1SimpleSet = (output: any, context: __SerdeContext)
     }
     return __expectString(entry) as any;
   });
-  if (__findDuplicates(retVal).length > 0) {
-    throw new TypeError('All elements of the set "aws.protocoltests.restjson#SimpleSet" must be unique.');
-  }
   return retVal;
 };
 
@@ -7747,6 +7846,19 @@ const deserializeAws_restJson1TestConfig = (output: any, context: __SerdeContext
   } as any;
 };
 
+const deserializeAws_restJson1UnionWithJsonName = (output: any, context: __SerdeContext): UnionWithJsonName => {
+  if (__expectString(output.bar) !== undefined) {
+    return { bar: __expectString(output.bar) as any };
+  }
+  if (__expectString(output._baz) !== undefined) {
+    return { baz: __expectString(output._baz) as any };
+  }
+  if (__expectString(output.FOO) !== undefined) {
+    return { foo: __expectString(output.FOO) as any };
+  }
+  return { $unknown: Object.entries(output)[0] };
+};
+
 const deserializeAws_restJson1RenamedGreeting = (output: any, context: __SerdeContext): RenamedGreeting => {
   return {
     salutation: __expectString(output.salutation),
@@ -7798,9 +7910,6 @@ const deserializeAws_restJson1FooEnumSet = (output: any, context: __SerdeContext
     }
     return __expectString(entry) as any;
   });
-  if (__findDuplicates(retVal).length > 0) {
-    throw new TypeError('All elements of the set "aws.protocoltests.shared#FooEnumSet" must be unique.');
-  }
   return retVal;
 };
 
@@ -7887,9 +7996,6 @@ const deserializeAws_restJson1StringSet = (output: any, context: __SerdeContext)
     }
     return __expectString(entry) as any;
   });
-  if (__findDuplicates(retVal).length > 0) {
-    throw new TypeError('All elements of the set "aws.protocoltests.shared#StringSet" must be unique.');
-  }
   return retVal;
 };
 

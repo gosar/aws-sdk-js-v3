@@ -30,6 +30,56 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type MalformedShort<Context> = __Operation<MalformedShortServerInput, MalformedShortServerOutput, Context>;
+
+export interface MalformedShortServerInput extends MalformedShortInput {}
+export namespace MalformedShortServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof MalformedShortInput.validate>[0]) => __ValidationFailure[] =
+    MalformedShortInput.validate;
+}
+export interface MalformedShortServerOutput {}
+
+export type MalformedShortErrors = never;
+
+export class MalformedShortSerializer
+  implements __OperationSerializer<RestJsonService<any>, "MalformedShort", MalformedShortErrors>
+{
+  serialize = serializeMalformedShortResponse;
+  deserialize = deserializeMalformedShortRequest;
+
+  isOperationError(error: any): error is MalformedShortErrors {
+    return false;
+  }
+
+  serializeError(error: MalformedShortErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getMalformedShortHandler = <Context>(
+  operation: __Operation<MalformedShortServerInput, MalformedShortServerOutput, Context>,
+  customizer: __ValidationCustomizer<"MalformedShort">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedShort">([
+    new httpbinding.UriSpec<"RestJson", "MalformedShort">(
+      "POST",
+      [{ type: "path_literal", value: "MalformedShort" }, { type: "path" }],
+      [],
+      { service: "RestJson", operation: "MalformedShort" }
+    ),
+  ]);
+  return new MalformedShortHandler(
+    operation,
+    mux,
+    new MalformedShortSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -130,53 +180,3 @@ export class MalformedShortHandler<Context> implements __ServiceHandler<Context>
     );
   }
 }
-
-export type MalformedShort<Context> = __Operation<MalformedShortServerInput, MalformedShortServerOutput, Context>;
-
-export interface MalformedShortServerInput extends MalformedShortInput {}
-export namespace MalformedShortServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof MalformedShortInput.validate>[0]) => __ValidationFailure[] =
-    MalformedShortInput.validate;
-}
-export interface MalformedShortServerOutput {}
-
-export type MalformedShortErrors = never;
-
-export class MalformedShortSerializer
-  implements __OperationSerializer<RestJsonService<any>, "MalformedShort", MalformedShortErrors>
-{
-  serialize = serializeMalformedShortResponse;
-  deserialize = deserializeMalformedShortRequest;
-
-  isOperationError(error: any): error is MalformedShortErrors {
-    return false;
-  }
-
-  serializeError(error: MalformedShortErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getMalformedShortHandler = <Context>(
-  operation: __Operation<MalformedShortServerInput, MalformedShortServerOutput, Context>,
-  customizer: __ValidationCustomizer<"MalformedShort">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedShort">([
-    new httpbinding.UriSpec<"RestJson", "MalformedShort">(
-      "POST",
-      [{ type: "path_literal", value: "MalformedShort" }, { type: "path" }],
-      [],
-      { service: "RestJson", operation: "MalformedShort" }
-    ),
-  ]);
-  return new MalformedShortHandler(
-    operation,
-    mux,
-    new MalformedShortSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

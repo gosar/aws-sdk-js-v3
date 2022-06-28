@@ -30,6 +30,83 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type HttpRequestWithLabelsAndTimestampFormat<Context> = __Operation<
+  HttpRequestWithLabelsAndTimestampFormatServerInput,
+  HttpRequestWithLabelsAndTimestampFormatServerOutput,
+  Context
+>;
+
+export interface HttpRequestWithLabelsAndTimestampFormatServerInput
+  extends HttpRequestWithLabelsAndTimestampFormatInput {}
+export namespace HttpRequestWithLabelsAndTimestampFormatServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (
+    obj: Parameters<typeof HttpRequestWithLabelsAndTimestampFormatInput.validate>[0]
+  ) => __ValidationFailure[] = HttpRequestWithLabelsAndTimestampFormatInput.validate;
+}
+export interface HttpRequestWithLabelsAndTimestampFormatServerOutput {}
+
+export type HttpRequestWithLabelsAndTimestampFormatErrors = never;
+
+export class HttpRequestWithLabelsAndTimestampFormatSerializer
+  implements
+    __OperationSerializer<
+      RestJsonService<any>,
+      "HttpRequestWithLabelsAndTimestampFormat",
+      HttpRequestWithLabelsAndTimestampFormatErrors
+    >
+{
+  serialize = serializeHttpRequestWithLabelsAndTimestampFormatResponse;
+  deserialize = deserializeHttpRequestWithLabelsAndTimestampFormatRequest;
+
+  isOperationError(error: any): error is HttpRequestWithLabelsAndTimestampFormatErrors {
+    return false;
+  }
+
+  serializeError(
+    error: HttpRequestWithLabelsAndTimestampFormatErrors,
+    ctx: ServerSerdeContext
+  ): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getHttpRequestWithLabelsAndTimestampFormatHandler = <Context>(
+  operation: __Operation<
+    HttpRequestWithLabelsAndTimestampFormatServerInput,
+    HttpRequestWithLabelsAndTimestampFormatServerOutput,
+    Context
+  >,
+  customizer: __ValidationCustomizer<"HttpRequestWithLabelsAndTimestampFormat">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "HttpRequestWithLabelsAndTimestampFormat">([
+    new httpbinding.UriSpec<"RestJson", "HttpRequestWithLabelsAndTimestampFormat">(
+      "GET",
+      [
+        { type: "path_literal", value: "HttpRequestWithLabelsAndTimestampFormat" },
+        { type: "path" },
+        { type: "path" },
+        { type: "path" },
+        { type: "path" },
+        { type: "path" },
+        { type: "path" },
+        { type: "path" },
+      ],
+      [],
+      { service: "RestJson", operation: "HttpRequestWithLabelsAndTimestampFormat" }
+    ),
+  ]);
+  return new HttpRequestWithLabelsAndTimestampFormatHandler(
+    operation,
+    mux,
+    new HttpRequestWithLabelsAndTimestampFormatSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -146,80 +223,3 @@ export class HttpRequestWithLabelsAndTimestampFormatHandler<Context> implements 
     );
   }
 }
-
-export type HttpRequestWithLabelsAndTimestampFormat<Context> = __Operation<
-  HttpRequestWithLabelsAndTimestampFormatServerInput,
-  HttpRequestWithLabelsAndTimestampFormatServerOutput,
-  Context
->;
-
-export interface HttpRequestWithLabelsAndTimestampFormatServerInput
-  extends HttpRequestWithLabelsAndTimestampFormatInput {}
-export namespace HttpRequestWithLabelsAndTimestampFormatServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (
-    obj: Parameters<typeof HttpRequestWithLabelsAndTimestampFormatInput.validate>[0]
-  ) => __ValidationFailure[] = HttpRequestWithLabelsAndTimestampFormatInput.validate;
-}
-export interface HttpRequestWithLabelsAndTimestampFormatServerOutput {}
-
-export type HttpRequestWithLabelsAndTimestampFormatErrors = never;
-
-export class HttpRequestWithLabelsAndTimestampFormatSerializer
-  implements
-    __OperationSerializer<
-      RestJsonService<any>,
-      "HttpRequestWithLabelsAndTimestampFormat",
-      HttpRequestWithLabelsAndTimestampFormatErrors
-    >
-{
-  serialize = serializeHttpRequestWithLabelsAndTimestampFormatResponse;
-  deserialize = deserializeHttpRequestWithLabelsAndTimestampFormatRequest;
-
-  isOperationError(error: any): error is HttpRequestWithLabelsAndTimestampFormatErrors {
-    return false;
-  }
-
-  serializeError(
-    error: HttpRequestWithLabelsAndTimestampFormatErrors,
-    ctx: ServerSerdeContext
-  ): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getHttpRequestWithLabelsAndTimestampFormatHandler = <Context>(
-  operation: __Operation<
-    HttpRequestWithLabelsAndTimestampFormatServerInput,
-    HttpRequestWithLabelsAndTimestampFormatServerOutput,
-    Context
-  >,
-  customizer: __ValidationCustomizer<"HttpRequestWithLabelsAndTimestampFormat">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "HttpRequestWithLabelsAndTimestampFormat">([
-    new httpbinding.UriSpec<"RestJson", "HttpRequestWithLabelsAndTimestampFormat">(
-      "GET",
-      [
-        { type: "path_literal", value: "HttpRequestWithLabelsAndTimestampFormat" },
-        { type: "path" },
-        { type: "path" },
-        { type: "path" },
-        { type: "path" },
-        { type: "path" },
-        { type: "path" },
-        { type: "path" },
-      ],
-      [],
-      { service: "RestJson", operation: "HttpRequestWithLabelsAndTimestampFormat" }
-    ),
-  ]);
-  return new HttpRequestWithLabelsAndTimestampFormatHandler(
-    operation,
-    mux,
-    new HttpRequestWithLabelsAndTimestampFormatSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

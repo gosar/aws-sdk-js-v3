@@ -30,6 +30,59 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type MalformedAcceptWithBody<Context> = __Operation<
+  MalformedAcceptWithBodyServerInput,
+  MalformedAcceptWithBodyServerOutput,
+  Context
+>;
+
+export interface MalformedAcceptWithBodyServerInput {}
+export namespace MalformedAcceptWithBodyServerInput {
+  /**
+   * @internal
+   */
+  export const validate: () => __ValidationFailure[] = () => [];
+}
+export interface MalformedAcceptWithBodyServerOutput extends GreetingStruct {}
+
+export type MalformedAcceptWithBodyErrors = never;
+
+export class MalformedAcceptWithBodySerializer
+  implements __OperationSerializer<RestJsonService<any>, "MalformedAcceptWithBody", MalformedAcceptWithBodyErrors>
+{
+  serialize = serializeMalformedAcceptWithBodyResponse;
+  deserialize = deserializeMalformedAcceptWithBodyRequest;
+
+  isOperationError(error: any): error is MalformedAcceptWithBodyErrors {
+    return false;
+  }
+
+  serializeError(error: MalformedAcceptWithBodyErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getMalformedAcceptWithBodyHandler = <Context>(
+  operation: __Operation<MalformedAcceptWithBodyServerInput, MalformedAcceptWithBodyServerOutput, Context>,
+  customizer: __ValidationCustomizer<"MalformedAcceptWithBody">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedAcceptWithBody">([
+    new httpbinding.UriSpec<"RestJson", "MalformedAcceptWithBody">(
+      "POST",
+      [{ type: "path_literal", value: "MalformedAcceptWithBody" }],
+      [],
+      { service: "RestJson", operation: "MalformedAcceptWithBody" }
+    ),
+  ]);
+  return new MalformedAcceptWithBodyHandler(
+    operation,
+    mux,
+    new MalformedAcceptWithBodySerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -142,56 +195,3 @@ export class MalformedAcceptWithBodyHandler<Context> implements __ServiceHandler
     );
   }
 }
-
-export type MalformedAcceptWithBody<Context> = __Operation<
-  MalformedAcceptWithBodyServerInput,
-  MalformedAcceptWithBodyServerOutput,
-  Context
->;
-
-export interface MalformedAcceptWithBodyServerInput {}
-export namespace MalformedAcceptWithBodyServerInput {
-  /**
-   * @internal
-   */
-  export const validate: () => __ValidationFailure[] = () => [];
-}
-export interface MalformedAcceptWithBodyServerOutput extends GreetingStruct {}
-
-export type MalformedAcceptWithBodyErrors = never;
-
-export class MalformedAcceptWithBodySerializer
-  implements __OperationSerializer<RestJsonService<any>, "MalformedAcceptWithBody", MalformedAcceptWithBodyErrors>
-{
-  serialize = serializeMalformedAcceptWithBodyResponse;
-  deserialize = deserializeMalformedAcceptWithBodyRequest;
-
-  isOperationError(error: any): error is MalformedAcceptWithBodyErrors {
-    return false;
-  }
-
-  serializeError(error: MalformedAcceptWithBodyErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getMalformedAcceptWithBodyHandler = <Context>(
-  operation: __Operation<MalformedAcceptWithBodyServerInput, MalformedAcceptWithBodyServerOutput, Context>,
-  customizer: __ValidationCustomizer<"MalformedAcceptWithBody">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedAcceptWithBody">([
-    new httpbinding.UriSpec<"RestJson", "MalformedAcceptWithBody">(
-      "POST",
-      [{ type: "path_literal", value: "MalformedAcceptWithBody" }],
-      [],
-      { service: "RestJson", operation: "MalformedAcceptWithBody" }
-    ),
-  ]);
-  return new MalformedAcceptWithBodyHandler(
-    operation,
-    mux,
-    new MalformedAcceptWithBodySerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

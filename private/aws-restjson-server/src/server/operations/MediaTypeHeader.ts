@@ -30,6 +30,56 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type MediaTypeHeader<Context> = __Operation<MediaTypeHeaderServerInput, MediaTypeHeaderServerOutput, Context>;
+
+export interface MediaTypeHeaderServerInput extends MediaTypeHeaderInput {}
+export namespace MediaTypeHeaderServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof MediaTypeHeaderInput.validate>[0]) => __ValidationFailure[] =
+    MediaTypeHeaderInput.validate;
+}
+export interface MediaTypeHeaderServerOutput extends MediaTypeHeaderOutput {}
+
+export type MediaTypeHeaderErrors = never;
+
+export class MediaTypeHeaderSerializer
+  implements __OperationSerializer<RestJsonService<any>, "MediaTypeHeader", MediaTypeHeaderErrors>
+{
+  serialize = serializeMediaTypeHeaderResponse;
+  deserialize = deserializeMediaTypeHeaderRequest;
+
+  isOperationError(error: any): error is MediaTypeHeaderErrors {
+    return false;
+  }
+
+  serializeError(error: MediaTypeHeaderErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getMediaTypeHeaderHandler = <Context>(
+  operation: __Operation<MediaTypeHeaderServerInput, MediaTypeHeaderServerOutput, Context>,
+  customizer: __ValidationCustomizer<"MediaTypeHeader">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "MediaTypeHeader">([
+    new httpbinding.UriSpec<"RestJson", "MediaTypeHeader">(
+      "GET",
+      [{ type: "path_literal", value: "MediaTypeHeader" }],
+      [],
+      { service: "RestJson", operation: "MediaTypeHeader" }
+    ),
+  ]);
+  return new MediaTypeHeaderHandler(
+    operation,
+    mux,
+    new MediaTypeHeaderSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -134,53 +184,3 @@ export class MediaTypeHeaderHandler<Context> implements __ServiceHandler<Context
     );
   }
 }
-
-export type MediaTypeHeader<Context> = __Operation<MediaTypeHeaderServerInput, MediaTypeHeaderServerOutput, Context>;
-
-export interface MediaTypeHeaderServerInput extends MediaTypeHeaderInput {}
-export namespace MediaTypeHeaderServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof MediaTypeHeaderInput.validate>[0]) => __ValidationFailure[] =
-    MediaTypeHeaderInput.validate;
-}
-export interface MediaTypeHeaderServerOutput extends MediaTypeHeaderOutput {}
-
-export type MediaTypeHeaderErrors = never;
-
-export class MediaTypeHeaderSerializer
-  implements __OperationSerializer<RestJsonService<any>, "MediaTypeHeader", MediaTypeHeaderErrors>
-{
-  serialize = serializeMediaTypeHeaderResponse;
-  deserialize = deserializeMediaTypeHeaderRequest;
-
-  isOperationError(error: any): error is MediaTypeHeaderErrors {
-    return false;
-  }
-
-  serializeError(error: MediaTypeHeaderErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getMediaTypeHeaderHandler = <Context>(
-  operation: __Operation<MediaTypeHeaderServerInput, MediaTypeHeaderServerOutput, Context>,
-  customizer: __ValidationCustomizer<"MediaTypeHeader">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "MediaTypeHeader">([
-    new httpbinding.UriSpec<"RestJson", "MediaTypeHeader">(
-      "GET",
-      [{ type: "path_literal", value: "MediaTypeHeader" }],
-      [],
-      { service: "RestJson", operation: "MediaTypeHeader" }
-    ),
-  ]);
-  return new MediaTypeHeaderHandler(
-    operation,
-    mux,
-    new MediaTypeHeaderSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

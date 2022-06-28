@@ -34,6 +34,82 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonValidationService } from "../RestJsonValidationService";
 
+export type MalformedRangeOverride<Context> = __Operation<
+  MalformedRangeOverrideServerInput,
+  MalformedRangeOverrideServerOutput,
+  Context
+>;
+
+export interface MalformedRangeOverrideServerInput extends MalformedRangeOverrideInput {}
+export namespace MalformedRangeOverrideServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof MalformedRangeOverrideInput.validate>[0]) => __ValidationFailure[] =
+    MalformedRangeOverrideInput.validate;
+}
+export interface MalformedRangeOverrideServerOutput {}
+
+export type MalformedRangeOverrideErrors = ValidationException;
+
+export class MalformedRangeOverrideSerializer
+  implements
+    __OperationSerializer<RestJsonValidationService<any>, "MalformedRangeOverride", MalformedRangeOverrideErrors>
+{
+  serialize = serializeMalformedRangeOverrideResponse;
+  deserialize = deserializeMalformedRangeOverrideRequest;
+
+  isOperationError(error: any): error is MalformedRangeOverrideErrors {
+    const names: MalformedRangeOverrideErrors["name"][] = ["ValidationException"];
+    return names.includes(error.name);
+  }
+
+  serializeError(error: MalformedRangeOverrideErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    switch (error.name) {
+      case "ValidationException": {
+        return serializeValidationExceptionError(error, ctx);
+      }
+      default: {
+        throw error;
+      }
+    }
+  }
+}
+
+export const getMalformedRangeOverrideHandler = <Context>(
+  operation: __Operation<MalformedRangeOverrideServerInput, MalformedRangeOverrideServerOutput, Context>
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJsonValidation", "MalformedRangeOverride">([
+    new httpbinding.UriSpec<"RestJsonValidation", "MalformedRangeOverride">(
+      "POST",
+      [{ type: "path_literal", value: "MalformedRangeOverride" }],
+      [],
+      { service: "RestJsonValidation", operation: "MalformedRangeOverride" }
+    ),
+  ]);
+  const customizer: __ValidationCustomizer<"MalformedRangeOverride"> = (ctx, failures) => {
+    if (!failures) {
+      return undefined;
+    }
+    return {
+      name: "ValidationException",
+      $fault: "client",
+      message: __generateValidationSummary(failures),
+      fieldList: failures.map((failure) => ({
+        path: failure.path,
+        message: __generateValidationMessage(failure),
+      })),
+    };
+  };
+  return new MalformedRangeOverrideHandler(
+    operation,
+    mux,
+    new MalformedRangeOverrideSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -146,79 +222,3 @@ export class MalformedRangeOverrideHandler<Context> implements __ServiceHandler<
     );
   }
 }
-
-export type MalformedRangeOverride<Context> = __Operation<
-  MalformedRangeOverrideServerInput,
-  MalformedRangeOverrideServerOutput,
-  Context
->;
-
-export interface MalformedRangeOverrideServerInput extends MalformedRangeOverrideInput {}
-export namespace MalformedRangeOverrideServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof MalformedRangeOverrideInput.validate>[0]) => __ValidationFailure[] =
-    MalformedRangeOverrideInput.validate;
-}
-export interface MalformedRangeOverrideServerOutput {}
-
-export type MalformedRangeOverrideErrors = ValidationException;
-
-export class MalformedRangeOverrideSerializer
-  implements
-    __OperationSerializer<RestJsonValidationService<any>, "MalformedRangeOverride", MalformedRangeOverrideErrors>
-{
-  serialize = serializeMalformedRangeOverrideResponse;
-  deserialize = deserializeMalformedRangeOverrideRequest;
-
-  isOperationError(error: any): error is MalformedRangeOverrideErrors {
-    const names: MalformedRangeOverrideErrors["name"][] = ["ValidationException"];
-    return names.includes(error.name);
-  }
-
-  serializeError(error: MalformedRangeOverrideErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    switch (error.name) {
-      case "ValidationException": {
-        return serializeValidationExceptionError(error, ctx);
-      }
-      default: {
-        throw error;
-      }
-    }
-  }
-}
-
-export const getMalformedRangeOverrideHandler = <Context>(
-  operation: __Operation<MalformedRangeOverrideServerInput, MalformedRangeOverrideServerOutput, Context>
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJsonValidation", "MalformedRangeOverride">([
-    new httpbinding.UriSpec<"RestJsonValidation", "MalformedRangeOverride">(
-      "POST",
-      [{ type: "path_literal", value: "MalformedRangeOverride" }],
-      [],
-      { service: "RestJsonValidation", operation: "MalformedRangeOverride" }
-    ),
-  ]);
-  const customizer: __ValidationCustomizer<"MalformedRangeOverride"> = (ctx, failures) => {
-    if (!failures) {
-      return undefined;
-    }
-    return {
-      name: "ValidationException",
-      $fault: "client",
-      message: __generateValidationSummary(failures),
-      fieldList: failures.map((failure) => ({
-        path: failure.path,
-        message: __generateValidationMessage(failure),
-      })),
-    };
-  };
-  return new MalformedRangeOverrideHandler(
-    operation,
-    mux,
-    new MalformedRangeOverrideSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

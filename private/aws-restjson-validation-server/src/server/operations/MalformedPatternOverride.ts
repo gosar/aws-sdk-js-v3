@@ -34,6 +34,82 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonValidationService } from "../RestJsonValidationService";
 
+export type MalformedPatternOverride<Context> = __Operation<
+  MalformedPatternOverrideServerInput,
+  MalformedPatternOverrideServerOutput,
+  Context
+>;
+
+export interface MalformedPatternOverrideServerInput extends MalformedPatternOverrideInput {}
+export namespace MalformedPatternOverrideServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof MalformedPatternOverrideInput.validate>[0]) => __ValidationFailure[] =
+    MalformedPatternOverrideInput.validate;
+}
+export interface MalformedPatternOverrideServerOutput {}
+
+export type MalformedPatternOverrideErrors = ValidationException;
+
+export class MalformedPatternOverrideSerializer
+  implements
+    __OperationSerializer<RestJsonValidationService<any>, "MalformedPatternOverride", MalformedPatternOverrideErrors>
+{
+  serialize = serializeMalformedPatternOverrideResponse;
+  deserialize = deserializeMalformedPatternOverrideRequest;
+
+  isOperationError(error: any): error is MalformedPatternOverrideErrors {
+    const names: MalformedPatternOverrideErrors["name"][] = ["ValidationException"];
+    return names.includes(error.name);
+  }
+
+  serializeError(error: MalformedPatternOverrideErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    switch (error.name) {
+      case "ValidationException": {
+        return serializeValidationExceptionError(error, ctx);
+      }
+      default: {
+        throw error;
+      }
+    }
+  }
+}
+
+export const getMalformedPatternOverrideHandler = <Context>(
+  operation: __Operation<MalformedPatternOverrideServerInput, MalformedPatternOverrideServerOutput, Context>
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJsonValidation", "MalformedPatternOverride">([
+    new httpbinding.UriSpec<"RestJsonValidation", "MalformedPatternOverride">(
+      "POST",
+      [{ type: "path_literal", value: "MalformedPatternOverride" }],
+      [],
+      { service: "RestJsonValidation", operation: "MalformedPatternOverride" }
+    ),
+  ]);
+  const customizer: __ValidationCustomizer<"MalformedPatternOverride"> = (ctx, failures) => {
+    if (!failures) {
+      return undefined;
+    }
+    return {
+      name: "ValidationException",
+      $fault: "client",
+      message: __generateValidationSummary(failures),
+      fieldList: failures.map((failure) => ({
+        path: failure.path,
+        message: __generateValidationMessage(failure),
+      })),
+    };
+  };
+  return new MalformedPatternOverrideHandler(
+    operation,
+    mux,
+    new MalformedPatternOverrideSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -146,79 +222,3 @@ export class MalformedPatternOverrideHandler<Context> implements __ServiceHandle
     );
   }
 }
-
-export type MalformedPatternOverride<Context> = __Operation<
-  MalformedPatternOverrideServerInput,
-  MalformedPatternOverrideServerOutput,
-  Context
->;
-
-export interface MalformedPatternOverrideServerInput extends MalformedPatternOverrideInput {}
-export namespace MalformedPatternOverrideServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof MalformedPatternOverrideInput.validate>[0]) => __ValidationFailure[] =
-    MalformedPatternOverrideInput.validate;
-}
-export interface MalformedPatternOverrideServerOutput {}
-
-export type MalformedPatternOverrideErrors = ValidationException;
-
-export class MalformedPatternOverrideSerializer
-  implements
-    __OperationSerializer<RestJsonValidationService<any>, "MalformedPatternOverride", MalformedPatternOverrideErrors>
-{
-  serialize = serializeMalformedPatternOverrideResponse;
-  deserialize = deserializeMalformedPatternOverrideRequest;
-
-  isOperationError(error: any): error is MalformedPatternOverrideErrors {
-    const names: MalformedPatternOverrideErrors["name"][] = ["ValidationException"];
-    return names.includes(error.name);
-  }
-
-  serializeError(error: MalformedPatternOverrideErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    switch (error.name) {
-      case "ValidationException": {
-        return serializeValidationExceptionError(error, ctx);
-      }
-      default: {
-        throw error;
-      }
-    }
-  }
-}
-
-export const getMalformedPatternOverrideHandler = <Context>(
-  operation: __Operation<MalformedPatternOverrideServerInput, MalformedPatternOverrideServerOutput, Context>
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJsonValidation", "MalformedPatternOverride">([
-    new httpbinding.UriSpec<"RestJsonValidation", "MalformedPatternOverride">(
-      "POST",
-      [{ type: "path_literal", value: "MalformedPatternOverride" }],
-      [],
-      { service: "RestJsonValidation", operation: "MalformedPatternOverride" }
-    ),
-  ]);
-  const customizer: __ValidationCustomizer<"MalformedPatternOverride"> = (ctx, failures) => {
-    if (!failures) {
-      return undefined;
-    }
-    return {
-      name: "ValidationException",
-      $fault: "client",
-      message: __generateValidationSummary(failures),
-      fieldList: failures.map((failure) => ({
-        path: failure.path,
-        message: __generateValidationMessage(failure),
-      })),
-    };
-  };
-  return new MalformedPatternOverrideHandler(
-    operation,
-    mux,
-    new MalformedPatternOverrideSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

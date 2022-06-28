@@ -30,6 +30,61 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type HttpChecksumRequired<Context> = __Operation<
+  HttpChecksumRequiredServerInput,
+  HttpChecksumRequiredServerOutput,
+  Context
+>;
+
+export interface HttpChecksumRequiredServerInput extends HttpChecksumRequiredInputOutput {}
+export namespace HttpChecksumRequiredServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (
+    obj: Parameters<typeof HttpChecksumRequiredInputOutput.validate>[0]
+  ) => __ValidationFailure[] = HttpChecksumRequiredInputOutput.validate;
+}
+export interface HttpChecksumRequiredServerOutput extends HttpChecksumRequiredInputOutput {}
+
+export type HttpChecksumRequiredErrors = never;
+
+export class HttpChecksumRequiredSerializer
+  implements __OperationSerializer<RestJsonService<any>, "HttpChecksumRequired", HttpChecksumRequiredErrors>
+{
+  serialize = serializeHttpChecksumRequiredResponse;
+  deserialize = deserializeHttpChecksumRequiredRequest;
+
+  isOperationError(error: any): error is HttpChecksumRequiredErrors {
+    return false;
+  }
+
+  serializeError(error: HttpChecksumRequiredErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getHttpChecksumRequiredHandler = <Context>(
+  operation: __Operation<HttpChecksumRequiredServerInput, HttpChecksumRequiredServerOutput, Context>,
+  customizer: __ValidationCustomizer<"HttpChecksumRequired">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "HttpChecksumRequired">([
+    new httpbinding.UriSpec<"RestJson", "HttpChecksumRequired">(
+      "POST",
+      [{ type: "path_literal", value: "HttpChecksumRequired" }],
+      [],
+      { service: "RestJson", operation: "HttpChecksumRequired" }
+    ),
+  ]);
+  return new HttpChecksumRequiredHandler(
+    operation,
+    mux,
+    new HttpChecksumRequiredSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -134,58 +189,3 @@ export class HttpChecksumRequiredHandler<Context> implements __ServiceHandler<Co
     );
   }
 }
-
-export type HttpChecksumRequired<Context> = __Operation<
-  HttpChecksumRequiredServerInput,
-  HttpChecksumRequiredServerOutput,
-  Context
->;
-
-export interface HttpChecksumRequiredServerInput extends HttpChecksumRequiredInputOutput {}
-export namespace HttpChecksumRequiredServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (
-    obj: Parameters<typeof HttpChecksumRequiredInputOutput.validate>[0]
-  ) => __ValidationFailure[] = HttpChecksumRequiredInputOutput.validate;
-}
-export interface HttpChecksumRequiredServerOutput extends HttpChecksumRequiredInputOutput {}
-
-export type HttpChecksumRequiredErrors = never;
-
-export class HttpChecksumRequiredSerializer
-  implements __OperationSerializer<RestJsonService<any>, "HttpChecksumRequired", HttpChecksumRequiredErrors>
-{
-  serialize = serializeHttpChecksumRequiredResponse;
-  deserialize = deserializeHttpChecksumRequiredRequest;
-
-  isOperationError(error: any): error is HttpChecksumRequiredErrors {
-    return false;
-  }
-
-  serializeError(error: HttpChecksumRequiredErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getHttpChecksumRequiredHandler = <Context>(
-  operation: __Operation<HttpChecksumRequiredServerInput, HttpChecksumRequiredServerOutput, Context>,
-  customizer: __ValidationCustomizer<"HttpChecksumRequired">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "HttpChecksumRequired">([
-    new httpbinding.UriSpec<"RestJson", "HttpChecksumRequired">(
-      "POST",
-      [{ type: "path_literal", value: "HttpChecksumRequired" }],
-      [],
-      { service: "RestJson", operation: "HttpChecksumRequired" }
-    ),
-  ]);
-  return new HttpChecksumRequiredHandler(
-    operation,
-    mux,
-    new HttpChecksumRequiredSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

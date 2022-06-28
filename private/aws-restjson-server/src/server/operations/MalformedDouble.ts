@@ -30,6 +30,56 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type MalformedDouble<Context> = __Operation<MalformedDoubleServerInput, MalformedDoubleServerOutput, Context>;
+
+export interface MalformedDoubleServerInput extends MalformedDoubleInput {}
+export namespace MalformedDoubleServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof MalformedDoubleInput.validate>[0]) => __ValidationFailure[] =
+    MalformedDoubleInput.validate;
+}
+export interface MalformedDoubleServerOutput {}
+
+export type MalformedDoubleErrors = never;
+
+export class MalformedDoubleSerializer
+  implements __OperationSerializer<RestJsonService<any>, "MalformedDouble", MalformedDoubleErrors>
+{
+  serialize = serializeMalformedDoubleResponse;
+  deserialize = deserializeMalformedDoubleRequest;
+
+  isOperationError(error: any): error is MalformedDoubleErrors {
+    return false;
+  }
+
+  serializeError(error: MalformedDoubleErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getMalformedDoubleHandler = <Context>(
+  operation: __Operation<MalformedDoubleServerInput, MalformedDoubleServerOutput, Context>,
+  customizer: __ValidationCustomizer<"MalformedDouble">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedDouble">([
+    new httpbinding.UriSpec<"RestJson", "MalformedDouble">(
+      "POST",
+      [{ type: "path_literal", value: "MalformedDouble" }, { type: "path" }],
+      [],
+      { service: "RestJson", operation: "MalformedDouble" }
+    ),
+  ]);
+  return new MalformedDoubleHandler(
+    operation,
+    mux,
+    new MalformedDoubleSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -134,53 +184,3 @@ export class MalformedDoubleHandler<Context> implements __ServiceHandler<Context
     );
   }
 }
-
-export type MalformedDouble<Context> = __Operation<MalformedDoubleServerInput, MalformedDoubleServerOutput, Context>;
-
-export interface MalformedDoubleServerInput extends MalformedDoubleInput {}
-export namespace MalformedDoubleServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof MalformedDoubleInput.validate>[0]) => __ValidationFailure[] =
-    MalformedDoubleInput.validate;
-}
-export interface MalformedDoubleServerOutput {}
-
-export type MalformedDoubleErrors = never;
-
-export class MalformedDoubleSerializer
-  implements __OperationSerializer<RestJsonService<any>, "MalformedDouble", MalformedDoubleErrors>
-{
-  serialize = serializeMalformedDoubleResponse;
-  deserialize = deserializeMalformedDoubleRequest;
-
-  isOperationError(error: any): error is MalformedDoubleErrors {
-    return false;
-  }
-
-  serializeError(error: MalformedDoubleErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getMalformedDoubleHandler = <Context>(
-  operation: __Operation<MalformedDoubleServerInput, MalformedDoubleServerOutput, Context>,
-  customizer: __ValidationCustomizer<"MalformedDouble">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedDouble">([
-    new httpbinding.UriSpec<"RestJson", "MalformedDouble">(
-      "POST",
-      [{ type: "path_literal", value: "MalformedDouble" }, { type: "path" }],
-      [],
-      { service: "RestJson", operation: "MalformedDouble" }
-    ),
-  ]);
-  return new MalformedDoubleHandler(
-    operation,
-    mux,
-    new MalformedDoubleSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

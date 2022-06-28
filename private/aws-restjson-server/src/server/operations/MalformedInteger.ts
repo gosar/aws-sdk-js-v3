@@ -30,6 +30,56 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type MalformedInteger<Context> = __Operation<MalformedIntegerServerInput, MalformedIntegerServerOutput, Context>;
+
+export interface MalformedIntegerServerInput extends MalformedIntegerInput {}
+export namespace MalformedIntegerServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (obj: Parameters<typeof MalformedIntegerInput.validate>[0]) => __ValidationFailure[] =
+    MalformedIntegerInput.validate;
+}
+export interface MalformedIntegerServerOutput {}
+
+export type MalformedIntegerErrors = never;
+
+export class MalformedIntegerSerializer
+  implements __OperationSerializer<RestJsonService<any>, "MalformedInteger", MalformedIntegerErrors>
+{
+  serialize = serializeMalformedIntegerResponse;
+  deserialize = deserializeMalformedIntegerRequest;
+
+  isOperationError(error: any): error is MalformedIntegerErrors {
+    return false;
+  }
+
+  serializeError(error: MalformedIntegerErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getMalformedIntegerHandler = <Context>(
+  operation: __Operation<MalformedIntegerServerInput, MalformedIntegerServerOutput, Context>,
+  customizer: __ValidationCustomizer<"MalformedInteger">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedInteger">([
+    new httpbinding.UriSpec<"RestJson", "MalformedInteger">(
+      "POST",
+      [{ type: "path_literal", value: "MalformedInteger" }, { type: "path" }],
+      [],
+      { service: "RestJson", operation: "MalformedInteger" }
+    ),
+  ]);
+  return new MalformedIntegerHandler(
+    operation,
+    mux,
+    new MalformedIntegerSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -134,53 +184,3 @@ export class MalformedIntegerHandler<Context> implements __ServiceHandler<Contex
     );
   }
 }
-
-export type MalformedInteger<Context> = __Operation<MalformedIntegerServerInput, MalformedIntegerServerOutput, Context>;
-
-export interface MalformedIntegerServerInput extends MalformedIntegerInput {}
-export namespace MalformedIntegerServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (obj: Parameters<typeof MalformedIntegerInput.validate>[0]) => __ValidationFailure[] =
-    MalformedIntegerInput.validate;
-}
-export interface MalformedIntegerServerOutput {}
-
-export type MalformedIntegerErrors = never;
-
-export class MalformedIntegerSerializer
-  implements __OperationSerializer<RestJsonService<any>, "MalformedInteger", MalformedIntegerErrors>
-{
-  serialize = serializeMalformedIntegerResponse;
-  deserialize = deserializeMalformedIntegerRequest;
-
-  isOperationError(error: any): error is MalformedIntegerErrors {
-    return false;
-  }
-
-  serializeError(error: MalformedIntegerErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getMalformedIntegerHandler = <Context>(
-  operation: __Operation<MalformedIntegerServerInput, MalformedIntegerServerOutput, Context>,
-  customizer: __ValidationCustomizer<"MalformedInteger">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedInteger">([
-    new httpbinding.UriSpec<"RestJson", "MalformedInteger">(
-      "POST",
-      [{ type: "path_literal", value: "MalformedInteger" }, { type: "path" }],
-      [],
-      { service: "RestJson", operation: "MalformedInteger" }
-    ),
-  ]);
-  return new MalformedIntegerHandler(
-    operation,
-    mux,
-    new MalformedIntegerSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};

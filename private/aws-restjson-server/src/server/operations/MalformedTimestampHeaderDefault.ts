@@ -30,6 +30,70 @@ import {
 } from "../../protocols/Aws_restJson1";
 import { RestJsonService } from "../RestJsonService";
 
+export type MalformedTimestampHeaderDefault<Context> = __Operation<
+  MalformedTimestampHeaderDefaultServerInput,
+  MalformedTimestampHeaderDefaultServerOutput,
+  Context
+>;
+
+export interface MalformedTimestampHeaderDefaultServerInput extends MalformedTimestampHeaderDefaultInput {}
+export namespace MalformedTimestampHeaderDefaultServerInput {
+  /**
+   * @internal
+   */
+  export const validate: (
+    obj: Parameters<typeof MalformedTimestampHeaderDefaultInput.validate>[0]
+  ) => __ValidationFailure[] = MalformedTimestampHeaderDefaultInput.validate;
+}
+export interface MalformedTimestampHeaderDefaultServerOutput {}
+
+export type MalformedTimestampHeaderDefaultErrors = never;
+
+export class MalformedTimestampHeaderDefaultSerializer
+  implements
+    __OperationSerializer<
+      RestJsonService<any>,
+      "MalformedTimestampHeaderDefault",
+      MalformedTimestampHeaderDefaultErrors
+    >
+{
+  serialize = serializeMalformedTimestampHeaderDefaultResponse;
+  deserialize = deserializeMalformedTimestampHeaderDefaultRequest;
+
+  isOperationError(error: any): error is MalformedTimestampHeaderDefaultErrors {
+    return false;
+  }
+
+  serializeError(error: MalformedTimestampHeaderDefaultErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
+    throw error;
+  }
+}
+
+export const getMalformedTimestampHeaderDefaultHandler = <Context>(
+  operation: __Operation<
+    MalformedTimestampHeaderDefaultServerInput,
+    MalformedTimestampHeaderDefaultServerOutput,
+    Context
+  >,
+  customizer: __ValidationCustomizer<"MalformedTimestampHeaderDefault">
+): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
+  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedTimestampHeaderDefault">([
+    new httpbinding.UriSpec<"RestJson", "MalformedTimestampHeaderDefault">(
+      "POST",
+      [{ type: "path_literal", value: "MalformedTimestampHeaderDefault" }],
+      [],
+      { service: "RestJson", operation: "MalformedTimestampHeaderDefault" }
+    ),
+  ]);
+  return new MalformedTimestampHeaderDefaultHandler(
+    operation,
+    mux,
+    new MalformedTimestampHeaderDefaultSerializer(),
+    serializeFrameworkException,
+    customizer
+  );
+};
+
 const serdeContextBase = {
   base64Encoder: toBase64,
   base64Decoder: fromBase64,
@@ -146,67 +210,3 @@ export class MalformedTimestampHeaderDefaultHandler<Context> implements __Servic
     );
   }
 }
-
-export type MalformedTimestampHeaderDefault<Context> = __Operation<
-  MalformedTimestampHeaderDefaultServerInput,
-  MalformedTimestampHeaderDefaultServerOutput,
-  Context
->;
-
-export interface MalformedTimestampHeaderDefaultServerInput extends MalformedTimestampHeaderDefaultInput {}
-export namespace MalformedTimestampHeaderDefaultServerInput {
-  /**
-   * @internal
-   */
-  export const validate: (
-    obj: Parameters<typeof MalformedTimestampHeaderDefaultInput.validate>[0]
-  ) => __ValidationFailure[] = MalformedTimestampHeaderDefaultInput.validate;
-}
-export interface MalformedTimestampHeaderDefaultServerOutput {}
-
-export type MalformedTimestampHeaderDefaultErrors = never;
-
-export class MalformedTimestampHeaderDefaultSerializer
-  implements
-    __OperationSerializer<
-      RestJsonService<any>,
-      "MalformedTimestampHeaderDefault",
-      MalformedTimestampHeaderDefaultErrors
-    >
-{
-  serialize = serializeMalformedTimestampHeaderDefaultResponse;
-  deserialize = deserializeMalformedTimestampHeaderDefaultRequest;
-
-  isOperationError(error: any): error is MalformedTimestampHeaderDefaultErrors {
-    return false;
-  }
-
-  serializeError(error: MalformedTimestampHeaderDefaultErrors, ctx: ServerSerdeContext): Promise<__HttpResponse> {
-    throw error;
-  }
-}
-
-export const getMalformedTimestampHeaderDefaultHandler = <Context>(
-  operation: __Operation<
-    MalformedTimestampHeaderDefaultServerInput,
-    MalformedTimestampHeaderDefaultServerOutput,
-    Context
-  >,
-  customizer: __ValidationCustomizer<"MalformedTimestampHeaderDefault">
-): __ServiceHandler<Context, __HttpRequest, __HttpResponse> => {
-  const mux = new httpbinding.HttpBindingMux<"RestJson", "MalformedTimestampHeaderDefault">([
-    new httpbinding.UriSpec<"RestJson", "MalformedTimestampHeaderDefault">(
-      "POST",
-      [{ type: "path_literal", value: "MalformedTimestampHeaderDefault" }],
-      [],
-      { service: "RestJson", operation: "MalformedTimestampHeaderDefault" }
-    ),
-  ]);
-  return new MalformedTimestampHeaderDefaultHandler(
-    operation,
-    mux,
-    new MalformedTimestampHeaderDefaultSerializer(),
-    serializeFrameworkException,
-    customizer
-  );
-};
