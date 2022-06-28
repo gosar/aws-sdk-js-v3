@@ -98,7 +98,7 @@ export namespace EnumUnion {
 export interface MalformedEnumInput {
   string?: EnumString | string;
   list?: (EnumString | string)[];
-  map?: { [key: string]: EnumString | string };
+  map?: Record<string, EnumString | string>;
   union?: EnumUnion;
 }
 
@@ -113,7 +113,7 @@ export namespace MalformedEnumInput {
   const memberValidators: {
     string?: __MultiConstraintValidator<string>;
     list?: __MultiConstraintValidator<Iterable<string>>;
-    map?: __MultiConstraintValidator<{ [key: string]: EnumString | string }>;
+    map?: __MultiConstraintValidator<Record<string, EnumString | string>>;
     union?: __MultiConstraintValidator<EnumUnion>;
   } = {};
   /**
@@ -249,7 +249,7 @@ export interface MalformedLengthInput {
   minString?: string;
   maxString?: string;
   list?: string[];
-  map?: { [key: string]: string[] };
+  map?: Record<string, string[]>;
 }
 
 export namespace MalformedLengthInput {
@@ -265,7 +265,7 @@ export namespace MalformedLengthInput {
     minString?: __MultiConstraintValidator<string>;
     maxString?: __MultiConstraintValidator<string>;
     list?: __MultiConstraintValidator<Iterable<string>>;
-    map?: __MultiConstraintValidator<{ [key: string]: string[] }>;
+    map?: __MultiConstraintValidator<Record<string, string[]>>;
   } = {};
   /**
    * @internal
@@ -301,7 +301,7 @@ export namespace MalformedLengthInput {
           }
           case "map": {
             memberValidators["map"] = new __CompositeMapValidator<string[]>(
-              new __CompositeValidator<{ [key: string]: string[] }>([new __LengthValidator(2, 8)]),
+              new __CompositeValidator<Record<string, string[]>>([new __LengthValidator(2, 8)]),
               new __CompositeValidator<string>([new __LengthValidator(2, 8)]),
               new __CompositeCollectionValidator<string>(
                 new __CompositeValidator<string[]>([new __LengthValidator(2, 8)]),
@@ -331,7 +331,7 @@ export interface MalformedLengthOverrideInput {
   minString?: string;
   maxString?: string;
   list?: string[];
-  map?: { [key: string]: string[] };
+  map?: Record<string, string[]>;
 }
 
 export namespace MalformedLengthOverrideInput {
@@ -347,7 +347,7 @@ export namespace MalformedLengthOverrideInput {
     minString?: __MultiConstraintValidator<string>;
     maxString?: __MultiConstraintValidator<string>;
     list?: __MultiConstraintValidator<Iterable<string>>;
-    map?: __MultiConstraintValidator<{ [key: string]: string[] }>;
+    map?: __MultiConstraintValidator<Record<string, string[]>>;
   } = {};
   /**
    * @internal
@@ -383,7 +383,7 @@ export namespace MalformedLengthOverrideInput {
           }
           case "map": {
             memberValidators["map"] = new __CompositeMapValidator<string[]>(
-              new __CompositeValidator<{ [key: string]: string[] }>([new __LengthValidator(4, 6)]),
+              new __CompositeValidator<Record<string, string[]>>([new __LengthValidator(4, 6)]),
               new __CompositeValidator<string>([new __LengthValidator(2, 8)]),
               new __CompositeCollectionValidator<string>(
                 new __CompositeValidator<string[]>([new __LengthValidator(2, 8)]),
@@ -519,7 +519,7 @@ export interface MalformedPatternInput {
   string?: string;
   evilString?: string;
   list?: string[];
-  map?: { [key: string]: string };
+  map?: Record<string, string>;
   union?: PatternUnion;
 }
 
@@ -535,7 +535,7 @@ export namespace MalformedPatternInput {
     string?: __MultiConstraintValidator<string>;
     evilString?: __MultiConstraintValidator<string>;
     list?: __MultiConstraintValidator<Iterable<string>>;
-    map?: __MultiConstraintValidator<{ [key: string]: string }>;
+    map?: __MultiConstraintValidator<Record<string, string>>;
     union?: __MultiConstraintValidator<PatternUnion>;
   } = {};
   /**
@@ -670,7 +670,7 @@ export namespace PatternUnionOverride {
 export interface MalformedPatternOverrideInput {
   string?: string;
   list?: string[];
-  map?: { [key: string]: string };
+  map?: Record<string, string>;
   union?: PatternUnionOverride;
 }
 
@@ -685,7 +685,7 @@ export namespace MalformedPatternOverrideInput {
   const memberValidators: {
     string?: __MultiConstraintValidator<string>;
     list?: __MultiConstraintValidator<Iterable<string>>;
-    map?: __MultiConstraintValidator<{ [key: string]: string }>;
+    map?: __MultiConstraintValidator<Record<string, string>>;
     union?: __MultiConstraintValidator<PatternUnionOverride>;
   } = {};
   /**

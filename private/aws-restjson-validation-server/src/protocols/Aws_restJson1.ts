@@ -90,7 +90,7 @@ export const deserializeMalformedEnumRequest = async (
     string: undefined,
     union: undefined,
   };
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.list !== undefined && data.list !== null) {
     contents.list = deserializeAws_restJson1EnumList(data.list, context);
   }
@@ -134,7 +134,7 @@ export const deserializeMalformedLengthRequest = async (
     minString: undefined,
     string: undefined,
   };
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.blob !== undefined && data.blob !== null) {
     contents.blob = context.base64Decoder(data.blob);
   }
@@ -184,7 +184,7 @@ export const deserializeMalformedLengthOverrideRequest = async (
     minString: undefined,
     string: undefined,
   };
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.blob !== undefined && data.blob !== null) {
     contents.blob = context.base64Decoder(data.blob);
   }
@@ -276,7 +276,7 @@ export const deserializeMalformedPatternRequest = async (
     string: undefined,
     union: undefined,
   };
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.evilString !== undefined && data.evilString !== null) {
     contents.evilString = __expectString(data.evilString);
   }
@@ -321,7 +321,7 @@ export const deserializeMalformedPatternOverrideRequest = async (
     string: undefined,
     union: undefined,
   };
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.list !== undefined && data.list !== null) {
     contents.list = deserializeAws_restJson1PatternListOverride(data.list, context);
   }
@@ -365,7 +365,7 @@ export const deserializeMalformedRangeRequest = async (
     minByte: undefined,
     minFloat: undefined,
   };
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.byte !== undefined && data.byte !== null) {
     contents.byte = __expectByte(data.byte);
   }
@@ -415,7 +415,7 @@ export const deserializeMalformedRangeOverrideRequest = async (
     minByte: undefined,
     minFloat: undefined,
   };
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.byte !== undefined && data.byte !== null) {
     contents.byte = __expectByte(data.byte);
   }
@@ -481,7 +481,7 @@ export const deserializeMalformedRequiredRequest = async (
   if (output.headers["string-in-headers"] !== undefined) {
     contents.stringInHeader = output.headers["string-in-headers"];
   }
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.string !== undefined && data.string !== null) {
     contents.string = __expectString(data.string);
   }
@@ -511,7 +511,7 @@ export const deserializeRecursiveStructuresRequest = async (
   const contents: RecursiveStructuresServerInput = {
     union: undefined,
   };
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.union !== undefined && data.union !== null) {
     contents.union = deserializeAws_restJson1RecursiveUnionOne(__expectUnion(data.union), context);
   }
@@ -541,7 +541,7 @@ export const deserializeSensitiveValidationRequest = async (
   const contents: SensitiveValidationServerInput = {
     string: undefined,
   };
-  const data: { [key: string]: any } = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
+  const data: Record<string, any> = __expectNonNull(__expectObject(await parseBody(output.body, context)), "body");
   if (data.string !== undefined && data.string !== null) {
     contents.string = __expectString(data.string);
   }
@@ -1078,12 +1078,9 @@ const deserializeAws_restJson1EnumList = (output: any, context: __SerdeContext):
   return retVal;
 };
 
-const deserializeAws_restJson1EnumMap = (
-  output: any,
-  context: __SerdeContext
-): { [key: string]: EnumString | string } => {
+const deserializeAws_restJson1EnumMap = (output: any, context: __SerdeContext): Record<string, EnumString | string> => {
   return Object.entries(output).reduce(
-    (acc: { [key: string]: EnumString | string }, [key, value]: [EnumString | string, any]) => {
+    (acc: Record<string, EnumString | string>, [key, value]: [EnumString | string, any]) => {
       if (value === null) {
         return acc;
       }
@@ -1118,8 +1115,8 @@ const deserializeAws_restJson1LengthList = (output: any, context: __SerdeContext
   return retVal;
 };
 
-const deserializeAws_restJson1LengthMap = (output: any, context: __SerdeContext): { [key: string]: string[] } => {
-  return Object.entries(output).reduce((acc: { [key: string]: string[] }, [key, value]: [string, any]) => {
+const deserializeAws_restJson1LengthMap = (output: any, context: __SerdeContext): Record<string, string[]> => {
+  return Object.entries(output).reduce((acc: Record<string, string[]>, [key, value]: [string, any]) => {
     if (value === null) {
       return acc;
     }
@@ -1154,8 +1151,8 @@ const deserializeAws_restJson1PatternListOverride = (output: any, context: __Ser
   return retVal;
 };
 
-const deserializeAws_restJson1PatternMap = (output: any, context: __SerdeContext): { [key: string]: string } => {
-  return Object.entries(output).reduce((acc: { [key: string]: string }, [key, value]: [string, any]) => {
+const deserializeAws_restJson1PatternMap = (output: any, context: __SerdeContext): Record<string, string> => {
+  return Object.entries(output).reduce((acc: Record<string, string>, [key, value]: [string, any]) => {
     if (value === null) {
       return acc;
     }
@@ -1166,11 +1163,8 @@ const deserializeAws_restJson1PatternMap = (output: any, context: __SerdeContext
   }, {});
 };
 
-const deserializeAws_restJson1PatternMapOverride = (
-  output: any,
-  context: __SerdeContext
-): { [key: string]: string } => {
-  return Object.entries(output).reduce((acc: { [key: string]: string }, [key, value]: [string, any]) => {
+const deserializeAws_restJson1PatternMapOverride = (output: any, context: __SerdeContext): Record<string, string> => {
+  return Object.entries(output).reduce((acc: Record<string, string>, [key, value]: [string, any]) => {
     if (value === null) {
       return acc;
     }
